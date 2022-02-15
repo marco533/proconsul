@@ -48,6 +48,7 @@ def check_input_style(input_list):
 
     alpha = 1
     outfile_name = 'first_%d_added_nodes_weight_%d.txt' % (max_number_of_added_nodes, alpha)
+    num_iterations = 10
 
     if len(input_list) == 5:
         try:
@@ -64,7 +65,17 @@ def check_input_style(input_list):
             print_usage()
             sys.exit(0)
             return
-    return network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name
+    if len(input_list) == 7:
+        try:
+            alpha = int(input_list[4])
+            outfile_name = input_list[5]
+            num_iterations = input_list[6]
+        except:
+            print_usage()
+            sys.exit(0)
+            return
+
+    return network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations
 
 
 # =============================================================================
@@ -348,7 +359,7 @@ def diamond_iteration_of_first_X_nodes(G, S, X, alpha):
         # print(next_node)
 
         # ---------------------------------------------------------------------
-        # Adding node with smallest p-value to the list of aaglomerated nodes
+        # Adding node with smallest p-value to the list of agglomerated nodes
         # ---------------------------------------------------------------------
         added_nodes.append((next_node,
                             info[next_node][0],
@@ -369,7 +380,7 @@ def diamond_iteration_of_first_X_nodes(G, S, X, alpha):
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, num_iterations=100):
+def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_iterations=10):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -382,7 +393,7 @@ def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
 
     # 2. agglomeration algorithm.
     all_nodes_dict = {}
-    max_iterations = 10
+
     for i in range(max_iterations):
         added_nodes = diamond_iteration_of_first_X_nodes(G_original,
                                                         disease_genes,
@@ -463,16 +474,17 @@ if __name__ == '__main__':
 
     # check if input style is correct
     input_list = sys.argv
-    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name = check_input_style(input_list)
+    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
 
 
-    # run prob diamond 100 times
+    # run Prob DIAMOnD
     added_nodes = prob_diamond(G_original,
                                seed_genes,
                                max_number_of_added_nodes, alpha,
-                               outfile=outfile_name)
+                               outfile=outfile_name,
+                               max_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)

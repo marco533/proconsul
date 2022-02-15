@@ -11,7 +11,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5):
+def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, num_iters_prob_diamond=10):
     '''
     Performs the K-Folf Cross Validation over all the disease genes.
     Input:
@@ -87,7 +87,7 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5):
                 predicted_genes = [item[0] for item in added_nodes]
 
             elif algorithm == "prob_diamond":
-                input_list = ["prob_diamond.py", interactome, training_set_file, num_genes_to_predict, 1, output_file]
+                input_list = ["prob_diamond.py", interactome, training_set_file, num_genes_to_predict, 1, output_file, num_iters_prob_diamond]
                 added_nodes = run_prob_diamond(input_list)
                 predicted_genes = [item[0] for item in added_nodes]
 
@@ -124,3 +124,5 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5):
         # save it as csv file
         csv_file = f"results/kfold/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
         result_df.to_csv(csv_file)
+
+        return result_df["Top 100"]["f1"]
