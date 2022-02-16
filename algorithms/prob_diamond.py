@@ -392,8 +392,8 @@ def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
             len(seed_genes - all_genes_in_network), len(seed_genes)))
 
     # 2. agglomeration algorithm.
+    print(f"PROB DIAMOnD(): number of iterations = {max_iterations}")
     all_nodes_dict = {}
-
     for i in range(max_iterations):
         added_nodes = diamond_iteration_of_first_X_nodes(G_original,
                                                         disease_genes,
@@ -432,7 +432,7 @@ def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
     return added_nodes
 
 def run_prob_diamond(input_list):
-    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name = check_input_style(input_list)
+    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
@@ -441,7 +441,8 @@ def run_prob_diamond(input_list):
     added_nodes = prob_diamond(G_original,
                                seed_genes,
                                max_number_of_added_nodes, alpha,
-                               outfile=outfile_name)
+                               outfile=outfile_name,
+                               max_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
 

@@ -1,3 +1,4 @@
+import sys
 import networkx as nx
 
 from test.kfold_validation import k_fold_cross_validation
@@ -51,13 +52,29 @@ if __name__ == "__main__":
     #  Find best iterations value  #
     # ============================ #
 
+    results_dict = {"Num iterations": [], "F1 top 50": [], "F1 top 100": [], "F1 top 200": [], "F1 top N": []}
+
     best_num_iters = 0
-    best_f1 = 0
-    for i in range(20):
-        f1 = k_fold_cross_validation(LCC_hhi, disease_genes, "prob_diamond", "Psoriasis", K=5, num_iters_prob_diamond=i)
+    best_f1_top_100 = 0
+    for i in range(1,2):
+        results_df = k_fold_cross_validation(LCC_hhi, disease_genes, "prob_diamond", "Psoriasis", K=5, num_iters_prob_diamond=i)
 
-        if f1 > best_f1:
+        # append f1 results to the dictionary
+        results_dict["Num iterations"] .append(i)
+        results_dict["F1 top 50"] .append(results_df.at["f1", "Top 50"][0])
+        results_dict["F1 top 100"] .append(results_df.at["f1", "Top 100"][0])
+        results_dict["F1 top 200"] .append(results_df.at["f1", "Top 200"][0])
+        results_dict["F1 top N"] .append(results_df.at["f1", "Top N"][0])
+
+        # find best f1 top 100 score
+        f1_top_100 = results_df.at["f1", "Top 100"][0]
+        if f1_top_100 > best_f1_top_100:
             best_num_iters = i
-            best_f1 = f1
+            best_f1_top_100 = f1_top_100
 
-    print(f"Best num iterations for Prob DIAMOnD is: {best_num_iters}, with an f1 score of {best_f1}")
+    # save the dictionary in a csv file
+    print(results_dict)
+    df = pd.DataFrame.from_dict(results_dict)
+    df.to_csv("results/prob_diamond_score_per_num_of_iterations.csv", float_format='%.3f')
+
+    print(f"Best num iterations for Prob DIAMOnD is: {best_num_iters}, with an f1 score of {best_f1_top_100}")

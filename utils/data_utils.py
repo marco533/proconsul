@@ -9,6 +9,7 @@ import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
 from matplotlib.colors import BoundaryNorm, LogNorm, Normalize
+from sklearn.utils import shuffle
 
 #################
 #   UTILITIES   #
@@ -27,7 +28,7 @@ def get_num_genes_per_disease(disease_list):
 
     return num_genes_per_disaese
 
-def get_disease_genes_from_gda(filename, disease):
+def get_disease_genes_from_gda(filename, disease, training_mode=True):
     '''
     Find all genes associated to a given disease in the GDA
     and return them as a list.
@@ -42,9 +43,15 @@ def get_disease_genes_from_gda(filename, disease):
     disease_genes = disease_df['geneSymbol'].to_list()
 
     # shuffling
-    random.shuffle(disease_genes)   # modify the original list
+    if training_mode == True:   # fixed seed for results reliability
+        shuffled_genes = disease_genes.copy()
+        random.seed(42)
+        random.shuffle(shuffled_genes)
+    else:
+        shuffled_genes = disease_genes.copy()
+        random.shuffle(shuffled_genes)   # modify the original list
 
-    return disease_genes
+    return shuffled_genes
 
 def split_list(list, n):
     ''' Split a list in n equals parts '''

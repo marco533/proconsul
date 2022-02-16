@@ -108,6 +108,16 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
         scores_avg = np.average(scores, axis=0)
         scores_std = np.std(scores, axis=0)
 
+        print(f"scores_avg:\n{scores_avg}")
+        print(f"score_std:\n{scores_std}")
+
+        # # round the arrays to the 3rd deciaml
+        # scores_avg = np.around(scores_avg, decimals=3)
+        # scores_std = np.around(scores_std, decimals=3)
+
+        # print(f"scores_avg after round: {scores_avg}")
+        # print(f"score_std after round: {scores_std}")
+
         # create the final score dataframe where each value is (avg, std)
         n_rows, n_cols = scores_avg.shape
         final_scores = np.zeros((n_rows, n_cols), dtype=tuple)
@@ -125,4 +135,5 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
         csv_file = f"results/kfold/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
         result_df.to_csv(csv_file)
 
-        return result_df["Top 100"]["f1"]
+        # return the DataFrame with the results
+        return result_df
