@@ -30,7 +30,6 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
     else:
         algorithm_list = [algorithm]
 
-
     # get all genes in the network
     all_genes = list(network.nodes)
 
@@ -134,6 +133,3 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
         # save it as csv file
         csv_file = f"results/kfold/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
         result_df.to_csv(csv_file)
-
-        # return the DataFrame with the results
-        return result_df

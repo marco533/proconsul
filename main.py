@@ -154,9 +154,6 @@ if __name__ == "__main__":
             # run the k-fold validation on {algorithm}
             k_fold_cross_validation(LCC_hhi, disease_genes, algorithm, disease, K=5, num_iters_prob_diamond=1)
 
-            # # MCL: Best inflation valure
-            # best_inflation = get_best_inflation_value(LCC_hhi)
-
     # ===================== #
     #  EXTENDED VALIDATION  #
     # ===================== #
