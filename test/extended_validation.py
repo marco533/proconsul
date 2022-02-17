@@ -10,7 +10,7 @@ from utils.metrics_utils import *
 from utils.data_utils import *
 
 
-def extended_validation(network, seed_genes, test_genes, algorithm_name, disease_name):
+def extended_validation(network, seed_genes, test_genes, algorithm_name, disease_name, num_iters_prob_diamond=1):
     '''
     Perform an extended validation using all the seed genes of the disease
     and test the predicted genes with all the genes in
@@ -63,7 +63,7 @@ def extended_validation(network, seed_genes, test_genes, algorithm_name, disease
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "prob_diamond":
-            input_list = ["prob_diamond.py", interactome, seed_genes_file, num_genes_to_predict, 1, output_file]
+            input_list = ["prob_diamond.py", interactome, seed_genes_file, num_genes_to_predict, 1, output_file, num_iters_prob_diamond]
             added_nodes = run_prob_diamond(input_list)
             predicted_genes = [item[0] for item in added_nodes]
 

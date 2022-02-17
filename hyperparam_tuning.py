@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     best_num_iters = 0
     best_f1_top_100 = 0
-    for i in range(1,2):
+    for i in range(1,21):
         results_df = k_fold_cross_validation(LCC_hhi, disease_genes, "prob_diamond", "Psoriasis", K=5, num_iters_prob_diamond=i)
 
         # append f1 results to the dictionary

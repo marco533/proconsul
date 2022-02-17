@@ -104,16 +104,16 @@ def read_terminal_input(args):
 # main
 if __name__ == "__main__":
 
-    #============#
-    # READ INPUT #
-    #============#
+    # ============ #
+    #  READ INPUT  #
+    # ============ #
 
     args = parse_args()
     disease_list, algorithm, validation = read_terminal_input(args)
 
-    #================#
-    # CREATE NETWORK #
-    #================#
+    # ================ #
+    #  CREATE NETWORK  #
+    # ================ #
 
     # select the human-human interactions from biogrid
     biogrid_file = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
@@ -139,9 +139,9 @@ if __name__ == "__main__":
     print("Isolating the LCC:")
     print(nx.info(LCC_hhi), end="\n\n")
 
-    #===================#
-    # K-FOLD VALIDATION #
-    #===================#
+    # =================== #
+    #  K-FOLD VALIDATION  #
+    # =================== #
 
     gda_filename = "data/curated_gene_disease_associations.tsv"
 
@@ -152,14 +152,14 @@ if __name__ == "__main__":
             disease_genes = get_disease_genes_from_gda(gda_filename, disease)
 
             # run the k-fold validation on {algorithm}
-            k_fold_cross_validation(LCC_hhi, disease_genes, algorithm, disease, K=5)
+            k_fold_cross_validation(LCC_hhi, disease_genes, algorithm, disease, K=5, num_iters_prob_diamond=1)
 
             # # MCL: Best inflation valure
             # best_inflation = get_best_inflation_value(LCC_hhi)
 
-    #=====================#
-    # EXTENDED VALIDATION #
-    #=====================#
+    # ===================== #
+    #  EXTENDED VALIDATION  #
+    # ===================== #
 
     all_gda_filename = "data/all_gene_disease_associations.tsv"
 
@@ -174,4 +174,4 @@ if __name__ == "__main__":
             new_disease_genes = list(set(all_disease_genes) - set(curated_disease_genes))
 
             # run the extended validation on {algorithm}
-            extended_validation(LCC_hhi, curated_disease_genes, new_disease_genes, algorithm, disease)
+            extended_validation(LCC_hhi, curated_disease_genes, new_disease_genes, algorithm, disease, num_iters_prob_diamond=1)

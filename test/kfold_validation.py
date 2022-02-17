@@ -11,7 +11,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, num_iters_prob_diamond=10):
+def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, num_iters_prob_diamond=1):
     '''
     Performs the K-Folf Cross Validation over all the disease genes.
     Input:
