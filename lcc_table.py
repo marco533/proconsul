@@ -5,6 +5,8 @@
 
 
 import csv
+from utils.data_utils import string_to_filename
+
 
 #this function takes one LCC group and return the line to print on the final table (line composed by 8 values)
 def manage_one_group(diseases):
@@ -22,6 +24,7 @@ def manage_one_group(diseases):
         for disease in diseases:   
 
             rows1 = []
+            disease = string_to_filename(disease)
             with open("results/kfold/diamond_on_"+disease+"_kfold.csv", 'r') as file1:
                 csvreader1 = csv.reader(file1)
                 header = next(csvreader1)
@@ -29,6 +32,7 @@ def manage_one_group(diseases):
                     rows1.append(row)
 
             rows2 = []
+            disease = string_to_filename(disease)
             with open("results/kfold/prob_diamond_on_"+disease+"_kfold.csv", 'r') as file2:
                 csvreader2 = csv.reader(file2)
                 header = next(csvreader2)
@@ -37,6 +41,7 @@ def manage_one_group(diseases):
 
 
             rows3 = []
+            disease = string_to_filename(disease)            
             with open("results/extended/diamond_on_"+disease+"_extended.csv", 'r') as file3:
                 csvreader3 = csv.reader(file3)
                 header = next(csvreader3)
@@ -44,6 +49,7 @@ def manage_one_group(diseases):
                     rows3.append(row)
 
             rows4 = []
+            disease = string_to_filename(disease)
             with open("results/extended/prob_diamond_on_"+disease+"_extended.csv", 'r') as file4:
                 csvreader4 = csv.reader(file4)
                 header = next(csvreader4)
