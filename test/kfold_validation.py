@@ -124,9 +124,6 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
         result_df = pd.DataFrame(final_scores, metrics, sizes)
 
         # save it as csv file
-        if algorithm == "prob_diamond":
-            csv_file = f"results/kfold/{algorithm}/{num_iters_prob_diamond}_iter/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
-        else:
-            csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
+        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
 
         result_df.to_csv(csv_file)

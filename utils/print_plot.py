@@ -375,7 +375,7 @@ def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validatio
 
         for disease in sorted_disease_list:
             # Read score from saved CSV
-            score_file = f"results/{validation}/{string_to_filename(algorithm)}_on_{string_to_filename(disease)}_{validation}.csv"
+            score_file = f"results/{validation}/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease)}_{validation}.csv"
             score_df = pd.read_csv(score_file, index_col=0)
 
             if validation == 'kfold':
@@ -540,5 +540,5 @@ if __name__ == "__main__":
     # Plot F1 scores by LCC size
     for validation in validations:
         for size in output_sizes:
-            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size)
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size)
             plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size)
