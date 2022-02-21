@@ -56,63 +56,15 @@ def manage_one_group(diseases):
                 for row in csvreader4:
                     rows4.append(row)
 
-            
-            #remove standard deviation from read values
-
-            rows1[2][1] = (rows1[2][1])[:(rows1[2][1]).rfind("+")]
-            rows1[2][1] = float(rows1[2][1])
-
-            rows2[2][1] = (rows2[2][1])[:(rows2[2][1]).rfind("+")]
-            rows2[2][1] = float(rows2[2][1]) 
-
-            rows1[2][2] = (rows1[2][2])[:(rows1[2][2]).rfind("+")]
-            rows1[2][2] = float(rows1[2][2])
-
-            rows2[2][2] = (rows2[2][2])[:(rows2[2][2]).rfind("+")]
-            rows2[2][2] = float(rows2[2][2])
-
-            rows1[2][3] = (rows1[2][3])[:(rows1[2][3]).rfind("+")]
-            rows1[2][3] = float(rows1[2][3])
-
-            rows2[2][3] = (rows2[2][3])[:(rows2[2][3]).rfind("+")]
-            rows2[2][3] = float(rows2[2][3])
-
-            rows1[2][4] = (rows1[2][4])[:(rows1[2][4]).rfind("+")]
-            rows1[2][4] = float(rows1[2][4])
-
-            rows2[2][4] = (rows2[2][4])[:(rows2[2][4]).rfind("+")]
-            rows2[2][4] = float(rows2[2][4])
-
-            rows3[2][1] = (rows3[2][1])[:(rows3[2][1]).rfind("+")]
-            rows3[2][1] = float(rows3[2][1])
-
-            rows4[2][1] = (rows4[2][1])[:(rows4[2][1]).rfind("+")]
-            rows4[2][1] = float(rows4[2][1])
-
-            rows3[2][2] = (rows3[2][2])[:(rows3[2][2]).rfind("+")]
-            rows3[2][2] = float(rows3[2][2])
-
-            rows4[2][2] = (rows4[2][2])[:(rows4[2][2]).rfind("+")]
-            rows4[2][2] = float(rows4[2][2])
-
-            rows3[2][3] = (rows3[2][3])[:(rows3[2][3]).rfind("+")]
-            rows3[2][3] = float(rows3[2][3])
-
-            rows4[2][3] = (rows4[2][3])[:(rows4[2][3]).rfind("+")]
-            rows4[2][3] = float(rows4[2][3])
-
-            rows3[2][4] = (rows3[2][4])[:(rows3[2][4]).rfind("+")]
-            rows3[2][4] = float(rows3[2][4])
-
-            rows4[2][4] = (rows4[2][4])[:(rows4[2][4]).rfind("+")]
-            rows4[2][4] = float(rows4[2][4])
-
-
 
             #comparisons among read values to get best algorithm
 
             #KFOLD
             #Top 50
+
+            #parsing of the desired value
+            rows1[2][1] = float((rows1[2][1].strip("(").strip(")").split(","))[0])
+            rows2[2][1] = float((rows2[2][1].strip("(").strip(")").split(","))[0])
             if rows1[2][1]>rows2[2][1]: 
                 kf_top_50_to_print = "diamond"
             elif rows1[2][1]<rows2[2][1]:
@@ -121,6 +73,10 @@ def manage_one_group(diseases):
                 kf_top_50_to_print = "same"
 
             # Top 100
+
+            #parsing of the desired value            
+            rows1[2][2] = float((rows1[2][2].strip("(").strip(")").split(","))[0])
+            rows2[2][2] = float((rows2[2][2].strip("(").strip(")").split(","))[0])            
             if rows1[2][2]>rows2[2][2]: 
                 kf_top_100_to_print = "diamond"
             elif rows1[2][2]<rows2[2][2]:
@@ -129,6 +85,10 @@ def manage_one_group(diseases):
                 kf_top_100_to_print = "same"
 
             # Top 200
+
+            #parsing of the desired value
+            rows1[2][3] = float((rows1[2][3].strip("(").strip(")").split(","))[0])
+            rows2[2][3] = float((rows2[2][3].strip("(").strip(")").split(","))[0])            
             if rows1[2][3]>rows2[2][3]: 
                 kf_top_200_to_print = "diamond"
             elif rows1[2][3]<rows2[2][3]:
@@ -137,6 +97,10 @@ def manage_one_group(diseases):
                 kf_top_200_to_print = "same"
 
             # Top N
+
+            #parsing of the desired value
+            rows1[2][4] = float((rows1[2][4].strip("(").strip(")").split(","))[0])
+            rows2[2][4] = float((rows2[2][4].strip("(").strip(")").split(","))[0])
             if rows1[2][4]>rows2[2][4]: 
                 kf_top_N_to_print = "diamond"
             elif rows1[2][4]<rows2[2][4]:
@@ -147,6 +111,10 @@ def manage_one_group(diseases):
 
             #EXTENDED
             #Top 50
+
+            #parsing of the desired value
+            rows3[2][1] = float(rows3[2][1])
+            rows4[2][1] = float(rows4[2][1])
             if rows3[2][1]>rows4[2][1]: 
                 ev_top_50_to_print = "diamond"
             elif rows3[2][1]<rows4[2][1]:
@@ -155,6 +123,10 @@ def manage_one_group(diseases):
                 ev_top_50_to_print = "same"
 
             # Top 100
+
+            #parsing of the desired value
+            rows3[2][2] = float(rows3[2][2])
+            rows4[2][2] = float(rows4[2][2])
             if rows3[2][2]>rows4[2][2]: 
                 ev_top_100_to_print = "diamond"
             elif rows3[2][2]<rows4[2][2]:
@@ -163,6 +135,10 @@ def manage_one_group(diseases):
                 ev_top_100_to_print = "same"
 
             # Top 200
+
+            #parsing of the desired value
+            rows3[2][3] = float(rows3[2][3])
+            rows4[2][3] = float(rows4[2][3])
             if rows3[2][3]>rows4[2][3]: 
                 ev_top_200_to_print = "diamond"
             elif rows3[2][3]<rows4[2][3]:
@@ -171,6 +147,10 @@ def manage_one_group(diseases):
                 ev_top_200_to_print = "same"
 
             # Top N
+            
+            #parsing of the desired value
+            rows3[2][4] = float(rows3[2][4])
+            rows4[2][4] = float(rows4[2][4])
             if rows3[2][4]>rows4[2][4]: 
                 ev_top_N_to_print = "diamond"
             elif rows3[2][4]<rows4[2][4]:
@@ -208,21 +188,19 @@ def manage_one_group(diseases):
 if __name__ == "__main__":
 
     #groups of diseases splitted by LCC size
-    LCC_0_50 = ['disease1','disease2','disease3']
-    LCC_50_100 = ['disease2']
-    LCC_100_150 = ['disease1']
+    LCC_50_100 = ['Osteoporosis, Senile','Steatohepatitis']
+    LCC_100_150 = ['Adenocarcinoma, Basal Cell','Heart Failure, Right-Sided']
+    LCC_150_200 = ['Liver carcinoma']
 
     rows_to_print=[]
 
     i=1
-    for group in [LCC_0_50, LCC_50_100,LCC_100_150]:
+    for group in [LCC_50_100,LCC_100_150,LCC_150_200]:
 
         #get name of the group te be printed on final table
-        if i==1:
-            group_name = f'{LCC_0_50=}'.split('=')[0]
-        if i==2:
+        if i==1:        
             group_name = f'{LCC_50_100=}'.split('=')[0]
-        if i==3:
+        if i==2:
             group_name = f'{LCC_100_150=}'.split('=')[0]
         i+=1
 
