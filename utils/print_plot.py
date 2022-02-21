@@ -1,6 +1,8 @@
 import csv
 import enum
+import re
 import sys
+import argparse
 from unittest import result
 
 import matplotlib as mpl
@@ -10,9 +12,11 @@ import matplotlib.ticker as plticker
 import numpy as np
 import pandas as pd
 from matplotlib.colors import BoundaryNorm, LogNorm, Normalize
+from sklearn import metrics
 
-from utils.data_utils import *
+from data_utils import *
 from avg_results import get_algorithm_avg_results, get_algorithm_results
+from get_disease_LCC import get_disease_LCC, select_hhi_only
 
 ####################################
 #   K-FOLD ITERATIONS COMPARISON   #
@@ -341,75 +345,200 @@ def plot_algorithm_comparison_by_num_genes(disease_file, validation='kfold', met
     plt.savefig(f"plot/algorithms_score_by_num_seed_genes_{metric}_{string_to_filename(size)}_{validation}.png", bbox_inches="tight")
     plt.close('all')
 
-############
+def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validation='kfold', metric='f1', output_size='Top 100'):
+    '''
+    Plot the score of all algorithms in algorithm_list
+    by the LCC size of the diseases in disease file.
+    '''
+
+    # Order disease list by LCC size
+    diseases_by_lcc_size = {}
+    for disease in disease_list:
+        # Get disease LCC
+        disease_LCC = get_disease_LCC(interactome,
+                                      disease,
+                                      from_curated=True if validation=='kfold' else False)
+
+        # Add the value to the dictionary
+        diseases_by_lcc_size[disease] = len(disease_LCC)
+
+    # Sort the dictionary by the LCC size in ascending order
+    diseases_by_lcc_size = dict(sorted(diseases_by_lcc_size.items(), key=lambda item: item[1]))
+
+    # Get the sorted disease list
+    sorted_disease_list = diseases_by_lcc_size.keys()
+
+    # Get algorithm score
+    for algorithm in algorithm_list:
+        LCC_sizes = []
+        scores = []
+
+        for disease in sorted_disease_list:
+            # Read score from saved CSV
+            score_file = f"results/{validation}/{string_to_filename(algorithm)}_on_{string_to_filename(disease)}_{validation}.csv"
+            score_df = pd.read_csv(score_file, index_col=0)
+
+            if validation == 'kfold':
+                score = score_df.at[metric, output_size]
+
+                if type(score) == str:
+                    score = score.replace("(", "")
+                    score = score.replace(")", "")
+                    score = float(score.split(", ")[0])
+
+            else:
+                score = score_df.at[metric, output_size]
+
+            # Append score and LCC size
+            LCC_sizes.append(diseases_by_lcc_size[disease])
+            scores.append(score)
+
+        # print(f"LCC sizes: {LCC_sizes}")
+        # print(f"Scores: {scores}")
+        # Add the algorithm score to the plot
+        plt.plot(LCC_sizes, scores, label=algorithm)
+
+    # plot legend and save as png
+    plt.legend()
+    plt.title(f"Scores by LCC size - Metric: {metric.upper()} | Predicted genes: {output_size} | Validation: {validation.upper()}")
+    plt.savefig(f"plots/scores_by_lcc_size/{string_to_filename(output_size)}_{metric}_{validation}.png", bbox_inches="tight")
+    plt.close('all')
+
+# =============== #
+#  INPUT READING  #
+# =============== #
+
+def print_usage():
+    print(' ')
+    print('        usage: python3 project.py --algorithm --validation --disease_file')
+    print('        -----------------------------------------------------------------')
+    print('        disease_file     : Position of a txt file containig a disease name for each line')
+    print('                           (default: "data/disease_file.txt"')
+    print('        algorithm        : Algorithm to test. It can be "diamond", "prob_diamond or "all".')
+    print('                           If all, run both the algorithms. (default: all')
+    print('        validation       : type of validation on which test the algorithms. It can be')
+    print('                           "kfold", "extended" or "all".')
+    print('                           If all, perform both the validations. (default: all')
+    print('        output_size      : Number of predicted genes to use for plotting the results.')
+    print('                           "Top 50", "Top 100", "Top 200", "Top N" or "all".')
+    print('                           If all, use all the sizes (default: all).')
+    print(' ')
+
+def parse_args():
+    '''
+    Parse the terminal arguments.
+    '''
+    parser = argparse.ArgumentParser(description='Set disease, algorithm and validation')
+    parser.add_argument('--algorithm', type=str, default='all',
+                    help='Algorithm to test. (default: all)')
+    parser.add_argument('--validation', type=str, default='all',
+                    help='Type of validation. (default: all')
+    parser.add_argument('--disease_file', type=str, default="data/disease_file.txt",
+                    help='Position to disease file (default: "data/disease_file.txt)')
+    parser.add_argument('--output_size', type=str, default='all',
+                        help='Number of predicted genes to use.')
+    return parser.parse_args()
+
+def read_terminal_input(args):
+    '''
+    Read the arguments passed by command line.
+    '''
+
+    def read_disease_file(disease_file):
+        '''
+        Read the disease file and return a list of diseases.
+        The file MUST HAVE only a desease name for each line.
+        '''
+        disease_list = []
+        with open(disease_file, 'r') as df:
+
+            for line in df:
+                if line[0] == "#":  # skip commented lines
+                    continue
+                disease_list.append(line.replace("\n",""))
+
+        return disease_list
+
+    # read the parsed values
+    algorithm       = args.algorithm
+    validation      = args.validation
+    output_size     = args.output_size
+    disease_file    = args.disease_file
+
+    print('')
+    print(f"============================")
+
+    print(f"algorithm: {algorithm}")
+    print(f"validation: {validation}")
+    print(f"output_size: {output_size}")
+    print(f"disease_file: {disease_file}")
+
+    # get disease list from file
+    try:
+        disease_list = read_disease_file(disease_file)
+    except:
+        print(f"Not found file in {disease_file} or no valid location.")
+        sys.exit(0)
+
+    # if list is empty fill it with default diseases
+    if len(disease_list) == 0:
+        print(f"ERROR: No diseases in disease_file")
+        sys.exit(0)
+
+    print(f"============================")
+    print('')
+
+    # check if is a valid algorithm
+    if algorithm not in ["diamond", "prob_diamond", "diable", "moses", "markov_clustering", "heat_diffusion", "RWR", "all"]:
+        print(f"ERROR: {algorithm} is no valid algorithm!")
+        print_usage()
+        sys.exit(0)
+
+    # check if is a valid validation
+    if validation not in ["kfold", "extended", "all"]:
+        print(f"ERROR: {validation} is no valid validation method!")
+        print_usage()
+        sys.exit(0)
+
+    if output_size not in ["Top 50", "Top 100", "Top 200", "Top N", "all"]:
+        print(f"ERROR: {output_size} is no valid matric!")
+        print_usage()
+        sys.exit(0)
+
+    return disease_list, algorithm, validation, output_size
+
+# ======== #
 #   MAIN   #
-############
+# ======== #
 
 if __name__ == "__main__":
-    # labels
-    input_size_labels_kfold     = ["top 50", "top N/10", "top N/4", "top N/2", "top N"]
-    input_size_labels_extended  = ["top 50", "top N"]
-    average_metric_labels       = ["avg_precision", "avg_recall", "avg_f1", "avg_ndcg"]
-    metric_labels               = ["precision", "recall", "f1", "ndcg"]
-    algorithm_names             = ["diamond", "prob_diamond", "diable", "moses", "markov_clustering", "heat_diffusion", "RWR"]
-    disease_dict                = create_disease_mesh_dictionary("data/disease_file.txt")
 
-    # ====================== #
-    #   Average Comparsion   #
-    # ====================== #
-    print("Algorithm comparison by number of genes")
+    # Read input
+    args = parse_args()
+    disease_list, algorithm, validation, output_size = read_terminal_input(args)
 
-    plot_algorithm_comparison_by_num_genes("data/disease_file.txt", validation='kfold', metric='f1', size='top 50')
-    plot_algorithm_comparison_by_num_genes("data/disease_file.txt", validation='extended', metric='f1', size='top 50')
-    plot_algorithm_comparison_by_num_genes("data/disease_file.txt", validation='kfold', metric='f1', size='top N')
-    plot_algorithm_comparison_by_num_genes("data/disease_file.txt", validation='extended', metric='f1', size='top N')
+    if algorithm == 'all':
+        algorithm_list = ['diamond', 'prob_diamond']
+    else:
+        algorithm_list = [algorithm]
 
-    print("\n============================================================\n")
+    if validation == 'all':
+        validations = ['kfold', 'extended']
+    else:
+        validations = [validation]
 
-    print("Success rate by class")
-    plot_success_rate_by_class("data/disease_file.txt", validation='kfold', metric='f1', size='top 50')
-    plot_success_rate_by_class("data/disease_file.txt", validation='extended', metric='f1', size='top 50')
-    plot_success_rate_by_class("data/disease_file.txt", validation='kfold', metric='f1', size='top N')
-    plot_success_rate_by_class("data/disease_file.txt", validation='extended', metric='f1', size='top N')
-
-    print("\n============================================================\n")
+    if  output_size == 'all':
+        output_sizes = ["Top 50", "Top 100", "Top 200", "Top N"]
+    else:
+        output_sizes = [output_size]
 
 
-    print("Average comparsion")
+    # Build the interactome DataFrame
+    biogrid_file = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+    hhi_df = select_hhi_only(biogrid_file)
 
-    for metric in average_metric_labels:
-        plot_average_comparison(input_size_labels_kfold,
-                                algorithm_names,
-                                disease_dict,
-                                metric=metric,
-                                validation='kfold',
-                                by_class = True)
-
-    for metric in metric_labels:
-        plot_average_comparison(input_size_labels_extended,
-                                algorithm_names,
-                                disease_dict,
-                                metric=metric,
-                                validation='extended',
-                                by_class = True)
-
-    print("\n============================================================\n")
-
-    # ======================= #
-    #    K-Fold Comparsion    #
-    # ======================= #
-    print("K-Fold Comparison")
-
-    # retrieve disease names
-    disease_names = get_diseases_from_file("data/disease_file.txt")
-
-    for algorithm in algorithm_names:
-        for metric in metric_labels:
-            for size in input_size_labels_kfold:
-                if algorithm == "diamond":
-                    continue
-                plot_kfold_comparison("diamond", algorithm, disease_names, metric=metric, prediction_size=size)
-
-    print("\n============================================================\n")
-
-
+    # Plot F1 scores by LCC size
+    for validation in validations:
+        for size in output_sizes:
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size)
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size)

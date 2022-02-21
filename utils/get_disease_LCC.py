@@ -12,7 +12,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from utils.data_utils import *
+from data_utils import *
 
 def parse_args():
     '''
@@ -43,14 +43,18 @@ def read_terminal_input(args):
 
     return disease_file, output_file
 
-def select_disease_interactions_only(hhi_df, disease):
+def select_disease_interactions_only(hhi_df, disease, curated=True):
     '''
     From the Human-Human interactions select only the interactions regarding
     the disease.
     '''
 
     # get disease genes from GDS
-    gda_filename = "data/curated_gene_disease_associations.tsv"
+    if curated:
+        gda_filename = "data/curated_gene_disease_associations.tsv"
+    else:
+        gda_filename = "data/all_gene_disease_associations.tsv"
+
     disease_genes = get_disease_genes_from_gda(gda_filename, disease)
 
     # convert to an immutable object
@@ -82,7 +86,41 @@ def select_hhi_only(filename, only_physical=1):
 
     return df
 
-# main
+
+# ================== #
+#  CALL BY FUNCTION  #
+# ================== #
+
+def get_disease_LCC(interactome_df, disease, from_curated=True):
+    '''
+    Given the interactome DataFrame,
+    Return the LCC of the disease.
+    '''
+
+    # From the dataframe select the disease genes only
+    disease_df = select_disease_interactions_only(interactome_df, disease, curated=from_curated)
+
+    # Create the network
+    disease_network = nx.from_pandas_edgelist(disease_df,
+                                              source = "Official Symbol Interactor A",
+                                              target = "Official Symbol Interactor B",
+                                              create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+    # Remove self loops
+    self_loop_edges = list(nx.selfloop_edges(disease_network))
+    disease_network.remove_edges_from(self_loop_edges)
+
+    # Find connected components
+    conn_comp = list(nx.connected_components(disease_network))
+
+    # Isolate the LCC
+    LCC = max(conn_comp, key=len)
+
+    return LCC
+
+# ===================== #
+#  CALL BY COMMAND LINE #
+# ===================== #
+
 if __name__ == "__main__":
     # parse terminal input
     args = parse_args()

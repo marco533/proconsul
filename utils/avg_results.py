@@ -6,7 +6,7 @@ from networkx import algorithms
 import numpy as np
 import pandas as pd
 
-from utils.data_utils import *
+from data_utils import *
 
 def print_latex(df, algorithm, outfile, validation='kfold'):
     '''
