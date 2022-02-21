@@ -110,13 +110,6 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
         print(f"scores_avg:\n{scores_avg}")
         print(f"score_std:\n{scores_std}")
 
-        # # round the arrays to the 3rd deciaml
-        # scores_avg = np.around(scores_avg, decimals=3)
-        # scores_std = np.around(scores_std, decimals=3)
-
-        # print(f"scores_avg after round: {scores_avg}")
-        # print(f"score_std after round: {scores_std}")
-
         # create the final score dataframe where each value is (avg, std)
         n_rows, n_cols = scores_avg.shape
         final_scores = np.zeros((n_rows, n_cols), dtype=tuple)
@@ -131,5 +124,9 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
         result_df = pd.DataFrame(final_scores, metrics, sizes)
 
         # save it as csv file
-        csv_file = f"results/kfold/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
+        if algorithm == "prob_diamond":
+            csv_file = f"results/kfold/{algorithm}/{num_iters_prob_diamond}_iter/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
+        else:
+            csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
+
         result_df.to_csv(csv_file)

@@ -86,5 +86,8 @@ def extended_validation(network, seed_genes, test_genes, algorithm_name, disease
         result_df = pd.DataFrame(scores, metrics, sizes)
 
         # save it as csv file
-        csv_file = f"results/extended/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_extended.csv"
+        if algorithm == "prob_diamond":
+            csv_file = f"results/extended/{algorithm}/{num_iters_prob_diamond}_iter/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_extended.csv"
+        else:
+            csv_file = f"results/extended/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_extended.csv"
         result_df.to_csv(csv_file)
