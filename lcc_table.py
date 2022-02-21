@@ -25,7 +25,7 @@ def manage_one_group(diseases):
 
             rows1 = []
             disease = string_to_filename(disease)
-            with open("results/kfold/diamond_on_"+disease+"_kfold.csv", 'r') as file1:
+            with open("results/kfold/diamond/diamond_on_"+disease+"_kfold.csv", 'r') as file1:
                 csvreader1 = csv.reader(file1)
                 header = next(csvreader1)
                 for row in csvreader1:
@@ -33,7 +33,7 @@ def manage_one_group(diseases):
 
             rows2 = []
             disease = string_to_filename(disease)
-            with open("results/kfold/prob_diamond_on_"+disease+"_kfold.csv", 'r') as file2:
+            with open("results/kfold/prob_diamond/prob_diamond_on_"+disease+"_kfold.csv", 'r') as file2:
                 csvreader2 = csv.reader(file2)
                 header = next(csvreader2)
                 for row in csvreader2:
@@ -42,7 +42,7 @@ def manage_one_group(diseases):
 
             rows3 = []
             disease = string_to_filename(disease)            
-            with open("results/extended/diamond_on_"+disease+"_extended.csv", 'r') as file3:
+            with open("results/extended/diamond/diamond_on_"+disease+"_extended.csv", 'r') as file3:
                 csvreader3 = csv.reader(file3)
                 header = next(csvreader3)
                 for row in csvreader3:
@@ -50,7 +50,7 @@ def manage_one_group(diseases):
 
             rows4 = []
             disease = string_to_filename(disease)
-            with open("results/extended/prob_diamond_on_"+disease+"_extended.csv", 'r') as file4:
+            with open("results/extended/prob_diamond/prob_diamond_on_"+disease+"_extended.csv", 'r') as file4:
                 csvreader4 = csv.reader(file4)
                 header = next(csvreader4)
                 for row in csvreader4:
@@ -188,20 +188,29 @@ def manage_one_group(diseases):
 if __name__ == "__main__":
 
     #groups of diseases splitted by LCC size
-    LCC_50_100 = ['Osteoporosis, Senile','Steatohepatitis']
-    LCC_100_150 = ['Adenocarcinoma, Basal Cell','Heart Failure, Right-Sided']
-    LCC_150_200 = ['Liver carcinoma']
+
+    LCC_50_75 = ['Psoriasis','Pneumonitis','Osteoporosis, Senile','Pneumonia','Dermatitis, Allergic Contact','Skin Neoplasms','Peripheral Nervous System Diseases','Insulin Sensitivity','Manic Disorder','Acute Cerebrovascular Accidents','Brain Ischemia','Non-Convulsive Status Epilepticus','Amphetamine Addiction','Mouth Neoplasms']
+    LCC_75_100 = ['Steatohepatitis','Disproportionate short stature','Parkinson Disease','Epilepsy, Cryptogenic','Allodynia','Hyperalgesia, Primary','Nonsyndromic Deafness']
+    LCC_100_125 = ['Heart Failure, Right-Sided','Hepatoma, Novikoff','Malignant mesothelioma','Tonic - clonic seizures','Adenocarcinoma, Basal Cell','Seizures, Auditory','Spontaneous abortion','Vertiginous seizure','Carcinoma, Cribriform']
+    LCC_125_150 = ['Papillary Renal Cell Carcinoma','Malignant neoplasm of ovary','Chromophobe Renal Cell Carcinoma','Cocaine Abuse']
+    LCC_150_ = ['Liver carcinoma','Liver Cirrhosis, Experimental','Diabetes Mellitus, Non-Insulin-Dependent','Stomach Neoplasms','Alcoholic Intoxication, Chronic','Malignant neoplasm of prostate','Carcinomatosis','Atrial Fibrillation','Craniofacial Abnormalities','Anaplastic carcinoma']
 
     rows_to_print=[]
 
     i=1
-    for group in [LCC_50_100,LCC_100_150,LCC_150_200]:
+    for group in [LCC_50_75,LCC_75_100,LCC_100_125,LCC_125_150,LCC_150_]:
 
         #get name of the group te be printed on final table
         if i==1:        
-            group_name = f'{LCC_50_100=}'.split('=')[0]
+            group_name = f'{LCC_50_75=}'.split('=')[0]
         if i==2:
-            group_name = f'{LCC_100_150=}'.split('=')[0]
+            group_name = f'{LCC_75_100=}'.split('=')[0]
+        if i==3:
+            group_name = f'{LCC_100_125=}'.split('=')[0]
+        if i==4:
+            group_name = f'{LCC_125_150=}'.split('=')[0]
+        if i==5:
+            group_name = f'{LCC_150_=}'.split('=')[0]
         i+=1
 
         #row_to_print = each row, one per group
