@@ -152,7 +152,7 @@ if __name__ == "__main__":
             disease_genes = get_disease_genes_from_gda(gda_filename, disease)
 
             # run the k-fold validation on {algorithm}
-            k_fold_cross_validation(LCC_hhi, disease_genes, algorithm, disease, K=5, num_iters_prob_diamond=1)
+            k_fold_cross_validation(LCC_hhi, disease_genes, algorithm, disease, K=5, num_iters_prob_diamond=10)
 
     # ===================== #
     #  EXTENDED VALIDATION  #
@@ -171,4 +171,4 @@ if __name__ == "__main__":
             new_disease_genes = list(set(all_disease_genes) - set(curated_disease_genes))
 
             # run the extended validation on {algorithm}
-            extended_validation(LCC_hhi, curated_disease_genes, new_disease_genes, algorithm, disease, num_iters_prob_diamond=1)
+            extended_validation(LCC_hhi, curated_disease_genes, new_disease_genes, algorithm, disease, num_iters_prob_diamond=10)
