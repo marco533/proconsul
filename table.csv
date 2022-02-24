@@ -1,4 +1,6 @@
 LCC group,kf_top_50,kf_top_100,kf_top_200,kf_top_N,ev_top_50,ev_top_100,ev_top_200,ev_top_N
-LCC_50_100,same,same,same,same,same,prob diamond,prob diamond,same
-LCC_100_150,diamond,diamond,diamond,diamond,same,same,prob diamond,same
-LCC_100_150,same,diamond,diamond,diamond,diamond,diamond,prob diamond,prob diamond
+LCC_50_75,same,same,same,same,same,diamond,prob diamond,same
+LCC_75_100,prob diamond,same,diamond,prob diamond,diamond,prob diamond,prob diamond,prob diamond
+LCC_100_125,same,same,same,same,same,same,diamond,same
+LCC_125_150,prob diamond,same,prob diamond,prob diamond,prob diamond,prob diamond,prob diamond,prob diamond
+LCC_150_,diamond,diamond,same,diamond,diamond,diamond,diamond,prob diamond
