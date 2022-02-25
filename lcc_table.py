@@ -191,9 +191,10 @@ if __name__ == "__main__":
 
     LCC_50_75 = ['Psoriasis','Pneumonitis','Osteoporosis, Senile','Pneumonia','Dermatitis, Allergic Contact','Skin Neoplasms','Peripheral Nervous System Diseases','Insulin Sensitivity','Manic Disorder','Acute Cerebrovascular Accidents','Brain Ischemia','Non-Convulsive Status Epilepticus','Amphetamine Addiction','Mouth Neoplasms']
     LCC_75_100 = ['Steatohepatitis','Disproportionate short stature','Parkinson Disease','Epilepsy, Cryptogenic','Allodynia','Hyperalgesia, Primary','Nonsyndromic Deafness']
-    LCC_100_125 = ['Heart Failure, Right-Sided','Hepatoma, Novikoff','Malignant mesothelioma','Tonic - clonic seizures','Adenocarcinoma, Basal Cell','Seizures, Auditory','Spontaneous abortion','Vertiginous seizure','Carcinoma, Cribriform']
+    LCC_100_125 = ['Heart Failure, Right-Sided','Hepatoma, Novikoff','Malignant mesothelioma','Tonic - clonic seizures','Adenocarcinoma, Basal Cell','Seizures, Auditory','Spontaneous abortion','Vertiginous seizure','Carcinoma, Cribriform',"Alzheimer's Disease"]
     LCC_125_150 = ['Papillary Renal Cell Carcinoma','Malignant neoplasm of ovary','Chromophobe Renal Cell Carcinoma','Cocaine Abuse']
     LCC_150_ = ['Liver carcinoma','Liver Cirrhosis, Experimental','Diabetes Mellitus, Non-Insulin-Dependent','Stomach Neoplasms','Alcoholic Intoxication, Chronic','Malignant neoplasm of prostate','Carcinomatosis','Atrial Fibrillation','Craniofacial Abnormalities','Anaplastic carcinoma']
+
 
     rows_to_print=[]
 
