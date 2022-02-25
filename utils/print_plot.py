@@ -540,7 +540,7 @@ if __name__ == "__main__":
     # Plot F1 and NDCG scores by LCC size
     for validation in validations:
         for size in output_sizes:
-            print(f"Plotting F1 score of {validation} on {output_size} genes")
+            print(f"Plotting F1 score of {validation} on {size} genes")
             plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size)
-            print(f"Plotting NDCG score of {validation} on {output_size} genes")
+            print(f"Plotting NDCG score of {validation} on {size} genes")
             plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size)

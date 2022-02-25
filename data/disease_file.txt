@@ -24,7 +24,7 @@ Malignant mesothelioma
 Tonic - clonic seizures
 Adenocarcinoma, Basal Cell
 Seizures, Auditory
-#Alzheimer's Disease
+Alzheimer's Disease
 Epilepsy, Cryptogenic
 Peripheral Nervous System Diseases
 Allodynia
