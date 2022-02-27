@@ -1,0 +1,46 @@
+DISEASE NAME,NUM CONNECTED COMPONENTS,SIZE LCC
+Psoriasis,10,21
+Liver carcinoma,15,395
+"Liver Cirrhosis, Experimental",18,614
+"Diabetes Mellitus, Non-Insulin-Dependent",19,91
+Papillary Renal Cell Carcinoma,13,72
+Malignant neoplasm of ovary,4,108
+Steatohepatitis,4,37
+Disproportionate short stature,12,13
+Stomach Neoplasms,6,247
+Pneumonitis,12,11
+"Heart Failure, Right-Sided",15,50
+"Alcoholic Intoxication, Chronic",22,129
+"Osteoporosis, Senile",9,26
+Parkinson Disease,14,45
+"Hepatoma, Novikoff",5,40
+Malignant neoplasm of prostate,7,543
+Pneumonia,12,11
+Carcinomatosis,12,135
+"Dermatitis, Allergic Contact",16,3
+Atrial Fibrillation,17,77
+Craniofacial Abnormalities,9,99
+Skin Neoplasms,8,40
+Malignant mesothelioma,15,63
+Tonic - clonic seizures,20,29
+"Adenocarcinoma, Basal Cell",6,88
+"Seizures, Auditory",19,28
+Alzheimer's Disease,6,60
+"Epilepsy, Cryptogenic",12,27
+Peripheral Nervous System Diseases,17,5
+Allodynia,16,19
+Insulin Sensitivity,10,36
+Chromophobe Renal Cell Carcinoma,13,72
+Anaplastic carcinoma,12,135
+Spontaneous abortion,13,22
+Manic Disorder,18,18
+Cocaine Abuse,14,62
+Acute Cerebrovascular Accidents,9,16
+Brain Ischemia,6,39
+"Hyperalgesia, Primary",16,19
+Nonsyndromic Deafness,9,9
+Vertiginous seizure,19,28
+Non-Convulsive Status Epilepticus,11,23
+Amphetamine Addiction,16,13
+"Carcinoma, Cribriform",6,88
+Mouth Neoplasms,5,32
