@@ -345,7 +345,7 @@ def plot_algorithm_comparison_by_num_genes(disease_file, validation='kfold', met
     plt.savefig(f"plot/algorithms_score_by_num_seed_genes_{metric}_{string_to_filename(size)}_{validation}.png", bbox_inches="tight")
     plt.close('all')
 
-def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validation='kfold', metric='f1', output_size='Top 100'):
+def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validation='kfold', metric='f1', output_size='Top 100', max_lcc=-1):
     '''
     Plot the score of all algorithms in algorithm_list
     by the LCC size of the diseases in disease file.
@@ -357,7 +357,8 @@ def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validatio
         # Get disease LCC
         disease_LCC = get_disease_LCC(interactome,
                                       disease,
-                                      from_curated=True if validation=='kfold' else False)
+                                      from_curated=True)
+                                    #   from_curated=True if validation=='kfold' else False)
 
         # Add the value to the dictionary
         diseases_by_lcc_size[disease] = len(disease_LCC)
@@ -390,8 +391,11 @@ def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validatio
                 score = score_df.at[metric, output_size]
 
             # Append score and LCC size
-            LCC_sizes.append(diseases_by_lcc_size[disease])
-            scores.append(score)
+            if max_lcc != -1 and diseases_by_lcc_size[disease] > max_lcc:
+                continue
+            else:
+                LCC_sizes.append(diseases_by_lcc_size[disease])
+                scores.append(score)
 
         # print(f"LCC sizes: {LCC_sizes}")
         # print(f"Scores: {scores}")
@@ -401,7 +405,10 @@ def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validatio
     # plot legend and save as png
     plt.legend()
     plt.title(f"Scores by LCC size - Metric: {metric.upper()} | Predicted genes: {output_size} | Validation: {validation.upper()}")
-    plt.savefig(f"plots/scores_by_lcc_size/{string_to_filename(output_size)}_{metric}_{validation}.png", bbox_inches="tight")
+    if max_lcc != -1:
+        plt.savefig(f"plots/scores_by_lcc_size/{string_to_filename(output_size)}_{metric}_{validation}_max_lcc_{max_lcc}.png", bbox_inches="tight")
+    else:
+        plt.savefig(f"plots/scores_by_lcc_size/{string_to_filename(output_size)}_{metric}_{validation}.png", bbox_inches="tight")
     plt.close('all')
 
 # =============== #
@@ -540,7 +547,12 @@ if __name__ == "__main__":
     # Plot F1 and NDCG scores by LCC size
     for validation in validations:
         for size in output_sizes:
-            print(f"Plotting F1 score of {validation} on {size} genes")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size)
-            print(f"Plotting NDCG score of {validation} on {size} genes")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size)
+            # print(f"Plotting F1 score of {validation} on {size} genes, no max LCC")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=-1)
+            # print(f"Plotting NDCG score of {validation} on {size} genes, no max LCC")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=-1)
+
+            print(f"Plotting F1 score of {validation} on {size} genes, max LCC = 150")
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=150)
+            print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = 150")
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=150)
