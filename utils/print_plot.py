@@ -552,7 +552,17 @@ if __name__ == "__main__":
             # print(f"Plotting NDCG score of {validation} on {size} genes, no max LCC")
             # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=-1)
 
+            # print(f"Plotting F1 score of {validation} on {size} genes, max LCC = 150")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=150)
+            # print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = 150")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=150)
+
             print(f"Plotting F1 score of {validation} on {size} genes, max LCC = 150")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=150)
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='precision', output_size=size, max_lcc=150)
             print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = 150")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=150)
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='recall', output_size=size, max_lcc=150)
+
+            print(f"Plotting F1 score of {validation} on {size} genes, max LCC = ALl")
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='precision', output_size=size, max_lcc=-1)
+            print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = All")
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='recall', output_size=size, max_lcc=-1)

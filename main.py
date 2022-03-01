@@ -16,26 +16,26 @@ def print_usage():
     print(' ')
     print('        usage: python3 project.py --algorithm --validation --disease_file')
     print('        -----------------------------------------------------------------')
-    print('        disease_file     : Position of a txt file containig a disease name for each line')
-    print('                           (default: "data/disease_file.txt"')
-    print('        algorithm        : Algorithm to test. It can be "diamond", "prob_diamond or "all".')
-    print('                           If all, run both the algorithms. (default: all')
-    print('        validation       : type of validation on which test the algorithms. It can be')
+    print('        algorithm        : Algorithm of whic collect the results. It can be "diamond", "prob_diamond", "heat_diffusion" or "all".')
+    print('                           If all, run all the algorithms. (default: all')
+    print('        validation       : Type of validation on which test the algorithms. It can be')
     print('                           "kfold", "extended" or "all".')
     print('                           If all, perform both the validations. (default: all')
+    print('        disease_file     : Relative path to the file containing the disease names to use for the comparison')
+    print('                           (default: "data/disease_file.txt).')
     print(' ')
 
 def parse_args():
     '''
     Parse the terminal arguments.
     '''
-    parser = argparse.ArgumentParser(description='Set disease, algorithm and validation')
+    parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
     parser.add_argument('--algorithm', type=str, default='all',
                     help='Algorithm to test. (default: all)')
     parser.add_argument('--validation', type=str, default='all',
                     help='Type of validation. (default: all')
     parser.add_argument('--disease_file', type=str, default="data/disease_file.txt",
-                    help='Position to disease gile (default: "data/disease_file.txt)')
+                    help='Relative path to the file with disease names (default: "data/disease_file.txt)')
     return parser.parse_args()
 
 def read_terminal_input(args):
@@ -63,31 +63,8 @@ def read_terminal_input(args):
     validation      = args.validation
     disease_file    = args.disease_file
 
-    print('')
-    print(f"============================")
-
-    print(f"algorithm: {algorithm}")
-    print(f"validation: {validation}")
-    print(f"disease_file: {disease_file}")
-
-    # get disease list from file
-    try:
-        disease_list = read_disease_file(disease_file)
-    except:
-        print(f"Not found file in {disease_file} or no valid location.")
-        sys.exit(0)
-        return
-
-    # if list is empty fill it with default diseases
-    if len(disease_list) == 0:
-        print(f"ERROR: No diseases in disease_file")
-        sys.exit(0)
-
-    print(f"============================")
-    print('')
-
     # check if is a valid algorithm
-    if algorithm not in ["diamond", "prob_diamond", "diable", "moses", "markov_clustering", "heat_diffusion", "RWR", "all"]:
+    if algorithm not in ["diamond", "prob_diamond", "heat_diffusion", "all"]:
         print(f"ERROR: {algorithm} is no valid algorithm!")
         print_usage()
         sys.exit(0)
@@ -98,7 +75,43 @@ def read_terminal_input(args):
         print_usage()
         sys.exit(0)
 
-    return disease_list, algorithm, validation
+    # get disease list from file
+    try:
+        disease_list = read_disease_file(disease_file)
+    except:
+        print(f"Not found file in {disease_file} or no valid location.")
+        sys.exit(0)
+
+    # if list is empty fill it with default diseases
+    if len(disease_list) == 0:
+        print(f"ERROR: No diseases in disease_file")
+        sys.exit(0)
+
+    # get the list of validations
+    if validation == 'all':
+        validation_list = ['kfold', 'extended']
+    else:
+        validation_list = [validation]
+
+    # get the list of algorithms
+    if algorithm == 'all':
+        algorithm_list = ["diamond",
+                          "prob_diamond"]
+    else:
+        algorithm_list = [algorithm]
+
+    print('')
+    print(f"============================")
+
+    print(f"Algorithm: {algorithm}")
+    print(f"Validations: {validation_list}")
+    print(f"Diseases: {disease_list}")
+
+    print(f"============================")
+    print('')
+
+
+    return algorithm_list, validation_list, disease_list
 
 
 # main
@@ -109,7 +122,7 @@ if __name__ == "__main__":
     # ============ #
 
     args = parse_args()
-    disease_list, algorithm, validation = read_terminal_input(args)
+    algorithms, validations, diseases = read_terminal_input(args)
 
     # ================ #
     #  CREATE NETWORK  #
@@ -145,14 +158,15 @@ if __name__ == "__main__":
 
     gda_filename = "data/curated_gene_disease_associations.tsv"
 
-    if validation == "kfold" or validation == "all":
-        for disease in disease_list:
+    if 'kfold' in validations:
+        for alg in algorithms:
+            for disease in diseases:
 
-            # get disease genes from curated GDA
-            disease_genes = get_disease_genes_from_gda(gda_filename, disease)
+                # get disease genes from curated GDA
+                disease_genes = get_disease_genes_from_gda(gda_filename, disease)
 
-            # run the k-fold validation on {algorithm}
-            k_fold_cross_validation(LCC_hhi, disease_genes, algorithm, disease, K=5, num_iters_prob_diamond=10)
+                # run the k-fold validation on {algorithm}
+                k_fold_cross_validation(LCC_hhi, disease_genes, alg, disease, K=5, num_iters_prob_diamond=10)
 
     # ===================== #
     #  EXTENDED VALIDATION  #
@@ -160,15 +174,16 @@ if __name__ == "__main__":
 
     all_gda_filename = "data/all_gene_disease_associations.tsv"
 
-    if validation == "extended" or validation == "all":
-        for disease in disease_list:
+    if 'extended' in validations:
+        for alg in algorithms:
+            for disease in diseases:
 
-            # get disease genes from curated and all GDA
-            curated_disease_genes = get_disease_genes_from_gda(gda_filename, disease)
-            all_disease_genes = get_disease_genes_from_gda(all_gda_filename, disease)
+                # get disease genes from curated and all GDA
+                curated_disease_genes = get_disease_genes_from_gda(gda_filename, disease)
+                all_disease_genes = get_disease_genes_from_gda(all_gda_filename, disease)
 
-            # remove from all the genes that are already in curated
-            new_disease_genes = list(set(all_disease_genes) - set(curated_disease_genes))
+                # remove from all the genes that are already in curated
+                new_disease_genes = list(set(all_disease_genes) - set(curated_disease_genes))
 
-            # run the extended validation on {algorithm}
-            extended_validation(LCC_hhi, curated_disease_genes, new_disease_genes, algorithm, disease, num_iters_prob_diamond=10)
+                # run the extended validation on {algorithm}
+                extended_validation(LCC_hhi, curated_disease_genes, new_disease_genes, alg, disease, num_iters_prob_diamond=10)
