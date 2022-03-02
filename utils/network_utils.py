@@ -94,11 +94,11 @@ def select_hhi_only(filename, only_physical=1):
 
     return df
 
-def disease_genes_percentage(seed_genes, LCC):
+def get_genes_percentage(seed_genes, LCC):
     '''
     Given the seed genes and the LCC of a network,
     compute the ratio between the LCC size and the
     total number of seed genes.
     '''
-    return len(disease_LCC)/len(disease_genes)
+    return len(LCC)/len(seed_genes)
 
