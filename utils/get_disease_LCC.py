@@ -12,7 +12,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 
-from data_utils import *
+from utils.data_utils import *
 
 def parse_args():
     '''

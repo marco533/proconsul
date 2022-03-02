@@ -1,5 +1,9 @@
 import argparse
 import sys
+from utils.data_utils import get_disease_genes_from_gda
+from utils.get_disease_LCC import get_disease_LCC
+
+from utils.network_utils import *
 
 # ======================= #
 #   R E A D   I N P U T   #
@@ -110,14 +114,40 @@ def read_terminal_input(args):
 
     return alg1, alg2, validation_list, disease_list
 
+# =========== #
+#   M A I N   #
+# =========== #
 if __name__ == "__main__":
 
+    # Read input
     args = parse_args()
     alg1, alg2, validations, diseases = read_terminal_input(args)
 
-    # for validation in validations:
-    #     for disease in diseases:
-    #         score1 = get_algorithm_score(algorithm=alg1, disease=disease, validation=validation)
-    #         score2 = get_algorithm_score(algorithm=alg2, disease=disease, validation=validation)
+    # Human-Human Interactome
+    biogrid = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+    hhi_df  = select_hhi_only(biogrid)
+    hhi     = nx.from_pandas_edgelist(hhi_df,
+                                      source = "Official Symbol Interactor A",
+                                      target = "Official Symbol Interactor B",
+                                      create_using=nx.Graph())  #nx.Graph doesn't allow duplicated edges
+    # Remove self loops
+    self_loop_edges = list(nx.selfloop_edges(hhi))
+    hhi.remove_edges_from(self_loop_edges)
 
-    # TODO: Implement algorithm comparison
+    # Largest Connected Component
+    LCC_hhi = isolate_LCC(hhi)
+
+    # Compare algorithms for each disease and for each validation
+    for disease in diseases:
+        # Disease genes
+        disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease)
+
+        # Disease LCC
+        disease_LCC = get_disease_LCC(hhi_df, disease)
+
+        disease_genes_percentage = get_genes_percentage(disease_genes, disease_LCC)
+        print(f"{disease} disease genes percentage = {disease_genes_percentage}")
+
+        for validation in validations:
+            # TODO: Compare algorithms
+            continue
