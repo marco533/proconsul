@@ -1,17 +1,10 @@
-import csv
-import enum
-import re
 import sys
 import argparse
-from unittest import result
 
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
-import matplotlib.ticker as plticker
 import numpy as np
 import pandas as pd
-from matplotlib.colors import BoundaryNorm, LogNorm, Normalize
+from matplotlib.colors import Normalize
 from sklearn import metrics
 
 from data_utils import *
@@ -336,11 +329,10 @@ def plot_algorithm_comparison_by_num_genes(disease_file, validation='kfold', met
         # add the <algorithm> plot
         plt.plot(x, y, label=algorithm)
 
-    # print(f"x data: {x}")
-    # print(f"y data: {y}")
-    # sys.exit(0)
     # plot legend and save as png
     plt.legend()
+    plt.xlabel("LCC Sizes")
+    plt.ylabel(f"{metric} score")
     plt.title(f"Algorithm score by number of seed genes - {metric} Score | {size} Predicted Genes | {validation.upper()} Validation")
     plt.savefig(f"plot/algorithms_score_by_num_seed_genes_{metric}_{string_to_filename(size)}_{validation}.png", bbox_inches="tight")
     plt.close('all')
@@ -400,7 +392,7 @@ def plot_scores_by_lcc_size(interactome, disease_list, algorithm_list, validatio
         # print(f"LCC sizes: {LCC_sizes}")
         # print(f"Scores: {scores}")
         # Add the algorithm score to the plot
-        plt.plot(LCC_sizes, scores, label=algorithm)
+        plt.scatter(LCC_sizes, scores, label=algorithm)
 
     # plot legend and save as png
     plt.legend()
@@ -547,22 +539,22 @@ if __name__ == "__main__":
     # Plot F1 and NDCG scores by LCC size
     for validation in validations:
         for size in output_sizes:
-            # print(f"Plotting F1 score of {validation} on {size} genes, no max LCC")
-            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=-1)
-            # print(f"Plotting NDCG score of {validation} on {size} genes, no max LCC")
-            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=-1)
-
-            # print(f"Plotting F1 score of {validation} on {size} genes, max LCC = 150")
-            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=150)
-            # print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = 150")
-            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=150)
+            print(f"Plotting F1 score of {validation} on {size} genes, no max LCC")
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=-1)
+            print(f"Plotting NDCG score of {validation} on {size} genes, no max LCC")
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=-1)
 
             print(f"Plotting F1 score of {validation} on {size} genes, max LCC = 150")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='precision', output_size=size, max_lcc=150)
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='f1', output_size=size, max_lcc=150)
             print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = 150")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='recall', output_size=size, max_lcc=150)
+            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='ndcg', output_size=size, max_lcc=150)
 
-            print(f"Plotting F1 score of {validation} on {size} genes, max LCC = ALl")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='precision', output_size=size, max_lcc=-1)
-            print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = All")
-            plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='recall', output_size=size, max_lcc=-1)
+            # print(f"Plotting F1 score of {validation} on {size} genes, max LCC = 150")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='precision', output_size=size, max_lcc=150)
+            # print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = 150")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='recall', output_size=size, max_lcc=150)
+
+            # print(f"Plotting F1 score of {validation} on {size} genes, max LCC = ALl")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='precision', output_size=size, max_lcc=-1)
+            # print(f"Plotting NDCG score of {validation} on {size} genes, max LCC = All")
+            # plot_scores_by_lcc_size(hhi_df, disease_list, algorithm_list, validation=validation, metric='recall', output_size=size, max_lcc=-1)
