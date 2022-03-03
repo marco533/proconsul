@@ -1,9 +1,12 @@
 import networkx as nx
+import numpy as np
 import pandas as pd
 
-# ================= #
-#     INDEXING      #
-# ================= #
+from utils.data_utils import get_disease_genes_from_gda
+
+# ========================
+#     I N D E X I N G
+# ========================
 
 def node_to_index(network, nodes_of_interest):
     '''
@@ -35,9 +38,26 @@ def index_to_node(network, indices):
 
     return nodes_of_interest
 
-# ================= #
-#     SELECTION     #
-# ================= #
+# ============
+# I N / O U T
+# ============
+
+def write_edges_in_file(network, output_file):
+    '''
+    Print all the connections in a network a file
+    with the following schema:
+        Node1,Node2
+        Node3,Node4
+        ...,...
+    '''
+    with open(output_file, 'w') as fo:
+        LCC_hhi_edges = list(network.edges)
+        for e in LCC_hhi_edges:
+            fo.write(e[0] + "," + e[1] + "\n")
+
+# ===================
+#  S E L E C T I O N
+# ===================
 
 def isolate_LCC(network):
     '''
@@ -63,19 +83,6 @@ def isolate_LCC(network):
 
     return LCC_hhi
 
-def write_edges_in_file(network, output_file):
-    '''
-    Print all the connections in a network a file
-    with the following schema:
-        Node1,Node2
-        Node3,Node4
-        ...,...
-    '''
-    with open(output_file, 'w') as fo:
-        LCC_hhi_edges = list(network.edges)
-        for e in LCC_hhi_edges:
-            fo.write(e[0] + "," + e[1] + "\n")
-
 def select_hhi_only(filename, only_physical=1):
     '''
     Select from the BIOGRID only the Human-Human Interactions.
@@ -93,6 +100,56 @@ def select_hhi_only(filename, only_physical=1):
         df = df.loc[df["Experimental System Type"] == "physical"]
 
     return df
+
+def select_disease_interactions_only(hhi_df, disease, curated=True):
+    '''
+    From the Human-Human interactions select only the interactions regarding
+    the disease.
+    '''
+
+    # get disease genes from GDS
+    if curated:
+        gda_filename = "data/curated_gene_disease_associations.tsv"
+    else:
+        gda_filename = "data/all_gene_disease_associations.tsv"
+
+    disease_genes = get_disease_genes_from_gda(gda_filename, disease)
+
+    # convert to an immutable object
+    disease_genes_array = np.array(disease_genes)
+
+    # select from human-human interactions only the rows that
+    # have both a gene belonging to disease_genes
+    disease_df = hhi_df.loc[(hhi_df["Official Symbol Interactor A"].isin(disease_genes_array)) &
+                            (hhi_df["Official Symbol Interactor B"].isin(disease_genes_array))]
+
+    return disease_df
+
+def get_disease_LCC(interactome_df, disease, from_curated=True):
+    '''
+    Given the interactome DataFrame,
+    Return the LCC of the disease.
+    '''
+
+    # From the dataframe select the disease genes only
+    disease_df = select_disease_interactions_only(interactome_df, disease, curated=from_curated)
+
+    # Create the network
+    disease_network = nx.from_pandas_edgelist(disease_df,
+                                              source = "Official Symbol Interactor A",
+                                              target = "Official Symbol Interactor B",
+                                              create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+    # Remove self loops
+    self_loop_edges = list(nx.selfloop_edges(disease_network))
+    disease_network.remove_edges_from(self_loop_edges)
+
+    # Find connected components
+    conn_comp = list(nx.connected_components(disease_network))
+
+    # Isolate the LCC
+    LCC = max(conn_comp, key=len)
+
+    return LCC
 
 def get_genes_percentage(seed_genes, LCC):
     '''
