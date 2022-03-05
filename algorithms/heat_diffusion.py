@@ -10,7 +10,7 @@ import copy
 from numpy import array
 from scipy.sparse import csc_matrix
 from scipy.sparse.linalg import expm, expm_multiply
-from utils.graph_indexing import node_to_index, index_to_node
+from utils.network_utils import node_to_index, index_to_node
 
 def diffuse(matrix, heat_array, time):
     return expm_multiply(-matrix, heat_array, start=0, stop=time, endpoint=True)[-1]
