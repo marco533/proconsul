@@ -159,3 +159,9 @@ def get_genes_percentage(seed_genes, LCC):
     '''
     return len(LCC)/len(seed_genes)
 
+def get_density(G):
+
+    '''Computes the density of a given graph'''
+    d = nx.density(G)
+    
+    return d
