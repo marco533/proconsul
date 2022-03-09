@@ -44,3 +44,57 @@ Non-Convulsive Status Epilepticus,23,same,same,same,same,same,same,same,same
 Amphetamine Addiction,13,same,same,same,same,same,same,same,same
 "Carcinoma, Cribriform",88,diamond,diamond,diamond,diamond,same,same,same,same
 Mouth Neoplasms,32,same,same,same,same,diamond,diamond,diamond,diamond
+Amyotrophic Lateral Sclerosis,35,same,same,same,same,prob diamond,prob diamond,prob diamond,diamond
+Ovarian Serous Adenocarcinoma,7,same,same,same,same,same,diamond,diamond,diamond
+"Condition, Preneoplastic",53,same,diamond,diamond,diamond,prob diamond,same,prob diamond,same
+Mycoplasma-Induced Stevens-Johnson Syndrome,23,same,same,same,same,same,same,same,same
+Respiratory Hypersensitivity,4,same,same,same,same,same,same,same,same
+"Hyperglycemia, Postprandial",3,same,same,same,same,same,same,same,same
+Primary microcephaly,15,same,same,same,same,prob diamond,prob diamond,same,same
+"Necrotizing encephalopathy, infantile subacute, of Leigh",29,diamond,same,diamond,diamond,same,same,same,same
+Disorder of eye,75,same,same,same,same,diamond,prob diamond,prob diamond,prob diamond
+Childhood Acute Lymphoblastic Leukemia,30,same,same,same,same,diamond,diamond,diamond,diamond
+Arsenic Encephalopathy,20,same,same,same,same,same,same,same,same
+Paroxysmal atrial fibrillation,77,diamond,diamond,diamond,diamond,diamond,diamond,diamond,diamond
+"Mammary Neoplasms, Human",443,prob diamond,prob diamond,prob diamond,prob diamond,same,same,same,same
+Spinocerebellar Ataxia Type 4,14,same,same,same,same,same,same,same,same
+Myocardial Reperfusion Injury,27,prob diamond,same,prob diamond,same,prob diamond,same,prob diamond,same
+Left Middle Cerebral Artery Infarction,6,diamond,diamond,same,same,diamond,diamond,diamond,same
+IGA Glomerulonephritis,7,same,same,same,same,prob diamond,diamond,diamond,prob diamond
+Glioblastoma Multiforme,80,same,same,same,same,diamond,diamond,diamond,diamond
+Schizophrenia,672,diamond,diamond,same,prob diamond,prob diamond,prob diamond,diamond,diamond
+Involutional Depression,3,same,same,same,same,same,same,same,same
+Kidney Failure,5,same,same,prob diamond,same,same,same,same,prob diamond
+Stevens-Johnson Syndrome,23,same,diamond,same,same,same,same,same,same
+Fibrillary Astrocytoma,18,diamond,diamond,diamond,same,same,same,same,same
+Arsenic Poisoning,20,same,same,same,same,same,same,same,same
+Ischemia,12,same,same,same,same,same,same,prob diamond,diamond
+Sarcomatoid Renal Cell Carcinoma,72,same,prob diamond,prob diamond,prob diamond,same,same,same,same
+"Epilepsy, Temporal Lobe",2,same,same,same,same,diamond,diamond,prob diamond,diamond
+"Encephalopathy, Toxic",6,same,same,same,same,same,same,same,same
+Epileptic encephalopathy,6,same,same,same,same,diamond,same,prob diamond,diamond
+Developmental Disabilities,4,same,same,prob diamond,same,same,prob diamond,prob diamond,same
+Neuroblastoma,35,diamond,prob diamond,prob diamond,diamond,diamond,diamond,diamond,diamond
+Neoplastic Cell Transformation,104,prob diamond,prob diamond,prob diamond,prob diamond,same,same,same,same
+Cocaine-Related Disorders,55,diamond,diamond,diamond,diamond,same,same,same,same
+Crohn's disease of the ileum,6,same,same,same,same,diamond,diamond,diamond,diamond
+Early Pregnancy Loss,22,diamond,same,prob diamond,same,same,same,same,same
+Colorectal Carcinoma,504,diamond,diamond,diamond,same,diamond,diamond,diamond,diamond
+Bilateral Wilms Tumor,14,same,same,same,same,same,same,same,same
+"Fibrosis, Liver",50,prob diamond,prob diamond,prob diamond,prob diamond,prob diamond,prob diamond,prob diamond,prob diamond
+Acute Confusional Senile Dementia,59,same,prob diamond,prob diamond,prob diamond,same,same,same,same
+"Hyalinosis, Segmental Glomerular",14,same,same,same,same,same,same,same,same
+Lymphatic Metastasis,10,same,prob diamond,prob diamond,same,diamond,diamond,prob diamond,diamond
+Chemically-Induced Liver Toxicity,229,prob diamond,prob diamond,prob diamond,prob diamond,same,same,same,prob diamond
+Familial Idiopathic Pulmonary Fibrosis,6,same,same,prob diamond,same,same,same,same,same
+Calcinosis,15,same,prob diamond,prob diamond,same,same,same,same,same
+Simple Partial Status Epilepticus,23,same,same,same,same,same,same,same,same
+Desmoplastic Medulloblastoma,26,diamond,same,same,diamond,same,same,same,diamond
+"Carcinoma, Ovarian Epithelial",10,same,same,same,same,diamond,diamond,diamond,diamond
+Microcalcification,15,same,prob diamond,prob diamond,same,same,same,same,same
+Ovarian Mucinous Adenocarcinoma,6,same,same,same,same,same,prob diamond,prob diamond,same
+Diabetes Mellitus,7,diamond,diamond,diamond,same,diamond,diamond,diamond,same
+Female infertility,12,prob diamond,same,same,same,same,diamond,same,same
+Malignant neoplasm of breast,882,diamond,diamond,diamond,diamond,diamond,prob diamond,prob diamond,prob diamond
+Single Seizure,28,same,same,same,same,same,same,same,same
+"Hearing Loss, Extreme",1,same,same,same,same,same,same,same,same
