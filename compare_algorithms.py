@@ -2,6 +2,8 @@ import argparse
 import sys
 from utils.data_utils import get_disease_genes_from_gda
 from utils.get_disease_LCC import get_disease_LCC
+from utils.network_utils import get_longest_paths
+
 
 from utils.network_utils import *
 
@@ -151,3 +153,4 @@ if __name__ == "__main__":
         for validation in validations:
             # TODO: Compare algorithms
             continue
+    
