@@ -1,8 +1,7 @@
 import argparse
 import sys
 from utils.data_utils import get_disease_genes_from_gda
-from utils.get_disease_LCC import get_disease_LCC
-from utils.network_utils import get_longest_paths
+from utils.network_utils import get_longest_paths, get_density, get_disease_LCC
 
 
 from utils.network_utils import *
@@ -138,6 +137,7 @@ if __name__ == "__main__":
 
     # Largest Connected Component
     LCC_hhi = isolate_LCC(hhi)
+    LCC_hhi = hhi.subgraph(LCC_hhi).copy()
 
     # Compare algorithms for each disease and for each validation
     for disease in diseases:
@@ -146,11 +146,27 @@ if __name__ == "__main__":
 
         # Disease LCC
         disease_LCC = get_disease_LCC(hhi_df, disease)
+        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
 
+        # Disease genes percentage
         disease_genes_percentage = get_genes_percentage(disease_genes, disease_LCC)
         print(f"{disease} disease genes percentage = {disease_genes_percentage}")
+
+        # Disease LCC density
+        disease_LCC_density = get_density(disease_LCC)
+        print(f"{disease} LCC density = {disease_LCC_density}")
+
+        # Longest path between disease genes in the LCC
+        disease_genes_longpath_in_LCC = get_disease_genes_longpath(disease_LCC, disease_genes)
+        print(f"{disease} longest path in LCC is: {disease_genes_longpath_in_LCC}")
+        print(f"with length: {len(disease_genes_longpath_in_LCC)}")
+
+        # Longest path between disease genes in all the network
+        # disease_genes_longpath_global = get_disease_genes_longpath(LCC_hhi, disease_genes)
+        # print(f"{disease} global longest path is: {disease_genes_longpath_global}")
+        # print(f"with length: {len(disease_genes_longpath_global)}")
 
         for validation in validations:
             # TODO: Compare algorithms
             continue
-    
+

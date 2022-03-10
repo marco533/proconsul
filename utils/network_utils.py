@@ -1,7 +1,9 @@
+import sys
+from itertools import combinations
+
 import networkx as nx
 import numpy as np
 import pandas as pd
-from itertools import combinations
 
 from utils.data_utils import get_disease_genes_from_gda
 
@@ -165,7 +167,7 @@ def get_density(G):
     '''Computes the density of a given graph'''
     d = nx.density(G)
 
-    return d 
+    return d
 
 def get_longest_paths():
 
@@ -196,7 +198,7 @@ def get_longest_paths():
         print(f"ERROR: No diseases in disease_file")
         sys.exit(0)
 
-    #create network:        
+    #create network:
 
     # select the human-human interactions from biogrid
     biogrid_file = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
@@ -265,7 +267,7 @@ def get_longest_paths():
 #            if mode == 'not_only_LCC':
 #                # get disease genes from curated GDA
 #                curated_disease_genes = get_disease_genes_from_gda(curated_gda_filename, disease)
-#           
+#
 #                #In not only LCC mode, selected_genes are all the curated disease-genes
 #                selected_genes = curated_disease_genes
 #                #print(f'genes not only in LCC: {len(selected_genes)}')
@@ -281,9 +283,36 @@ def get_longest_paths():
 #                        if (len(path) > max):
 #                            max = len(path)
 #                print(f'{disease}, {max}')
-#                results[disease]=max    
+#                results[disease]=max
+
+def get_disease_genes_longpath(network, disease_genes):
+    """
+    Given a network return the longest path between the disease genes.
+    If the given network is the LCC of the disease network, return the
+    longest path between seed genes in the LCC.
+    """
+
+    # Throw away disease genes not in the LCC
+    all_genes_in_network = set(network.nodes())
+    disease_genes = set(disease_genes)
+    disease_genes_in_network = disease_genes & all_genes_in_network
+
+    if len(disease_genes_in_network) != len(disease_genes):
+        print("disease_genes_longpath(): ignoring %s of %s disease genes that are not in the network" % (
+            len(disease_genes - all_genes_in_network), len(disease_genes)))
+
+    # For each pair of disease genes
+    source_genes = disease_genes_in_network
+    target_genes = disease_genes_in_network
+    all_paths = []
+
+    for s in source_genes:
+        for t in target_genes:
+            if (nx.has_path(network, source=s, target=t)):
+                paths = nx.all_simple_paths(network, source=s, target=t)
+                all_paths.extend(paths)
+
+    # Find the longest
+    return max(all_paths, key=len)
 
 
-
-  
-    
