@@ -150,7 +150,10 @@ def get_disease_LCC(interactome_df, disease, from_curated=True):
     conn_comp = list(nx.connected_components(disease_network))
 
     # Isolate the LCC
-    LCC = max(conn_comp, key=len)
+    try:
+        LCC = max(conn_comp, key=len)
+    except:
+        LCC = disease_network.copy()
 
     return LCC
 
@@ -160,7 +163,7 @@ def get_genes_percentage(seed_genes, LCC):
     compute the ratio between the LCC size and the
     total number of seed genes.
     '''
-    return len(LCC)/len(seed_genes)
+    return nx.number_of_nodes(LCC)/len(seed_genes)
 
 def get_density(G):
 

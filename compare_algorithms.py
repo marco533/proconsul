@@ -1,10 +1,10 @@
 import argparse
+import csv
 import sys
-from utils.data_utils import get_disease_genes_from_gda
-from utils.network_utils import get_longest_paths, get_density, get_disease_LCC
 
-
+from utils.data_utils import get_disease_genes_from_gda, string_to_filename
 from utils.network_utils import *
+from utils.network_utils import get_density, get_disease_LCC, get_longest_paths
 
 # ======================= #
 #   R E A D   I N P U T   #
@@ -115,9 +115,184 @@ def read_terminal_input(args):
 
     return alg1, alg2, validation_list, disease_list
 
+
+# ====================== #
+#   U T I L I T I E S    #
+# ====================== #
+
+def scores(alg, disease, validation="kfold", metric="f1", precision=2):
+    """
+    Return the scores of 'alg' on 'disease' of the
+    'validation' method.
+    Input:
+    -------
+        - alg: algorithm's name
+        - disease: disease's name
+        - validation: validation methon
+        - metric: metric name (precision, recall, f1, ndcg)
+    -------
+    Return:
+        - scores: A list with n elements,
+                  one for each number of predicted gens.
+    """
+
+    # Read the score DataFrame
+    scores_path = f"results/{validation}/{alg}/{alg}_on_{string_to_filename(disease)}_{validation}.csv"
+    scores_df = pd.read_csv(scores_path, index_col=0)
+
+    # Get values associated to the given metric in array fotm
+    values = scores_df.loc[metric].values
+
+    # Init final score of the metric
+    scores = np.zeros(len(values))
+
+    # Extract scores
+    for idx, value in enumerate(values):
+        # if is 'string' then we need to split
+        # 'mean' and 'std_deviation'
+        if type(value) == str:
+            # 1. Clean the string
+            value = value.replace("(", "")
+            value = value.replace(")", "")
+
+            # 2. Split 'mean' and 'std'
+            mean, std = value.split(", ")
+
+            # 3. Convert to float
+            mean = float(mean)
+            std = float(std)
+
+            # 4. Round according 'precision'
+            mean = round(mean, precision)
+            std = round(std, precision)
+
+            # 4. Save 'mean' into 'scores' list
+            scores[idx] = mean
+
+        else:   # no string value
+            # 1. Simply save the rounded value into 'scores'
+            scores[idx] = round(value, precision)
+
+    return scores
+
+def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2):
+    """
+    Compare the results of 'alg1' and 'alg2' on 'disease'
+    with a specific 'validation' method.
+    Input:
+    --------
+        - alg1, alg2:
+                Names of the algorithm to compare
+        - disease:
+                Name of the disease
+        - validation:
+                The valdation method to analyze
+        - metric:
+                Metric name (precision, recall, f1, ndcg)
+    --------
+    Return:
+        - winner_name_and_detachment:
+                A list with one element for each number of predicted genes
+                and each element is composed by 2 entries:
+                    * name: name of the winner algorithm
+                    * victory_margin: by how much the algorithm has won.
+
+    """
+
+    alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision)
+    alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision)
+
+    winner_name_and_detachment = []
+
+    # Decree the winner for each prediction size
+    # (Top 50, Top 100, Top 200, Top N)
+    for i in range(len(alg1_scores)):
+        if alg1_scores[i] > alg2_scores[i]:
+            winner = alg1
+            by_how_much = alg1_scores[i] - alg2_scores[i]
+        elif alg1_scores[i] < alg2_scores[i]:
+            winner = alg2
+            by_how_much = alg2_scores[i] - alg1_scores[i]
+        else:
+            winner = "draw"
+            by_how_much = 0.0
+
+        # Save the tuple in 'winner_list'
+        winner_name_and_detachment.append((winner, round(by_how_much, precision)))
+
+    return winner_name_and_detachment
+
+# =============== #
+#   T A B L E S   #
+# =============== #
+
+def winner_tables(alg1, alg2, validations, diseases, metric="f1", precision=2):
+
+    header = ["Disease", "Num disease genes", "LCC_size", "Density", "Disgenes Percentage", "Disgenes Longpath",
+                "KF Top 50", "KF Top 100", "KF Top 200", "KF Top N",
+                "EX Top 50", "EX Top 100", "EX Top 200", "EX Top N"]
+
+    with open(f"tables/{alg1}_vs_{alg2}_{metric}_p{precision}.csv", "w") as f:
+
+        writer = csv.writer(f)
+
+        # ** Write the header **
+        writer.writerow(header)
+
+        # Compare algorithms for each disease and for each validation
+        for idx, disease in enumerate(diseases):
+            print(f"Disease {idx+1}/{len(diseases)}")
+
+            # Disease genes
+            disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease)
+            num_disease_genes = len(disease_genes)
+
+            # Disease LCC
+            disease_LCC = get_disease_LCC(hhi_df, disease)
+            disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+
+            # Disease LCC size
+            disease_LCC_size = nx.number_of_nodes(disease_LCC)
+
+            # Disease genes percentage
+            disease_genes_percentage = get_genes_percentage(disease_genes, disease_LCC)
+            # print(f"{disease} disease genes percentage = {disease_genes_percentage}")
+
+            # Disease LCC density
+            disease_LCC_density = get_density(disease_LCC)
+            # print(f"{disease} LCC density = {disease_LCC_density}")
+
+            # Longest path between disease genes in the LCC
+            if num_disease_genes < 1:
+                disease_genes_longpath_in_LCC = get_disease_genes_longpath(disease_LCC, disease_genes)
+            else:
+                disease_genes_longpath_in_LCC = -1
+            # print(f"{disease} longest path in LCC is: {disease_genes_longpath_in_LCC}")
+            # print(f"with length: {len(disease_genes_longpath_in_LCC)}")
+
+            # Longest path between disease genes in all the network
+            # disease_genes_longpath_global = get_disease_genes_longpath(LCC_hhi, disease_genes)
+            # print(f"{disease} global longest path is: {disease_genes_longpath_global}")
+            # print(f"with length: {len(disease_genes_longpath_global)}")
+
+            # ------------------------------------------------------------------------------------------
+
+
+            # ** Write the data **
+            data = [disease, num_disease_genes, disease_LCC_size, disease_LCC_density, disease_genes_percentage, disease_genes_longpath_in_LCC]
+
+            for validation in validations:
+                winner = who_win(alg1, alg2, disease, validation=validation, metric=metric)
+                for item in winner:
+                    data.append(item)
+
+            writer.writerow(data)
+
+
 # =========== #
 #   M A I N   #
 # =========== #
+
 if __name__ == "__main__":
 
     # Read input
@@ -139,34 +314,7 @@ if __name__ == "__main__":
     LCC_hhi = isolate_LCC(hhi)
     LCC_hhi = hhi.subgraph(LCC_hhi).copy()
 
-    # Compare algorithms for each disease and for each validation
-    for disease in diseases:
-        # Disease genes
-        disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease)
+    for metric in ["f1"]:
+        winner_tables(alg1, alg2, validations, diseases, metric=metric, precision=2)
 
-        # Disease LCC
-        disease_LCC = get_disease_LCC(hhi_df, disease)
-        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
-
-        # Disease genes percentage
-        disease_genes_percentage = get_genes_percentage(disease_genes, disease_LCC)
-        print(f"{disease} disease genes percentage = {disease_genes_percentage}")
-
-        # Disease LCC density
-        disease_LCC_density = get_density(disease_LCC)
-        print(f"{disease} LCC density = {disease_LCC_density}")
-
-        # Longest path between disease genes in the LCC
-        disease_genes_longpath_in_LCC = get_disease_genes_longpath(disease_LCC, disease_genes)
-        print(f"{disease} longest path in LCC is: {disease_genes_longpath_in_LCC}")
-        print(f"with length: {len(disease_genes_longpath_in_LCC)}")
-
-        # Longest path between disease genes in all the network
-        # disease_genes_longpath_global = get_disease_genes_longpath(LCC_hhi, disease_genes)
-        # print(f"{disease} global longest path is: {disease_genes_longpath_global}")
-        # print(f"with length: {len(disease_genes_longpath_global)}")
-
-        for validation in validations:
-            # TODO: Compare algorithms
-            continue
 
