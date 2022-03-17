@@ -11,7 +11,7 @@ from utils.metrics_utils import *
 from utils.data_utils import *
 
 
-def extended_validation(network, seed_genes, test_genes, algorithm, disease_name, num_iters_prob_diamond=1):
+def extended_validation(network, seed_genes, test_genes, algorithm, disease_name, num_iters_prob_diamond=10):
     '''
     Perform an extended validation using all the seed genes of the disease
     and test the predicted genes with all the genes in
@@ -73,10 +73,13 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
         sys.exit(0)
 
     # compute the scores over the predicted genes
-    scores = np.array((compute_metrics(all_genes, seed_genes, predicted_genes[:50], test_genes),
-                        compute_metrics(all_genes, seed_genes, predicted_genes[:100], test_genes),
-                        compute_metrics(all_genes, seed_genes, predicted_genes[:200], test_genes),
-                        compute_metrics(all_genes, seed_genes, predicted_genes[:num_disease_genes], test_genes))).transpose()
+    scores = np.array((compute_metrics(all_genes, test_genes, predicted_genes[:50]),
+                        compute_metrics(all_genes, test_genes, predicted_genes[:100]),
+                        compute_metrics(all_genes, test_genes, predicted_genes[:200]),
+                        compute_metrics(all_genes, test_genes, predicted_genes[:num_disease_genes]))).transpose()
+
+    # print results
+    print(scores)
 
     # create a DataFrame with the results
     metrics = ["precision", "recall", "f1", "ndcg"]
