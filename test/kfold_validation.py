@@ -50,13 +50,17 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
     # where N = num genes in curated GDAs.
     print(f"{K}-Fold Cross Validation of {algorithm.upper()} on {disease_name.upper()}")
 
+    # init scores array
+    scores = np.zeros((K,4,4))
+
     for k in range(K):
         # init predicted genes and scores
         predicted_genes = []
-        scores = np.zeros((K,4,4))
 
         # split list and get the k-th
+        print("===============================")
         print(f"iteration {k+1}/{K}")
+
         disease_genes = splitted_disease_genes.copy()
         test_genes = disease_genes.pop(k)
         training_genes = [gene for sublist in disease_genes for gene in sublist] # flatten the list of lists
@@ -96,10 +100,14 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
             sys.exit(0)
 
         # compute the scores over the predicted genes
-        scores[k] = np.array((compute_metrics(all_genes, seed_genes, predicted_genes[:50], test_genes),
-                                compute_metrics(all_genes, seed_genes, predicted_genes[:100], test_genes),
-                                compute_metrics(all_genes, seed_genes, predicted_genes[:200], test_genes),
-                                compute_metrics(all_genes, seed_genes, predicted_genes[:num_disease_genes], test_genes))).transpose()
+        scores[k] = np.array((compute_metrics(all_genes, test_genes, predicted_genes[:50]),
+                                compute_metrics(all_genes, test_genes, predicted_genes[:100]),
+                                compute_metrics(all_genes, test_genes, predicted_genes[:200]),
+                                compute_metrics(all_genes, test_genes, predicted_genes[:num_disease_genes]))).transpose()
+
+        # print iteration results
+        print(scores[k])
+        print("===============================")
 
     # compute average and std deviation of the metrics
     scores_avg = np.average(scores, axis=0)

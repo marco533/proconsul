@@ -17,7 +17,7 @@ def compute_max_dcg(len_test_genes, top):
         max_dcg += 1/log_result
     return max_dcg
 
-def compute_metrics(all_genes, training_genes, test_genes, predicted_genes, is_ranking=True):
+def compute_metrics(all_genes, test_genes, predicted_genes, is_ranking=True):
     '''
     Given the network, the predicted genes and the test set
     compute the following metrics:
