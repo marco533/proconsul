@@ -12,14 +12,23 @@ def createMatrix(data_array):
 
     for j in range(columns):
         for i in range(rows):
+            value = parseStringToFloat(data_array[i][j])
             if 'heat' in data_array[i][j]:
-                num_matrix[i][j] = 0
+                num_matrix[i][j] = value*(-1)
             elif 'draw' in data_array[i][j]:
-                num_matrix[i][j] = 1
+                num_matrix[i][j] = value
             else:
-                num_matrix[i][j] = 2
+                num_matrix[i][j] = value
 
     return num_matrix
+
+def parseStringToFloat(str):
+
+    str = str.replace(")", "")
+    word,value = str.split(", ")
+    value = float(value)
+
+    return value
 
 if __name__ == "__main__":
 
@@ -30,8 +39,8 @@ if __name__ == "__main__":
     
     #We convert our data to a convenient format
     data_array = np.array(data)
-    #yaxis = data_array[0,:]
-    #yaxis = np.delete(yaxis, [0,1,2,3,4,5])
+    yaxis = data_array[0,:]
+    yaxis = np.delete(yaxis, [0,1,2,3,4,5])
     yaxis = ['KF Top 50', 'KF Top 100', 'KF Top 200', 'KF Top N', 'EX Top 50', 'EX Top 100', 'EX Top 200', 'EX Top N']
     xaxis = data_array[:,2]
     xaxis = np.delete(xaxis, 0)
@@ -39,7 +48,7 @@ if __name__ == "__main__":
     data_array = np.delete(data_array,0, axis=0)
     #print(xaxis)
     #This function generates a numerical matrix that can be used for the heat map generation
-    print(data_array)
+    #print(data_array)
     num_matrix = createMatrix(data_array)
     
     #Tranpose the matrix so the plot fits better on the screen
@@ -47,14 +56,17 @@ if __name__ == "__main__":
     #We plot the results
     cmap = plt.get_cmap('bwr')
     fig, ax = plt.subplots()
-    ax.imshow(num_matrix, cmap = cmap)
+    img = ax.imshow(num_matrix, cmap = cmap)
     ax.set_xticks(np.arange(len(xaxis)))
     ax.set_yticks(np.arange(len(yaxis)))
     ax.set_yticklabels(yaxis)
     ax.set_xticklabels(xaxis)
     plt.setp(ax.get_xticklabels(), rotation=90, ha="right", rotation_mode="anchor")
+    plt.colorbar(img, shrink=0.5)
+    plt.text(97,20, 'diamond > heat_diffusion')
+    plt.text(96,-12, 'heat_diffusion > diamond')
     
-    fig.suptitle('LCC_size: Diamond (red) vs Heat diffusion (blue)')
+    fig.suptitle('LCC_size: Diamond vs heat_diffusion')
 
     # for i in range(len(yaxis)):
     #     for j in range(len(xaxis)):
