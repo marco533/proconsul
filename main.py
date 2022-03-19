@@ -96,7 +96,8 @@ def read_terminal_input(args):
     # get the list of algorithms
     if algorithm == 'all':
         algorithm_list = ["diamond",
-                          "prob_diamond"]
+                          "prob_diamond",
+                          "heat_diffusion"]
     else:
         algorithm_list = [algorithm]
 
