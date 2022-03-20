@@ -33,7 +33,7 @@ def parseStringToFloat(str):
 if __name__ == "__main__":
 
     #We open the disease table file to sort it
-    df = pd.read_csv('tables/diamond_vs_heat_diffusion_f1_p3.csv')
+    df = pd.read_csv('tables/diamond_vs_heat_diffusion_f1_p2.csv')
     sorted_df = df.sort_values(by=["LCC_size"])
     data = sorted_df.values.tolist()
     
