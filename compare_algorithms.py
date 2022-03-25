@@ -268,7 +268,13 @@ def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1
                 "KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200",
                 "EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
 
-    with open(f"tables/{alg1}_vs_{alg2}_{metric}_p{precision}.csv", "w") as f:
+    if alg1 != "heat_diffusion" and alg2 != "heat_diffusion":
+        diffusion_time = "None"
+    if alg2 != "prob_diamond" and alg2 != "prob_diamond":
+        num_iters_prob_diamond = "None"
+
+    outfile = f"tables/{alg1}_vs_{alg2}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_prob_diamond}.csv"
+    with open(outfile, "w") as f:
 
         writer = csv.writer(f)
 
