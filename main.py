@@ -14,15 +14,19 @@ from utils.data_utils import *
 
 def print_usage():
     print(' ')
-    print('        usage: python3 project.py --algorithm --validation --disease_file')
+    print('        usage: python3 project.py --algorithm --validation --disease_file --diffusion_time --num_iters_prob_diamond')
     print('        -----------------------------------------------------------------')
-    print('        algorithm        : Algorithm of whic collect the results. It can be "diamond", "prob_diamond", "heat_diffusion" or "all".')
-    print('                           If all, run all the algorithms. (default: all')
-    print('        validation       : Type of validation on which test the algorithms. It can be')
-    print('                           "kfold", "extended" or "all".')
-    print('                           If all, perform both the validations. (default: all')
-    print('        disease_file     : Relative path to the file containing the disease names to use for the comparison')
-    print('                           (default: "data/disease_file.txt).')
+    print('        algorithm                : Algorithm of whic collect the results. It can be "diamond", "prob_diamond", "heat_diffusion" or "all".')
+    print('                                   If all, run all the algorithms. (default: all')
+    print('        validation               : Type of validation on which test the algorithms. It can be')
+    print('                                   "kfold", "extended" or "all".')
+    print('                                    If all, perform both the validations. (default: all')
+    print('        disease_file             : Relative path to the file containing the disease names to use for the comparison')
+    print('                                   (default: "data/disease_file.txt).')
+    print('        diffusion_time           : Diffusion time for heat_diffusion algorithm.')
+    print('                                   (default: 0.005)')
+    print('        num_iters_prob_diamond   : Number of iteration for pDIAMOnD.')
+    print('                                   (default: 10)')
     print(' ')
 
 def parse_args():
@@ -36,6 +40,10 @@ def parse_args():
                     help='Type of validation. (default: all')
     parser.add_argument('--disease_file', type=str, default="data/disease_file.txt",
                     help='Relative path to the file with disease names (default: "data/disease_file.txt)')
+    parser.add_argument('--diffusion_time', type=float, default=0.005,
+                    help='Diffusion time for heat_diffusion algorithm. (default: 0.005')
+    parser.add_argument('--num_iters_prob_diamond', type=int, default=10,
+                    help='Number of iteration for pDIAMOnD. (default: 10)')
     return parser.parse_args()
 
 def read_terminal_input(args):
@@ -62,6 +70,8 @@ def read_terminal_input(args):
     algorithm       = args.algorithm
     validation      = args.validation
     disease_file    = args.disease_file
+    diffusion_time  = args.diffusion_time
+    num_iters_prob_diamond = args.num_iters_prob_diamond
 
     # check if is a valid algorithm
     if algorithm not in ["diamond", "prob_diamond", "heat_diffusion", "all"]:
@@ -101,18 +111,30 @@ def read_terminal_input(args):
     else:
         algorithm_list = [algorithm]
 
+    # test diffusion time
+    if diffusion_time < 0:
+        print(f"ERROR: diffusion time must be greater than 0")
+        sys.exit(0)
+
+    # test num_iters_prob_diamond
+    if num_iters_prob_diamond <= 0:
+        print(f"ERROR: num_iters_prob_diamond must be greater or equal of 1")
+        sys.exit(0)
+
     print('')
     print(f"============================")
 
     print(f"Algorithm: {algorithm}")
     print(f"Validations: {validation_list}")
     print(f"Diseases: {disease_list}")
+    print(f"Diffusion Time: {diffusion_time}")
+    print(f"Num iterations pDIAMOnD: {num_iters_prob_diamond}")
 
     print(f"============================")
     print('')
 
 
-    return algorithm_list, validation_list, disease_list
+    return algorithm_list, validation_list, disease_list, diffusion_time, num_iters_prob_diamond
 
 
 # main
@@ -123,7 +145,7 @@ if __name__ == "__main__":
     # ============ #
 
     args = parse_args()
-    algorithms, validations, diseases = read_terminal_input(args)
+    algorithms, validations, diseases, diffusion_time, num_iters_prob_diamond = read_terminal_input(args)
 
     # ================ #
     #  CREATE NETWORK  #
@@ -167,7 +189,13 @@ if __name__ == "__main__":
                 disease_genes = get_disease_genes_from_gda(gda_filename, disease)
 
                 # run the k-fold validation on {algorithm}
-                k_fold_cross_validation(LCC_hhi, disease_genes, alg, disease, K=5, num_iters_prob_diamond=10)
+                k_fold_cross_validation(LCC_hhi,
+                                        disease_genes,
+                                        alg,
+                                        disease,
+                                        K=5,
+                                        diffusion_time=diffusion_time,
+                                        num_iters_prob_diamond=num_iters_prob_diamond)
 
     # ===================== #
     #  EXTENDED VALIDATION  #
@@ -187,4 +215,10 @@ if __name__ == "__main__":
                 new_disease_genes = list(set(all_disease_genes) - set(curated_disease_genes))
 
                 # run the extended validation on {algorithm}
-                extended_validation(LCC_hhi, curated_disease_genes, new_disease_genes, alg, disease, num_iters_prob_diamond=10)
+                extended_validation(LCC_hhi,
+                                    curated_disease_genes,
+                                    new_disease_genes,
+                                    alg,
+                                    disease,
+                                    diffusion_time=diffusion_time,
+                                    num_iters_prob_diamond=num_iters_prob_diamond)

@@ -12,7 +12,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, num_iters_prob_diamond=10):
+def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, diffusion_time=0.005, num_iters_prob_diamond=10):
     '''
     Performs the K-Folf Cross Validation over all the disease genes.
     Input:
@@ -35,19 +35,15 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
     splitted_disease_genes = split_list(seed_genes, K)
     num_disease_genes = len(seed_genes)
 
-    # define how many genes to predict (at least 200 genes)
-    if num_disease_genes < 200:
-        num_genes_to_predict = 200
-    else:
-        num_genes_to_predict = num_disease_genes
+    # how many genes predict
+    num_genes_to_predict = 200
 
     # prepare the files for the computation
     test_set_file = "tmp/test_set.txt"
     training_set_file = "tmp/training_set.txt"
 
     # K-fold cross validation:
-    # Compute the score for each algorithm using the top 50, top 100, top 200 and top N predicted genes
-    # where N = num genes in curated GDAs.
+    # Compute the score for each algorithm using the top 25, top 50, top 100 and top 200 predicted genes
     print(f"{K}-Fold Cross Validation of {algorithm.upper()} on {disease_name.upper()}")
 
     # init scores array
@@ -89,7 +85,7 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "heat_diffusion":
-            predicted_genes = run_heat_diffusion(network, training_genes, n_positions=num_genes_to_predict, diffusion_time=0.005)
+            predicted_genes = run_heat_diffusion(network, training_genes, n_positions=num_genes_to_predict, diffusion_time=diffusion_time)
 
         else:
             print("  ERROR: No valid algorithm.    ")
@@ -100,10 +96,10 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
             sys.exit(0)
 
         # compute the scores over the predicted genes
-        scores[k] = np.array((compute_metrics(all_genes, test_genes, predicted_genes[:50]),
+        scores[k] = np.array((compute_metrics(all_genes, test_genes, predicted_genes[:25]),
+                                compute_metrics(all_genes, test_genes, predicted_genes[:50]),
                                 compute_metrics(all_genes, test_genes, predicted_genes[:100]),
-                                compute_metrics(all_genes, test_genes, predicted_genes[:200]),
-                                compute_metrics(all_genes, test_genes, predicted_genes[:num_disease_genes]))).transpose()
+                                compute_metrics(all_genes, test_genes, predicted_genes[:200]))).transpose()
 
         # print iteration results
         print(scores[k])
@@ -126,10 +122,17 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, n
 
     # create a DataFrame with the results
     metrics = ["precision", "recall", "f1", "ndcg"]
-    sizes = ["Top 50","Top 100", "Top 200", "Top N"]
+    sizes = ["Top 25","Top 50", "Top 100", "Top 200"]
     result_df = pd.DataFrame(final_scores, metrics, sizes)
 
     # save it as csv file
-    csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
+    if algorithm == "diamond":
+        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
+
+    if algorithm == "prob_diamond":
+        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_{num_iters_prob_diamond}_iters.csv"
+
+    if algorithm == "heat_diffusion":
+        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_diff_time_{diffusion_time}.csv"
 
     result_df.to_csv(csv_file)
