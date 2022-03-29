@@ -395,7 +395,7 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
     disease_genes = seed_genes & all_genes_in_network
 
     if len(disease_genes) != len(seed_genes):
-        print("PROB DIAMOnD(): ignoring %s of %s seed genes that are not in the network" % (
+        print("pDIAMOnD(): ignoring %s of %s seed genes that are not in the network" % (
             len(seed_genes - all_genes_in_network), len(seed_genes)))
 
     # 2. run pdiamond different times and get the best
