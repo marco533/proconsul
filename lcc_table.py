@@ -33,7 +33,7 @@ def manage_one_group(diseases):
 
             rows2 = []
             disease = string_to_filename(disease)
-            with open("results/kfold/pdiamond/prob_diamond_on_"+disease+"_kfold.csv", 'r') as file2:
+            with open("results/kfold/pdiamond/pdiamond_on_"+disease+"_kfold.csv", 'r') as file2:
                 csvreader2 = csv.reader(file2)
                 header = next(csvreader2)
                 for row in csvreader2:
@@ -50,7 +50,7 @@ def manage_one_group(diseases):
 
             rows4 = []
             disease = string_to_filename(disease)
-            with open("results/extended/pdiamond/prob_diamond_on_"+disease+"_extended.csv", 'r') as file4:
+            with open("results/extended/pdiamond/pdiamond_on_"+disease+"_extended.csv", 'r') as file4:
                 csvreader4 = csv.reader(file4)
                 header = next(csvreader4)
                 for row in csvreader4:

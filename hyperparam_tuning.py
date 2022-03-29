@@ -60,7 +60,7 @@ if __name__ == "__main__":
         k_fold_cross_validation(LCC_hhi, disease_genes, "pdiamond", "Psoriasis", K=5, num_iters_pdiamond=i)
 
         # read the results DataFrame
-        results_df = pd.read_csv("results/kfold/prob_diamond_on_psoriasis_kfold.csv")
+        results_df = pd.read_csv("results/kfold/pdiamond_on_psoriasis_kfold.csv")
 
         # append f1 results to the dictionary
         results_dict["Num iterations"] .append(i)
@@ -78,6 +78,6 @@ if __name__ == "__main__":
     # save the dictionary in a csv file
     print(results_dict)
     df = pd.DataFrame.from_dict(results_dict)
-    df.to_csv("results/prob_diamond_score_per_num_of_iterations.csv", float_format='%.3f')
+    df.to_csv("results/pdiamond_score_per_num_of_iterations.csv", float_format='%.3f')
 
     print(f"Best num iterations for Prob DIAMOnD is: {best_num_iters}, with an f1 score of {best_f1_top_100}")
