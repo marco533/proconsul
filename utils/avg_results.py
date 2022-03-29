@@ -103,7 +103,7 @@ def best_algorithm_per_disease(disease_file, output_file):
     Find the best algorithm for each disease, based on f1 score on top 50 genes
     and f1 score on top N.
     '''
-    algorithm_list = ["diamond", "prob_diamond", "diable", "moses", "markov_clustering", "heat_diffusion", "RWR"]
+    algorithm_list = ["diamond", "pdiamond", "diable", "moses", "markov_clustering", "heat_diffusion", "RWR"]
     disease_list = get_diseases_from_file(disease_file)
     disease_num_genes_dict = get_num_genes_per_disease(disease_list)
 
@@ -154,7 +154,7 @@ def avg_results_all_diseases(disease_file, by_mesh=False):
     If by_mesh=True, compute alsoe the average results by MeSH class.
     Save the results in output_file.
     '''
-    algorithm_list = ["diamond", "prob_diamond", "diable", "moses", "markov_clustering", "heat_diffusion", "RWR"]
+    algorithm_list = ["diamond", "pdiamond", "diable", "moses", "markov_clustering", "heat_diffusion", "RWR"]
     disease_dict = create_disease_mesh_dictionary(disease_file)
     disease_list = get_diseases_from_file(disease_file)
 

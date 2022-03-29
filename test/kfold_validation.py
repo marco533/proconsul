@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from algorithms.diamond import run_diamond
-from algorithms.prob_diamond import run_prob_diamond
+from algorithms.pdiamond import run_pdiamond
 from algorithms.heat_diffusion import run_heat_diffusion
 from utils.network_utils import *
 from utils.metrics_utils import *
@@ -12,7 +12,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, diffusion_time=0.005, num_iters_prob_diamond=10):
+def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, diffusion_time=0.005, num_iters_pdiamond=10):
     '''
     Performs the K-Folf Cross Validation over all the disease genes.
     Input:
@@ -79,9 +79,9 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
             added_nodes = run_diamond(input_list)   # take only firs elements of each sublist
             predicted_genes = [item[0] for item in added_nodes]
 
-        elif algorithm == "prob_diamond":
-            input_list = ["prob_diamond.py", interactome, training_set_file, num_genes_to_predict, 1, output_file, num_iters_prob_diamond]
-            added_nodes = run_prob_diamond(input_list)
+        elif algorithm == "pdiamond":
+            input_list = ["pdiamond.py", interactome, training_set_file, num_genes_to_predict, 1, output_file, num_iters_pdiamond]
+            added_nodes = run_pdiamond(input_list)
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "heat_diffusion":
@@ -91,7 +91,7 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
             print("  ERROR: No valid algorithm.    ")
             print("  Choose one of the following:  ")
             print("    - diamond                   ")
-            print("    - prob_diamond              ")
+            print("    - pdiamond              ")
             print("    - heat_diffusion            ")
             sys.exit(0)
 
@@ -129,8 +129,8 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
     if algorithm == "diamond":
         csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
 
-    if algorithm == "prob_diamond":
-        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_{num_iters_prob_diamond}_iters.csv"
+    if algorithm == "pdiamond":
+        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_{num_iters_pdiamond}_iters.csv"
 
     if algorithm == "heat_diffusion":
         csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_diff_time_{diffusion_time}.csv"

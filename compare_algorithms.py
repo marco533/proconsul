@@ -12,9 +12,9 @@ from utils.network_utils import get_density, get_disease_LCC, get_longest_paths
 
 def print_usage():
     print(' ')
-    print('        usage: python3 compare_algorithms.py --alg1 --alg2 --validation --disease_file --p --diffusion_time --num_iters_prob_diamond')
+    print('        usage: python3 compare_algorithms.py --alg1 --alg2 --validation --disease_file --p --diffusion_time --num_iters_pdiamond')
     print('        -----------------------------------------------------------------')
-    print('        alg1                     : First algorithm to compare. It can be "diamond", "prob_diamond" or "heat_diffusion".')
+    print('        alg1                     : First algorithm to compare. It can be "diamond", "pdiamond" or "heat_diffusion".')
     print('                                   (default: diamond')
     print('        alg2                     : Second algorithm to compare.')
     print('                                   (default: heat_diffusion')
@@ -28,7 +28,7 @@ def print_usage():
     print('                                   (default: "data/disease_file.txt).')
     print('        diffusion_time           : Diffusion time for heat_diffusion algorithm.')
     print('                                   (default: 0.005)')
-    print('        num_iters_prob_diamond   : Number of iteration for pDIAMOnD.')
+    print('        num_iters_pdiamond   : Number of iteration for pDIAMOnD.')
     print('                                   (default: 10)')
     print(' ')
 
@@ -51,7 +51,7 @@ def parse_args():
                     help='Relative path to the file containing the disease names to use for the comparison (default: "data/disease_file.txt)')
     parser.add_argument('--diffusion_time', type=float, default=0.005,
                     help='Diffusion time for heat_diffusion algorithm. (default: 0.005')
-    parser.add_argument('--num_iters_prob_diamond', type=int, default=10,
+    parser.add_argument('--num_iters_pdiamond', type=int, default=10,
                     help='Number of iteration for pDIAMOnD. (default: 10)')
     return parser.parse_args()
 
@@ -83,7 +83,7 @@ def read_terminal_input(args):
     validation      = args.validation
     disease_file    = args.disease_file
     diffusion_time  = args.diffusion_time
-    num_iters_prob_diamond = args.num_iters_prob_diamond
+    num_iters_pdiamond = args.num_iters_pdiamond
 
     # get disease list from file
     try:
@@ -98,12 +98,12 @@ def read_terminal_input(args):
         sys.exit(0)
 
     # check if the algorithm names are valid
-    if alg1 not in ["diamond", "prob_diamond", "heat_diffusion"]:
+    if alg1 not in ["diamond", "pdiamond", "heat_diffusion"]:
         print(f"ERROR: {alg1} is not a valid algorithm!")
         print_usage()
         sys.exit(0)
 
-    if alg2 not in ["diamond", "prob_diamond", "heat_diffusion"]:
+    if alg2 not in ["diamond", "pdiamond", "heat_diffusion"]:
         print(f"ERROR: {alg2} is not a valid algorithm!")
         print_usage()
         sys.exit(0)
@@ -125,9 +125,9 @@ def read_terminal_input(args):
         print(f"ERROR: diffusion time must be greater than 0")
         sys.exit(0)
 
-    # test num_iters_prob_diamond
-    if num_iters_prob_diamond <= 0:
-        print(f"ERROR: num_iters_prob_diamond must be greater or equal of 1")
+    # test num_iters_pdiamond
+    if num_iters_pdiamond <= 0:
+        print(f"ERROR: num_iters_pdiamond must be greater or equal of 1")
         sys.exit(0)
 
     print('')
@@ -139,19 +139,19 @@ def read_terminal_input(args):
     print(f"Validations: {validation_list}")
     print(f"Diseases: {disease_list}")
     print(f"Diffusion Time: {diffusion_time}")
-    print(f"Num iterations pDIAMOnD: {num_iters_prob_diamond}")
+    print(f"Num iterations pDIAMOnD: {num_iters_pdiamond}")
 
     print(f"============================")
     print('')
 
-    return alg1, alg2, metric, p, validation_list, disease_list, diffusion_time, num_iters_prob_diamond
+    return alg1, alg2, metric, p, validation_list, disease_list, diffusion_time, num_iters_pdiamond
 
 
 # ====================== #
 #   U T I L I T I E S    #
 # ====================== #
 
-def scores(alg, disease, validation="kfold", metric="f1", precision=2, diffusion_time=0.005, num_iters_prob_diamond=10):
+def scores(alg, disease, validation="kfold", metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
     """
     Return the scores of 'alg' on 'disease' of the
     'validation' method.
@@ -170,8 +170,8 @@ def scores(alg, disease, validation="kfold", metric="f1", precision=2, diffusion
     # Read the score DataFrame
     if alg == "diamond":
         scores_path = f"results/{validation}/{alg}/{alg}_on_{string_to_filename(disease)}_{validation}.csv"
-    if alg == "prob_diamond":
-        scores_path = f"results/{validation}/{alg}/{alg}_on_{string_to_filename(disease)}_{validation}_{num_iters_prob_diamond}_iters.csv"
+    if alg == "pdiamond":
+        scores_path = f"results/{validation}/{alg}/{alg}_on_{string_to_filename(disease)}_{validation}_{num_iters_pdiamond}_iters.csv"
     if alg == "heat_diffusion":
         scores_path = f"results/{validation}/{alg}/{alg}_on_{string_to_filename(disease)}_{validation}_diff_time_{diffusion_time}.csv"
     scores_df = pd.read_csv(scores_path, index_col=0)
@@ -211,7 +211,7 @@ def scores(alg, disease, validation="kfold", metric="f1", precision=2, diffusion
 
     return scores
 
-def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, diffusion_time=0.005, num_iters_prob_diamond=10):
+def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
     """
     Compare the results of 'alg1' and 'alg2' on 'disease'
     with a specific 'validation' method.
@@ -235,8 +235,8 @@ def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, d
 
     """
 
-    alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision, diffusion_time=diffusion_time, num_iters_prob_diamond=num_iters_prob_diamond)
-    alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision, diffusion_time=diffusion_time, num_iters_prob_diamond=num_iters_prob_diamond)
+    alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+    alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
     winner_name_and_by_how_much = []
 
@@ -262,7 +262,7 @@ def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, d
 #   T A B L E S   #
 # =============== #
 
-def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_prob_diamond=10):
+def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
 
     header = ["Disease", "Num disease genes", "LCC_size", "Density", "Disgenes Percentage", "Disgenes Longpath",
                 "KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200",
@@ -270,10 +270,10 @@ def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1
 
     if alg1 != "heat_diffusion" and alg2 != "heat_diffusion":
         diffusion_time = "None"
-    if alg2 != "prob_diamond" and alg2 != "prob_diamond":
-        num_iters_prob_diamond = "None"
+    if alg2 != "pdiamond" and alg2 != "pdiamond":
+        num_iters_pdiamond = "None"
 
-    outfile = f"tables/{alg1}_vs_{alg2}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_prob_diamond}.csv"
+    outfile = f"tables/{alg1}_vs_{alg2}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
     with open(outfile, "w") as f:
 
         writer = csv.writer(f)
@@ -330,7 +330,7 @@ def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1
 
             writer.writerow(data)
 
-def heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_prob_diamond=10):
+def heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
     #TODO: Adapt "create_heat_map.py" code
     return 0
 
@@ -344,7 +344,7 @@ if __name__ == "__main__":
 
     # Read input
     args = parse_args()
-    alg1, alg2, metric, p, validations, diseases, diffusion_time, num_iters_prob_diamond = read_terminal_input(args)
+    alg1, alg2, metric, p, validations, diseases, diffusion_time, num_iters_pdiamond = read_terminal_input(args)
 
     # Human-Human Interactome
     biogrid = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
@@ -361,7 +361,7 @@ if __name__ == "__main__":
     LCC_hhi = isolate_LCC(hhi)
     LCC_hhi = hhi.subgraph(LCC_hhi).copy()
 
-    winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_prob_diamond=num_iters_prob_diamond)
+    winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
     # Read algorithms score and create the heatmaps
-    heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_prob_diamond=num_iters_prob_diamond)
+    heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)

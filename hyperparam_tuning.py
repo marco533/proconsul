@@ -57,7 +57,7 @@ if __name__ == "__main__":
     best_num_iters = 0
     best_f1_top_100 = 0
     for i in range(1,21):
-        k_fold_cross_validation(LCC_hhi, disease_genes, "prob_diamond", "Psoriasis", K=5, num_iters_prob_diamond=i)
+        k_fold_cross_validation(LCC_hhi, disease_genes, "pdiamond", "Psoriasis", K=5, num_iters_pdiamond=i)
 
         # read the results DataFrame
         results_df = pd.read_csv("results/kfold/prob_diamond_on_psoriasis_kfold.csv")

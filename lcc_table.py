@@ -1,6 +1,6 @@
 #
 # This script makes comparisons among diamond and prob results and outputs best algorithm per each LCC size
-# and per each category (extended and kfold, top 50, 100, 200 , N ) 
+# and per each category (extended and kfold, top 50, 100, 200 , N )
 #
 
 
@@ -15,13 +15,13 @@ def manage_one_group(diseases):
 
         header = ['kf_top_50', 'kf_top_100', 'kf_top_200','kf_top_N','ev_top_50', 'ev_top_100', 'ev_top_200','ev_top_N']
 
-        writer = csv.writer(of)    
+        writer = csv.writer(of)
         writer.writerow(header)
-    
+
         data=[]
 
         #read from the four files (diamond and prob diamond, kfold and extended)
-        for disease in diseases:   
+        for disease in diseases:
 
             rows1 = []
             disease = string_to_filename(disease)
@@ -33,7 +33,7 @@ def manage_one_group(diseases):
 
             rows2 = []
             disease = string_to_filename(disease)
-            with open("results/kfold/prob_diamond/prob_diamond_on_"+disease+"_kfold.csv", 'r') as file2:
+            with open("results/kfold/pdiamond/prob_diamond_on_"+disease+"_kfold.csv", 'r') as file2:
                 csvreader2 = csv.reader(file2)
                 header = next(csvreader2)
                 for row in csvreader2:
@@ -41,7 +41,7 @@ def manage_one_group(diseases):
 
 
             rows3 = []
-            disease = string_to_filename(disease)            
+            disease = string_to_filename(disease)
             with open("results/extended/diamond/diamond_on_"+disease+"_extended.csv", 'r') as file3:
                 csvreader3 = csv.reader(file3)
                 header = next(csvreader3)
@@ -50,7 +50,7 @@ def manage_one_group(diseases):
 
             rows4 = []
             disease = string_to_filename(disease)
-            with open("results/extended/prob_diamond/prob_diamond_on_"+disease+"_extended.csv", 'r') as file4:
+            with open("results/extended/pdiamond/prob_diamond_on_"+disease+"_extended.csv", 'r') as file4:
                 csvreader4 = csv.reader(file4)
                 header = next(csvreader4)
                 for row in csvreader4:
@@ -65,7 +65,7 @@ def manage_one_group(diseases):
             #parsing of the desired value
             rows1[2][1] = float((rows1[2][1].strip("(").strip(")").split(","))[0])
             rows2[2][1] = float((rows2[2][1].strip("(").strip(")").split(","))[0])
-            if rows1[2][1]>rows2[2][1]: 
+            if rows1[2][1]>rows2[2][1]:
                 kf_top_50_to_print = "diamond"
             elif rows1[2][1]<rows2[2][1]:
                 kf_top_50_to_print = "prob diamond"
@@ -74,10 +74,10 @@ def manage_one_group(diseases):
 
             # Top 100
 
-            #parsing of the desired value            
+            #parsing of the desired value
             rows1[2][2] = float((rows1[2][2].strip("(").strip(")").split(","))[0])
-            rows2[2][2] = float((rows2[2][2].strip("(").strip(")").split(","))[0])            
-            if rows1[2][2]>rows2[2][2]: 
+            rows2[2][2] = float((rows2[2][2].strip("(").strip(")").split(","))[0])
+            if rows1[2][2]>rows2[2][2]:
                 kf_top_100_to_print = "diamond"
             elif rows1[2][2]<rows2[2][2]:
                 kf_top_100_to_print = "prob diamond"
@@ -88,8 +88,8 @@ def manage_one_group(diseases):
 
             #parsing of the desired value
             rows1[2][3] = float((rows1[2][3].strip("(").strip(")").split(","))[0])
-            rows2[2][3] = float((rows2[2][3].strip("(").strip(")").split(","))[0])            
-            if rows1[2][3]>rows2[2][3]: 
+            rows2[2][3] = float((rows2[2][3].strip("(").strip(")").split(","))[0])
+            if rows1[2][3]>rows2[2][3]:
                 kf_top_200_to_print = "diamond"
             elif rows1[2][3]<rows2[2][3]:
                 kf_top_200_to_print = "prob diamond"
@@ -101,7 +101,7 @@ def manage_one_group(diseases):
             #parsing of the desired value
             rows1[2][4] = float((rows1[2][4].strip("(").strip(")").split(","))[0])
             rows2[2][4] = float((rows2[2][4].strip("(").strip(")").split(","))[0])
-            if rows1[2][4]>rows2[2][4]: 
+            if rows1[2][4]>rows2[2][4]:
                 kf_top_N_to_print = "diamond"
             elif rows1[2][4]<rows2[2][4]:
                 kf_top_N_to_print = "prob diamond"
@@ -115,7 +115,7 @@ def manage_one_group(diseases):
             #parsing of the desired value
             rows3[2][1] = float(rows3[2][1])
             rows4[2][1] = float(rows4[2][1])
-            if rows3[2][1]>rows4[2][1]: 
+            if rows3[2][1]>rows4[2][1]:
                 ev_top_50_to_print = "diamond"
             elif rows3[2][1]<rows4[2][1]:
                 ev_top_50_to_print = "prob diamond"
@@ -127,7 +127,7 @@ def manage_one_group(diseases):
             #parsing of the desired value
             rows3[2][2] = float(rows3[2][2])
             rows4[2][2] = float(rows4[2][2])
-            if rows3[2][2]>rows4[2][2]: 
+            if rows3[2][2]>rows4[2][2]:
                 ev_top_100_to_print = "diamond"
             elif rows3[2][2]<rows4[2][2]:
                 ev_top_100_to_print = "prob diamond"
@@ -139,7 +139,7 @@ def manage_one_group(diseases):
             #parsing of the desired value
             rows3[2][3] = float(rows3[2][3])
             rows4[2][3] = float(rows4[2][3])
-            if rows3[2][3]>rows4[2][3]: 
+            if rows3[2][3]>rows4[2][3]:
                 ev_top_200_to_print = "diamond"
             elif rows3[2][3]<rows4[2][3]:
                 ev_top_200_to_print = "prob diamond"
@@ -147,11 +147,11 @@ def manage_one_group(diseases):
                 ev_top_200_to_print = "same"
 
             # Top N
-            
+
             #parsing of the desired value
             rows3[2][4] = float(rows3[2][4])
             rows4[2][4] = float(rows4[2][4])
-            if rows3[2][4]>rows4[2][4]: 
+            if rows3[2][4]>rows4[2][4]:
                 ev_top_N_to_print = "diamond"
             elif rows3[2][4]<rows4[2][4]:
                 ev_top_N_to_print = "prob diamond"
@@ -172,7 +172,7 @@ def manage_one_group(diseases):
         row_to_print =[]
         rows=[]
         reader = csv.reader(rf)
-        header = next(reader)    
+        header = next(reader)
         for row in reader:
             rows.append(row)
         for i in range(8):
@@ -183,7 +183,7 @@ def manage_one_group(diseases):
             row_to_print.append(lcc_value)
     return row_to_print  #return the 8 values: 8 best algorithms per each category in this group
 
-      
+
 
 if __name__ == "__main__":
 
@@ -202,7 +202,7 @@ if __name__ == "__main__":
     for group in [LCC_50_75,LCC_75_100,LCC_100_125,LCC_125_150,LCC_150_]:
 
         #get name of the group te be printed on final table
-        if i==1:        
+        if i==1:
             group_name = f'{LCC_50_75=}'.split('=')[0]
         if i==2:
             group_name = f'{LCC_75_100=}'.split('=')[0]
@@ -217,7 +217,7 @@ if __name__ == "__main__":
         #row_to_print = each row, one per group
         #rows_to_print = all the rows to print on the table
         #call core function
-        row_to_print = manage_one_group(group)  
+        row_to_print = manage_one_group(group)
         row_to_print.insert(0,group_name)
         rows_to_print.append(row_to_print)
 
@@ -226,6 +226,6 @@ if __name__ == "__main__":
 
         header = ['LCC group','kf_top_50', 'kf_top_100', 'kf_top_200','kf_top_N','ev_top_50', 'ev_top_100', 'ev_top_200','ev_top_N']
 
-        writer = csv.writer(wf)    
+        writer = csv.writer(wf)
         writer.writerow(header)
         writer.writerows(rows_to_print)

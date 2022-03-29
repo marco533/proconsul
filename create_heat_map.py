@@ -20,7 +20,7 @@ def compare_algorithms(algorithms_pair):
 
                 sorted_df = df.sort_values(by = param)
                 data = sorted_df.values.tolist()
-    
+
                 #We convert our data to a convenient format
                 data_array = np.array(data)
                 yaxis = data_array[0,:]
@@ -32,11 +32,11 @@ def compare_algorithms(algorithms_pair):
                 data_array = np.delete(data_array,0, axis=0)
 
                 column_counter +=  1
-        
+
                 #This function generates a numerical matrix that is used for the heat map generation
-        
+
                 num_matrix = createMatrix(data_array, algorithms_pair, m)
-    
+
                 #Tranpose the matrix so the plot fits better on the screen
                 num_matrix = np.transpose(num_matrix)
 
@@ -54,18 +54,18 @@ def compare_algorithms(algorithms_pair):
                 plt.colorbar(img, shrink=0.5)
                 plt.text(97,20, f"{algorithms_pair[1]} > {algorithms_pair[0]}")
                 plt.text(96,-12, f"{algorithms_pair[0]} > {algorithms_pair[1]}")
-    
+
                 fig.suptitle(f"{param}: {algorithms_pair[0]} vs {algorithms_pair[1]}")
 
                 # for i in range(len(yaxis)):
                 #     for j in range(len(xaxis)):
                 #         text = ax.text(j, i, num_matrix[i, j], ha="center", va="center", color="w")
-    
+
                 #plt.show()
-                plt.savefig(f"heatmaps/{m}/{param}_{algorithms_pair[0]}_vs_{algorithms_pair[1]}.png") 
-                
-                plt.close('all')    
-     
+                plt.savefig(f"heatmaps/{m}/{param}_{algorithms_pair[0]}_vs_{algorithms_pair[1]}.png")
+
+                plt.close('all')
+
 
 def createMatrix(data_array, algorithms_pair, mode):
 
@@ -86,7 +86,7 @@ def createMatrix(data_array, algorithms_pair, mode):
                     num_matrix[i][j] = 0
                 else:
                     value = parseStringToFloat(data_array[i][j])
-                    num_matrix[i][j] = value                    
+                    num_matrix[i][j] = value
             else:
                 if mode == "absolute":
                     num_matrix[i][j] = 1
@@ -106,7 +106,7 @@ def parseStringToFloat(str):
 
 if __name__ == "__main__":
 
-    algorithms = ["diamond","prob_diamond","heat_diffusion"]
+    algorithms = ["diamond","pdiamond","heat_diffusion"]
 
     algorithms_pair = [algorithms[0], algorithms[1]]
 
@@ -116,4 +116,4 @@ if __name__ == "__main__":
 
     compare_algorithms(algorithms_pair)
 
-   
+

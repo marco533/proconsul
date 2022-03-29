@@ -14,9 +14,9 @@ from utils.data_utils import *
 
 def print_usage():
     print(' ')
-    print('        usage: python3 project.py --algorithm --validation --disease_file --diffusion_time --num_iters_prob_diamond')
+    print('        usage: python3 project.py --algorithm --validation --disease_file --diffusion_time --num_iters_pdiamond')
     print('        -----------------------------------------------------------------')
-    print('        algorithm                : Algorithm of whic collect the results. It can be "diamond", "prob_diamond", "heat_diffusion" or "all".')
+    print('        algorithm                : Algorithm of whic collect the results. It can be "diamond", "pdiamond", "heat_diffusion" or "all".')
     print('                                   If all, run all the algorithms. (default: all')
     print('        validation               : Type of validation on which test the algorithms. It can be')
     print('                                   "kfold", "extended" or "all".')
@@ -25,7 +25,7 @@ def print_usage():
     print('                                   (default: "data/disease_file.txt).')
     print('        diffusion_time           : Diffusion time for heat_diffusion algorithm.')
     print('                                   (default: 0.005)')
-    print('        num_iters_prob_diamond   : Number of iteration for pDIAMOnD.')
+    print('        num_iters_pdiamond   : Number of iteration for pDIAMOnD.')
     print('                                   (default: 10)')
     print(' ')
 
@@ -42,7 +42,7 @@ def parse_args():
                     help='Relative path to the file with disease names (default: "data/disease_file.txt)')
     parser.add_argument('--diffusion_time', type=float, default=0.005,
                     help='Diffusion time for heat_diffusion algorithm. (default: 0.005')
-    parser.add_argument('--num_iters_prob_diamond', type=int, default=10,
+    parser.add_argument('--num_iters_pdiamond', type=int, default=10,
                     help='Number of iteration for pDIAMOnD. (default: 10)')
     return parser.parse_args()
 
@@ -71,10 +71,10 @@ def read_terminal_input(args):
     validation      = args.validation
     disease_file    = args.disease_file
     diffusion_time  = args.diffusion_time
-    num_iters_prob_diamond = args.num_iters_prob_diamond
+    num_iters_pdiamond = args.num_iters_pdiamond
 
     # check if is a valid algorithm
-    if algorithm not in ["diamond", "prob_diamond", "heat_diffusion", "all"]:
+    if algorithm not in ["diamond", "pdiamond", "heat_diffusion", "all"]:
         print(f"ERROR: {algorithm} is no valid algorithm!")
         print_usage()
         sys.exit(0)
@@ -106,7 +106,7 @@ def read_terminal_input(args):
     # get the list of algorithms
     if algorithm == 'all':
         algorithm_list = ["diamond",
-                          "prob_diamond",
+                          "pdiamond",
                           "heat_diffusion"]
     else:
         algorithm_list = [algorithm]
@@ -116,9 +116,9 @@ def read_terminal_input(args):
         print(f"ERROR: diffusion time must be greater than 0")
         sys.exit(0)
 
-    # test num_iters_prob_diamond
-    if num_iters_prob_diamond <= 0:
-        print(f"ERROR: num_iters_prob_diamond must be greater or equal of 1")
+    # test num_iters_pdiamond
+    if num_iters_pdiamond <= 0:
+        print(f"ERROR: num_iters_pdiamond must be greater or equal of 1")
         sys.exit(0)
 
     print('')
@@ -128,13 +128,13 @@ def read_terminal_input(args):
     print(f"Validations: {validation_list}")
     print(f"Diseases: {disease_list}")
     print(f"Diffusion Time: {diffusion_time}")
-    print(f"Num iterations pDIAMOnD: {num_iters_prob_diamond}")
+    print(f"Num iterations pDIAMOnD: {num_iters_pdiamond}")
 
     print(f"============================")
     print('')
 
 
-    return algorithm_list, validation_list, disease_list, diffusion_time, num_iters_prob_diamond
+    return algorithm_list, validation_list, disease_list, diffusion_time, num_iters_pdiamond
 
 
 # main
@@ -145,7 +145,7 @@ if __name__ == "__main__":
     # ============ #
 
     args = parse_args()
-    algorithms, validations, diseases, diffusion_time, num_iters_prob_diamond = read_terminal_input(args)
+    algorithms, validations, diseases, diffusion_time, num_iters_pdiamond = read_terminal_input(args)
 
     # ================ #
     #  CREATE NETWORK  #
@@ -195,7 +195,7 @@ if __name__ == "__main__":
                                         disease,
                                         K=5,
                                         diffusion_time=diffusion_time,
-                                        num_iters_prob_diamond=num_iters_prob_diamond)
+                                        num_iters_pdiamond=num_iters_pdiamond)
 
     # ===================== #
     #  EXTENDED VALIDATION  #
@@ -221,4 +221,4 @@ if __name__ == "__main__":
                                     alg,
                                     disease,
                                     diffusion_time=diffusion_time,
-                                    num_iters_prob_diamond=num_iters_prob_diamond)
+                                    num_iters_pdiamond=num_iters_pdiamond)

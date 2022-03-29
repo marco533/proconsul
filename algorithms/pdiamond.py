@@ -15,7 +15,7 @@ import sys
 def print_usage():
 
     print(' ')
-    print('        usage: python3 prob_diamond.py network_file seed_file n alpha(optional) outfile_name (optional)')
+    print('        usage: python3 pdiamond.py network_file seed_file n alpha(optional) outfile_name (optional)')
     print('        -----------------------------------------------------------------')
     print('        network_file : The edgelist must be provided as any delimiter-separated')
     print('                       table. Make sure the delimiter does not exit in gene IDs')
@@ -380,7 +380,7 @@ def diamond_iteration_of_first_X_nodes(G, S, X, alpha):
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_iterations=10):
+def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_iterations=10):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -388,11 +388,11 @@ def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
     disease_genes = seed_genes & all_genes_in_network
 
     if len(disease_genes) != len(seed_genes):
-        print("PROB DIAMOnD(): ignoring %s of %s seed genes that are not in the network" % (
+        print("pDIAMOnD(): ignoring %s of %s seed genes that are not in the network" % (
             len(seed_genes - all_genes_in_network), len(seed_genes)))
 
     # 2. agglomeration algorithm.
-    print(f"PROB DIAMOnD(): number of iterations = {max_iterations}")
+    print(f"pDIAMOnD(): number of iterations = {max_iterations}")
     all_nodes_dict = {}
     for i in range(max_iterations):
         added_nodes = diamond_iteration_of_first_X_nodes(G_original,
@@ -409,7 +409,7 @@ def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
     # print(all_nodes_dict)
 
     # sort the dictionary in descendig order
-    sort_nodes = sorted(all_nodes_dict.items(), key=lambda x: x[1], reverse=True)
+    sorted_nodes = sorted(all_nodes_dict.items(), key=lambda x: x[1], reverse=True)
 
     # for sn in sort_nodes:
     #     print(sn[0], sn[1])
@@ -419,8 +419,8 @@ def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
 
         fout.write('\t'.join(['rank', 'node', 'num_occ']) + '\n')
         rank = 0
-        for sn in sort_nodes:
-            if rank > 100:
+        for sn in sorted_nodes:
+            if rank > max_number_of_added_nodes:
                 break
 
             rank += 1
@@ -429,16 +429,16 @@ def prob_diamond(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
 
             fout.write('\t'.join(map(str, ([rank, node, num_occ]))) + '\n')
 
-    return added_nodes
+    return sorted_nodes
 
-def run_prob_diamond(input_list):
+def run_pdiamond(input_list):
     network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
 
     # run DIAMOnD
-    added_nodes = prob_diamond(G_original,
+    added_nodes = pDIAMOnD(G_original,
                                seed_genes,
                                max_number_of_added_nodes, alpha,
                                outfile=outfile_name,
@@ -482,7 +482,7 @@ if __name__ == '__main__':
 
 
     # run Prob DIAMOnD
-    added_nodes = prob_diamond(G_original,
+    added_nodes = pDIAMOnD(G_original,
                                seed_genes,
                                max_number_of_added_nodes, alpha,
                                outfile=outfile_name,
