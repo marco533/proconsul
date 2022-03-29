@@ -1,5 +1,4 @@
 import sys
-from dictdiffer import diff
 
 import networkx as nx
 import numpy as np
