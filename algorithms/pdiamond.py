@@ -244,7 +244,7 @@ def softmax(x):
 # ======================================================================================
 #   C O R E    A L G O R I T H M
 # ======================================================================================
-def diamond_iteration_of_first_X_nodes(G, S, X, alpha):
+def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
     """
     Parameters:
     ----------
@@ -395,7 +395,7 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
     print(f"pDIAMOnD(): number of iterations = {max_iterations}")
     all_nodes_dict = {}
     for i in range(max_iterations):
-        added_nodes = diamond_iteration_of_first_X_nodes(G_original,
+        added_nodes = pdiamond_iteration_of_first_X_nodes(G_original,
                                                         disease_genes,
                                                         max_number_of_added_nodes, alpha)
         for node in added_nodes:
