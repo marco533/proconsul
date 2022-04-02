@@ -309,7 +309,7 @@ def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1",
     if alg2 != "pdiamond" and alg2 != "pdiamond":
         num_iters_pdiamond = "None"
 
-    outfile = f"tables/{alg1}_vs_{alg2}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
+    outfile = f"tables/{alg1}_vs_{alg2}/{alg1}_vs_{alg2}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
     with open(outfile, "w") as f:
 
         writer = csv.writer(f)
@@ -416,7 +416,7 @@ def how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric="f
                 EX_top_100.append(best_alg[2])
                 EX_top_200.append(best_alg[3])
 
-    outfile = f"tables/best_algorithm_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
+    outfile = f"tables/best_algorithm_overall/best_algorithm_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
     with open(outfile, "w") as f:
         writer = csv.writer(f)
 
@@ -551,7 +551,7 @@ def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f
         hm = sns.heatmap(compared_scores_df, annot=False, cmap=cmap, center=0, vmin=-0.1, vmax=0.1)
 
         figure = hm.get_figure()
-        figure.savefig(f'plots/heatmaps/seaborn/{validation}/{metric}/{alg1}_vs_{alg2}_{validation}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.png', bbox_inches='tight')
+        figure.savefig(f'plots/heatmaps/absolute_score/{validation}/{metric}/{alg1}_vs_{alg2}_{validation}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.png', bbox_inches='tight')
 
         # Close previous plots
         plt.close()
@@ -588,20 +588,20 @@ if __name__ == "__main__":
 
     # For each algorithm pair
 
-    # for metric in metrics:
-    #     for alg_pair in alg_pairs:
-    #         print("                                                          ")
-    #         print("----------------------------------------------------------")
-    #         print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
-    #         print("----------------------------------------------------------")
-    #         # winner tables
-    #         print("WINNER TABLES:")
-    #         winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+    for metric in metrics:
+        for alg_pair in alg_pairs:
+            print("                                                          ")
+            print("----------------------------------------------------------")
+            print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
+            print("----------------------------------------------------------")
+            # winner tables
+            print("WINNER TABLES:")
+            winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
-    #         # Read algorithms score and create the heatmaps
-    #         print("        ")
-    #         print("HEATMAPS")
-    #         absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+            # Read algorithms score and create the heatmaps
+            print("        ")
+            print("HEATMAPS")
+            absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
 
     # How many time an algorithm is better than the other for each validation
