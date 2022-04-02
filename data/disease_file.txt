@@ -1,34 +1,11 @@
-Psoriasis
-Liver carcinoma
-Liver Cirrhosis, Experimental
-Diabetes Mellitus, Non-Insulin-Dependent
-Papillary Renal Cell Carcinoma
-Malignant neoplasm of ovary
-Steatohepatitis
-Disproportionate short stature
-Stomach Neoplasms
-Pneumonitis
-Heart Failure, Right-Sided
-Alcoholic Intoxication, Chronic
-Osteoporosis, Senile
-Parkinson Disease
-Hepatoma, Novikoff
-Malignant neoplasm of prostate
-Pneumonia
-Carcinomatosis
-Dermatitis, Allergic Contact
-Atrial Fibrillation
-Craniofacial Abnormalities
-Skin Neoplasms
-Malignant mesothelioma
-Tonic - clonic seizures
-Adenocarcinoma, Basal Cell
-Seizures, Auditory
-Alzheimer's Disease
-Epilepsy, Cryptogenic
-Peripheral Nervous System Diseases
-Allodynia
-Insulin Sensitivity
-Chromophobe Renal Cell Carcinoma
-Anaplastic carcinoma
-Spontaneous abortion
+Manic Disorder
+Cocaine Abuse
+Acute Cerebrovascular Accidents
+Brain Ischemia
+Hyperalgesia, Primary
+Nonsyndromic Deafness
+Vertiginous seizure
+Non-Convulsive Status Epilepticus
+Amphetamine Addiction
+Carcinoma, Cribriform
+Mouth Neoplasms
