@@ -330,6 +330,21 @@ def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1
 
             writer.writerow(data)
 
+    # return filename of the table
+    return outfile
+
+def how_many_time_winner(winner_table_filename):
+    # read csv
+    winner_table_df = pd.read_csv(winner_table_filename)
+
+    # TODO
+
+    return 0
+
+# ============  #
+#   P L O T S   #
+# ============  #
+
 def heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
     #TODO: Adapt "create_heat_map.py" code
     return 0
@@ -361,7 +376,11 @@ if __name__ == "__main__":
     LCC_hhi = isolate_LCC(hhi)
     LCC_hhi = hhi.subgraph(LCC_hhi).copy()
 
-    winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+    # winner tables
+    winner_table_filename = winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+    # How many time an algorithm is better than the other for each validation
+    how_many_time_winner(winner_table_filename)
 
     # Read algorithms score and create the heatmaps
     heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
