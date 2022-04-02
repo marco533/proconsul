@@ -1,10 +1,16 @@
 import argparse
 import csv
 import sys
+from itertools import combinations
+
+from matplotlib import pyplot as plt
+from numpy import indices
 
 from utils.data_utils import get_disease_genes_from_gda, string_to_filename
 from utils.network_utils import *
 from utils.network_utils import get_density, get_disease_LCC, get_longest_paths
+
+import seaborn as sns
 
 # ======================= #
 #   R E A D   I N P U T   #
@@ -12,14 +18,12 @@ from utils.network_utils import get_density, get_disease_LCC, get_longest_paths
 
 def print_usage():
     print(' ')
-    print('        usage: python3 compare_algorithms.py --alg1 --alg2 --validation --disease_file --p --diffusion_time --num_iters_pdiamond')
+    print('        usage: python3 compare_algorithms.py --algs --metrics --validation --disease_file --p --diffusion_time --num_iters_pdiamond')
     print('        -----------------------------------------------------------------')
-    print('        alg1                     : First algorithm to compare. It can be "diamond", "pdiamond" or "heat_diffusion".')
-    print('                                   (default: diamond')
-    print('        alg2                     : Second algorithm to compare.')
-    print('                                   (default: heat_diffusion')
-    print('        metric                   : Metric used for the comparison. It can be "precision", "recall", "f1" and "ndcg"')
-    print('                                   (default: f1')
+    print('        algs                     : List of algorithms to compare. They can be "diamond", "pdiamond", "heat_diffusion"')
+    print('                                   (default: all')
+    print('        metrics                  : Metrics used for the comparison. It can be "precision", "recall", "f1" and "ndcg"')
+    print('                                   (default: all')
     print('        p                        : Decimal digit precision (default: 2)')
     print('        validation               : type of validation on which compare the algorithms. It can be')
     print('                                   "kfold", "extended" or "all".')
@@ -37,12 +41,10 @@ def parse_args():
     Parse the terminal arguments.
     '''
     parser = argparse.ArgumentParser(description='Get algorithms to compare and on which validation.')
-    parser.add_argument('--alg1', type=str, default='diamond',
-                    help='First algorithm. (default: diamond)')
-    parser.add_argument('--alg2', type=str, default='heat_diffusion',
-                    help='Second algorithm. (default: heat_diffusion')
-    parser.add_argument('--metric', type=str, default='f1',
-                    help='Metric for comparison. (default: f1')
+    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "heat_diffusion"],
+                    help='List of algorithms to compare (default: all)')
+    parser.add_argument('--metrics', nargs='+', default=["precision", "recall", "f1", "ndcg"],
+                    help='Metrics for comparison. (default: all')
     parser.add_argument('--p', type=int, default=2,
                     help='Decimal digit precision (default: 2)')
     parser.add_argument('--validation', type=str, default='all',
@@ -76,9 +78,8 @@ def read_terminal_input(args):
         return disease_list
 
     # read the parsed values
-    alg1            = args.alg1
-    alg2            = args.alg2
-    metric          = args.metric
+    algs            = args.algs
+    metrics         = args.metrics
     p               = args.p
     validation      = args.validation
     disease_file    = args.disease_file
@@ -98,15 +99,11 @@ def read_terminal_input(args):
         sys.exit(0)
 
     # check if the algorithm names are valid
-    if alg1 not in ["diamond", "pdiamond", "heat_diffusion"]:
-        print(f"ERROR: {alg1} is not a valid algorithm!")
-        print_usage()
-        sys.exit(0)
-
-    if alg2 not in ["diamond", "pdiamond", "heat_diffusion"]:
-        print(f"ERROR: {alg2} is not a valid algorithm!")
-        print_usage()
-        sys.exit(0)
+    for alg in algs:
+        if alg not in ["diamond", "pdiamond", "heat_diffusion"]:
+            print(f"ERROR: {alg} is not a valid algorithm!")
+            print_usage()
+            sys.exit(0)
 
     # check if the validation name is valid
     if validation not in ["kfold", "extended", "all"]:
@@ -133,8 +130,8 @@ def read_terminal_input(args):
     print('')
     print(f"============================")
 
-    print(f"Algorithm 1: {alg1}")
-    print(f"Algorithm 2: {alg2}")
+    print(f"Algorithms: {algs}")
+    print(f"Metrics: {metrics}")
     print(f"Precision: {p}")
     print(f"Validations: {validation_list}")
     print(f"Diseases: {disease_list}")
@@ -144,7 +141,7 @@ def read_terminal_input(args):
     print(f"============================")
     print('')
 
-    return alg1, alg2, metric, p, validation_list, disease_list, diffusion_time, num_iters_pdiamond
+    return algs, metrics, p, validation_list, disease_list, diffusion_time, num_iters_pdiamond
 
 
 # ====================== #
@@ -241,7 +238,7 @@ def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, d
     winner_name_and_by_how_much = []
 
     # Decree the winner for each prediction size
-    # (Top 50, Top 100, Top 200, Top N)
+    # (Top 25, Top 50, Top 100, Top 200)
     for i in range(len(alg1_scores)):
         if alg1_scores[i] > alg2_scores[i]:
             winner = alg1
@@ -258,15 +255,54 @@ def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, d
 
     return winner_name_and_by_how_much
 
+def comparison_matrix(data_array, alg_pair, mode):
+
+    def score_advantage(str):
+        str = str.replace(")", "")
+        word,value = str.split(", ")
+        value = float(value)
+
+        return value
+
+    [rows, columns] = np.shape(data_array)
+    num_matrix = np.zeros((rows, columns))
+
+    for j in range(columns):
+        for i in range(rows):
+            if alg_pair[1] in data_array[i][j]:
+                if mode == "absolute":
+                    num_matrix[i][j] = -1
+                else:
+                    value = score_advantage(data_array[i][j])
+                    num_matrix[i][j] = value*(-1)
+
+            elif 'draw' in data_array[i][j]:
+                if mode == "absolute":
+                    num_matrix[i][j] = 0
+                else:
+                    value = score_advantage(data_array[i][j])
+                    num_matrix[i][j] = value
+            else:
+                if mode == "absolute":
+                    num_matrix[i][j] = 1
+                else:
+                    value = score_advantage(data_array[i][j])
+                    num_matrix[i][j] = value
+
+    return num_matrix
+
 # =============== #
 #   T A B L E S   #
 # =============== #
 
-def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
+def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
 
     header = ["Disease", "Num disease genes", "LCC_size", "Density", "Disgenes Percentage", "Disgenes Longpath",
-                "KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200",
-                "EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
+              "KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200",
+              "EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
+
+    alg1 = alg_pair[0]
+    alg2 = alg_pair[1]
 
     if alg1 != "heat_diffusion" and alg2 != "heat_diffusion":
         diffusion_time = "None"
@@ -333,21 +369,192 @@ def winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1
     # return filename of the table
     return outfile
 
-def how_many_time_winner(winner_table_filename):
-    # read csv
-    winner_table_df = pd.read_csv(winner_table_filename)
+def how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None):
+    """
+    Create a table that represents, for each algorithm, how many time
+    it is the best algorithm
+    """
 
-    # TODO
+    # Num of diseases
+    N = len(diseases)
 
-    return 0
+    KF_top_25   = []
+    KF_top_50   = []
+    KF_top_100  = []
+    KF_top_200  = []
+
+    EX_top_25   = []
+    EX_top_50   = []
+    EX_top_100  = []
+    EX_top_200  = []
+
+    for validation in validations:
+        for disease in diseases:
+
+            # Find the best algorithm for this disease for each prediction size
+            best_alg = np.zeros(4, dtype=object)
+            best_score = np.zeros(4)
+            for alg in algs:
+                score = scores(alg, disease, validation=validation, metric=metric, precision=precision,
+                                diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+                for i in range(len(score)):
+                    if score[i] >= best_score[i]:
+                        best_score[i] = score[i]
+                        best_alg[i] = alg
+
+
+            if validation == 'kfold':
+                KF_top_25.append(best_alg[0])
+                KF_top_50.append(best_alg[1])
+                KF_top_100.append(best_alg[2])
+                KF_top_200.append(best_alg[3])
+
+            if validation == 'extended':
+                EX_top_25.append(best_alg[0])
+                EX_top_50.append(best_alg[1])
+                EX_top_100.append(best_alg[2])
+                EX_top_200.append(best_alg[3])
+
+    outfile = f"tables/best_algorithm_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
+    with open(outfile, "w") as f:
+        writer = csv.writer(f)
+
+        # ** Write the header **
+        header = ["Algorithm",
+                  "KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200",
+                  "EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
+
+        writer.writerow(header)
+
+        for alg in algs:
+            data = [alg,
+                    KF_top_25.count(alg), KF_top_50.count(alg), KF_top_100.count(alg), KF_top_200.count(alg),
+                    EX_top_25.count(alg), EX_top_50.count(alg), EX_top_100.count(alg), EX_top_200.count(alg)]
+
+            writer.writerow(data)
+
 
 # ============  #
 #   P L O T S   #
 # ============  #
 
-def heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10):
-    #TODO: Adapt "create_heat_map.py" code
-    return 0
+def heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None):
+
+    alg1 = alg_pair[0]
+    alg2 = alg_pair[1]
+
+    if alg1 != "heat_diffusion" and alg2 != "heat_diffusion":
+        diffusion_time = "None"
+    if alg1 != "pdiamond" and alg2 != "pdiamond":
+        num_iters_pdiamond = "None"
+
+    df = pd.read_csv(f"tables/{alg1}_vs_{alg2}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv")
+
+
+    parameters = ["LCC_size", "Density", "Disgenes Percentage"]
+
+    #This counter indicates the column where the first parameter is located
+    column_counter = 2
+    mode = ["absolute", "gradient"]
+
+    for m in mode:
+
+        for param in parameters:
+
+            sorted_df = df.sort_values(by = param)
+            data = sorted_df.values.tolist()
+
+            #We convert our data to a convenient format
+            data_array = np.array(data)
+            yaxis = data_array[0,:]
+            yaxis = np.delete(yaxis, [0,1,2,3,4,5])
+            yaxis = ['KF Top 25', 'KF Top 50', 'KF Top 100', 'KF Top 200', 'EX Top 25', 'EX Top 50', 'EX Top 100', 'EX Top 200']
+            xaxis = data_array[:,column_counter]
+            xaxis = np.delete(xaxis, 0)
+            data_array = np.delete(data_array,[0,1,2,3,4,5], axis=1)
+            data_array = np.delete(data_array,0, axis=0)
+
+            column_counter +=  1
+
+            #This function generates a numerical matrix that is used for the heat map generation
+
+            num_matrix = comparison_matrix(data_array, alg_pair, m)
+
+            #Tranpose the matrix so the plot fits better on the screen
+            num_matrix = np.transpose(num_matrix)
+
+            #We plot the results
+            cmap = plt.get_cmap('bwr')
+            fig, ax = plt.subplots()
+            img = ax.imshow(num_matrix, cmap = cmap)
+
+            ax.set_xticks(np.arange(len(xaxis)))
+            ax.set_yticks(np.arange(len(yaxis)))
+            ax.set_yticklabels(yaxis)
+            ax.set_xticklabels(xaxis)
+
+            plt.setp(ax.get_xticklabels(), rotation=90, ha="right", rotation_mode="anchor")
+            plt.colorbar(img, shrink=0.5)
+            plt.text(97,20, f"{alg_pair[1]} > {alg_pair[0]}")
+            plt.text(96,-12, f"{alg_pair[0]} > {alg_pair[1]}")
+
+            fig.suptitle(f"{param}: {alg_pair[0]} vs {alg_pair[1]}")
+
+            # for i in range(len(yaxis)):
+            #     for j in range(len(xaxis)):
+            #         text = ax.text(j, i, num_matrix[i, j], ha="center", va="center", color="w")
+
+            #plt.show()
+            plt.savefig(f"plots/heatmaps/{m}/{param}_{alg_pair[0]}_vs_{alg_pair[1]}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.png")
+
+            plt.close('all')
+
+def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None):
+    alg1 = alg_pair[0]
+    alg2 = alg_pair[1]
+
+    if alg1 != "heat_diffusion" and alg2 != "heat_diffusion":
+        diffusion_time = "None"
+    if alg1 != "pdiamond" and alg2 != "pdiamond":
+        num_iters_pdiamond = "None"
+
+    indices = diseases
+
+    for validation in validations:
+        if validation == 'kfold':
+            cols = ['KF Top 25', 'KF Top 50', 'KF Top 100', 'KF Top 200']
+        if validation == 'extended':
+            cols = ['EX Top 25', 'EX Top 50', 'EX Top 100', 'EX Top 200']
+
+        compared_scores = np.zeros( (len(indices), len(cols)) )
+
+        for idx, disease in enumerate(diseases):
+            # Get algorithm scores
+            alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision,
+                                 diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+            alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision,
+                                 diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+            # Compare scores
+            # compared_scores[idx] = alg1_scores  # Copy the alg1_scores
+            # comp_bool_array = alg1_scores < alg2_scores # True when alg1 < alg2, False otherwise
+            # compared_scores[idx][comp_bool_array] = -alg2_scores[comp_bool_array] # When alg1 < alg2 substitute the final score with -alg2
+
+            compared_scores[idx] = alg1_scores - alg2_scores
+
+        # Create DataFrame with the compared scores
+        compared_scores_df = pd.DataFrame(compared_scores, index=indices, columns=cols)
+
+        # Plot HeatMap
+        cmap = sns.diverging_palette(220, 20, as_cmap=True)
+        hm = sns.heatmap(compared_scores_df, annot=False, cmap=cmap, center=0, vmin=-0.1, vmax=0.1)
+
+        figure = hm.get_figure()
+        figure.savefig(f'plots/heatmaps/seaborn/{validation}/{metric}/{alg1}_vs_{alg2}_{validation}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.png', bbox_inches='tight')
+
+        # Close previous plots
+        plt.close()
 
 
 
@@ -359,7 +566,7 @@ if __name__ == "__main__":
 
     # Read input
     args = parse_args()
-    alg1, alg2, metric, p, validations, diseases, diffusion_time, num_iters_pdiamond = read_terminal_input(args)
+    algs, metrics, p, validations, diseases, diffusion_time, num_iters_pdiamond = read_terminal_input(args)
 
     # Human-Human Interactome
     biogrid = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
@@ -376,11 +583,27 @@ if __name__ == "__main__":
     LCC_hhi = isolate_LCC(hhi)
     LCC_hhi = hhi.subgraph(LCC_hhi).copy()
 
-    # winner tables
-    winner_table_filename = winner_tables(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+    # Create all possible pairs for algorithms in "algs"
+    alg_pairs = list(combinations(algs, 2))
+
+    # For each algorithm pair
+
+    # for metric in metrics:
+    #     for alg_pair in alg_pairs:
+    #         print("                                                          ")
+    #         print("----------------------------------------------------------")
+    #         print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
+    #         print("----------------------------------------------------------")
+    #         # winner tables
+    #         print("WINNER TABLES:")
+    #         winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+    #         # Read algorithms score and create the heatmaps
+    #         print("        ")
+    #         print("HEATMAPS")
+    #         absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
 
     # How many time an algorithm is better than the other for each validation
-    how_many_time_winner(winner_table_filename)
-
-    # Read algorithms score and create the heatmaps
-    heatmap(alg1, alg2, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+    for metric in metrics:
+        how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
