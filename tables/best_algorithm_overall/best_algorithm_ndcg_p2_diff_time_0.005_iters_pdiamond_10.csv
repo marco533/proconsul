@@ -1,4 +1,5 @@
 Algorithm,KF Top 25,KF Top 50,KF Top 100,KF Top 200,EX Top 25,EX Top 50,EX Top 100,EX Top 200
 diamond,29,28,29,22,19,20,20,13
-pdiamond,23,27,31,32,16,15,21,28
-heat_diffusion,27,24,19,25,44,44,38,38
+pdiamond,19,18,24,22,15,11,16,23
+heat_diffusion,8,13,13,17,6,10,8,7
+no clear winner,23,20,13,18,39,38,35,36
