@@ -443,6 +443,128 @@ def how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric="f
 
             writer.writerow(data)
 
+def num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None):
+    """
+    Given a pair of algorithm,
+    Return how many time one algorithm was better than the other
+    for each validation output.
+    """
+
+    alg1 = alg_pair[0]
+    alg2 = alg_pair[1]
+
+    if alg1 != "heat_diffusion" and alg2 != "heat_diffusion":
+        diffusion_time = "None"
+    if alg1 != "pdiamond" and alg2 != "pdiamond":
+        num_iters_pdiamond = "None"
+
+    round_dict = {"KF Top 25": [], "KF Top 50": [], "KF Top 100": [], "KF Top 200": [],
+                  "EX Top 25": [], "EX Top 50": [], "EX Top 100": [], "EX Top 200": []}
+
+    for validation in validations:
+
+        for idx, disease in enumerate(diseases):
+            # Get algorithm scores
+            alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision,
+                                 diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+            alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision,
+                                 diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+            # Compare scores
+            compared_scores = alg1_scores - alg2_scores
+
+            for i in range(len(compared_scores)):
+                if validation == "kfold":
+                    if compared_scores[i] > 0:  # alg1 > alg2
+                        if i == 0:
+                            round_dict["KF Top 25"].append(alg1)
+                        elif i == 1:
+                            round_dict["KF Top 50"].append(alg1)
+                        elif i == 2:
+                            round_dict["KF Top 100"].append(alg1)
+                        else:
+                            round_dict["KF Top 200"].append(alg1)
+                    elif compared_scores[i] < 0:  # alg1 < alg2
+                        if i == 0:
+                            round_dict["KF Top 25"].append(alg2)
+                        elif i == 1:
+                            round_dict["KF Top 50"].append(alg2)
+                        elif i == 2:
+                            round_dict["KF Top 100"].append(alg2)
+                        else:
+                            round_dict["KF Top 200"].append(alg2)
+                    else:   # alg1 == alg2
+                        if i == 0:
+                            round_dict["KF Top 25"].append("draw")
+                        elif i == 1:
+                            round_dict["KF Top 50"].append("draw")
+                        elif i == 2:
+                            round_dict["KF Top 100"].append("draw")
+                        else:
+                            round_dict["KF Top 200"].append("draw")
+
+                if validation == "extended":
+                    if compared_scores[i] > 0:  # alg1 > alg2
+                        if i == 0:
+                            round_dict["EX Top 25"].append(alg1)
+                        elif i == 1:
+                            round_dict["EX Top 50"].append(alg1)
+                        elif i == 2:
+                            round_dict["EX Top 100"].append(alg1)
+                        else:
+                            round_dict["EX Top 200"].append(alg1)
+                    elif compared_scores[i] < 0:  # alg1 < alg2
+                        if i == 0:
+                            round_dict["EX Top 25"].append(alg2)
+                        elif i == 1:
+                            round_dict["EX Top 50"].append(alg2)
+                        elif i == 2:
+                            round_dict["EX Top 100"].append(alg2)
+                        else:
+                            round_dict["EX Top 200"].append(alg2)
+                    else:   # alg1 == alg2
+                        if i == 0:
+                            round_dict["EX Top 25"].append("draw")
+                        elif i == 1:
+                            round_dict["EX Top 50"].append("draw")
+                        elif i == 2:
+                            round_dict["EX Top 100"].append("draw")
+                        else:
+                            round_dict["EX Top 200"].append("draw")
+
+    # Count how many time one algorithm appears in each dict key
+    KF_top_25 = round_dict["KF Top 25"]
+    KF_top_50 = round_dict["KF Top 50"]
+    KF_top_100 = round_dict["KF Top 100"]
+    KF_top_200 = round_dict["KF Top 200"]
+
+    EX_top_25 = round_dict["EX Top 25"]
+    EX_top_50 = round_dict["EX Top 50"]
+    EX_top_100 = round_dict["EX Top 100"]
+    EX_top_200 = round_dict["EX Top 200"]
+
+    outfile = f"tables/{alg1}_vs_{alg2}/num_times_winner_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
+    with open(outfile, "w") as f:
+        writer = csv.writer(f)
+
+        # ** Write the header **
+        header = ["Algorithm",
+                  "KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200",
+                  "EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
+
+        writer.writerow(header)
+        algs_with_draw =list(alg_pair).copy()
+        algs_with_draw.append("draw")
+        # print(algs_with_draw)
+        # sys.exit(0)
+        for alg in algs_with_draw:
+        # for alg in algs:
+            data = [alg,
+                    KF_top_25.count(alg), KF_top_50.count(alg), KF_top_100.count(alg), KF_top_200.count(alg),
+                    EX_top_25.count(alg), EX_top_50.count(alg), EX_top_100.count(alg), EX_top_200.count(alg)]
+
+            writer.writerow(data)
+
+
 
 # ============  #
 #   P L O T S   #
@@ -597,22 +719,31 @@ if __name__ == "__main__":
 
     # For each algorithm pair
 
-    # for metric in metrics:
-    #     for alg_pair in alg_pairs:
-    #         print("                                                          ")
-    #         print("----------------------------------------------------------")
-    #         print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
-    #         print("----------------------------------------------------------")
-    #         # winner tables
-    #         print("WINNER TABLES:")
-    #         winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
-
-    #         # Read algorithms score and create the heatmaps
-    #         print("        ")
-    #         print("HEATMAPS")
-    #         absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
-
-
-    # How many time an algorithm is better than the other for each validation
     for metric in metrics:
-        how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+        print( "**************************")
+        print(f"  {metric.upper()} SCORE  ")
+        print( "**************************")
+
+        for alg_pair in alg_pairs:
+            print("                                                          ")
+            print("----------------------------------------------------------")
+            print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
+            print("----------------------------------------------------------")
+
+            # # Winner tables
+            # print("WINNER TABLES:")
+            # winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+            # # Heatmaps
+            # print("        ")
+            # print("HEATMAPS")
+            # absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+            # Num won matches
+            num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+
+        # # How many time an algorithm is better than the other for each validation
+        # how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+

@@ -43,6 +43,27 @@ Non-Convulsive Status Epilepticus
 Amphetamine Addiction
 Carcinoma, Cribriform
 Mouth Neoplasms
+Amyotrophic Lateral Sclerosis
+Ovarian Serous Adenocarcinoma
+Condition, Preneoplastic
+Mycoplasma-Induced Stevens-Johnson Syndrome
+Respiratory Hypersensitivity
+Hyperglycemia, Postprandial
+Primary microcephaly
+Necrotizing encephalopathy, infantile subacute, of Leigh
+Disorder of eye
+Childhood Acute Lymphoblastic Leukemia
+Arsenic Encephalopathy
+Paroxysmal atrial fibrillation
+Mammary Neoplasms, Human
+Spinocerebellar Ataxia Type 4
+Myocardial Reperfusion Injury
+Left Middle Cerebral Artery Infarction
+IGA Glomerulonephritis
+Glioblastoma Multiforme
+Schizophrenia
+Involutional Depression
+Kidney Failure
 Stevens-Johnson Syndrome
 Fibrillary Astrocytoma
 Arsenic Poisoning

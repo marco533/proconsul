@@ -1,0 +1,4 @@
+Algorithm,KF Top 25,KF Top 50,KF Top 100,KF Top 200,EX Top 25,EX Top 50,EX Top 100,EX Top 200
+diamond,60,60,67,57,37,41,41,41
+heat_diffusion,14,18,20,28,14,15,17,17
+draw,26,22,13,15,49,44,42,42
