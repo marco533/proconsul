@@ -399,9 +399,13 @@ def how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric="f
                                 diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
                 for i in range(len(score)):
-                    if score[i] >= best_score[i]:
+                    if score[i] > best_score[i]:
                         best_score[i] = score[i]
                         best_alg[i] = alg
+                    elif score[i] == best_score[i]:
+                        best_alg[i] = "no clear winner"
+                    else:
+                        continue
 
 
             if validation == 'kfold':
@@ -416,6 +420,7 @@ def how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric="f
                 EX_top_100.append(best_alg[2])
                 EX_top_200.append(best_alg[3])
 
+
     outfile = f"tables/best_algorithm_overall/best_algorithm_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
     with open(outfile, "w") as f:
         writer = csv.writer(f)
@@ -426,8 +431,12 @@ def how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric="f
                   "EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
 
         writer.writerow(header)
-
-        for alg in algs:
+        algs_with_draw = algs.copy()
+        algs_with_draw.append("no clear winner")
+        # print(algs_with_draw)
+        # sys.exit(0)
+        for alg in algs_with_draw:
+        # for alg in algs:
             data = [alg,
                     KF_top_25.count(alg), KF_top_50.count(alg), KF_top_100.count(alg), KF_top_200.count(alg),
                     EX_top_25.count(alg), EX_top_50.count(alg), EX_top_100.count(alg), EX_top_200.count(alg)]
@@ -588,20 +597,20 @@ if __name__ == "__main__":
 
     # For each algorithm pair
 
-    for metric in metrics:
-        for alg_pair in alg_pairs:
-            print("                                                          ")
-            print("----------------------------------------------------------")
-            print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
-            print("----------------------------------------------------------")
-            # winner tables
-            print("WINNER TABLES:")
-            winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+    # for metric in metrics:
+    #     for alg_pair in alg_pairs:
+    #         print("                                                          ")
+    #         print("----------------------------------------------------------")
+    #         print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
+    #         print("----------------------------------------------------------")
+    #         # winner tables
+    #         print("WINNER TABLES:")
+    #         winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
-            # Read algorithms score and create the heatmaps
-            print("        ")
-            print("HEATMAPS")
-            absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+    #         # Read algorithms score and create the heatmaps
+    #         print("        ")
+    #         print("HEATMAPS")
+    #         absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
 
     # How many time an algorithm is better than the other for each validation
