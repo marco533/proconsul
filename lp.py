@@ -44,7 +44,7 @@ if __name__ == "__main__":
     print(adjacency_matrix)
 
     # Save adjacency metric as binary file
-    with open("data/adjacency_matrix", "wb") as f:
+    with open("data/adjacency_matrix.npy", "wb") as f:
         np.save(f, adjacency_matrix)
 
     #compute distance matrix
@@ -52,7 +52,7 @@ if __name__ == "__main__":
     print(distance_matrix)
 
     # Save adjacency metric as binary file
-    with open("data/distance_matrix", "wb") as f:
+    with open("data/distance_matrix.npy", "wb") as f:
         np.save(f, distance_matrix)
 
 
