@@ -687,6 +687,90 @@ def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f
         # Close previous plots
         plt.close()
 
+def clustered_heatmap(alg_pair, validations, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None):
+    """
+    Given a table with the scores for two algorithms
+    and the properties for each disease,
+    build an heatmap that show the winner for
+    the selected <validation>, the selected
+    <output size> and the slected <metric>,
+    clusterized wrt the disease properties.
+    """
+
+    # Extract the two algorithms in the pair
+    alg1 = alg_pair[0]
+    alg2 = alg_pair[1]
+
+    # Set value for diffusion_time and num_iters_pdiamond
+    # according the algorithms into the pair
+    if alg1 != "heat_diffusion" and alg2 != "heat_diffusion":
+        diffusion_time = "None"
+    if alg1 != "pdiamond" and alg2 != "pdiamond":
+        num_iters_pdiamond = "None"
+
+    for validation in validations:
+        # List the possible prediction sizes
+        # according to <validation>
+        if validation == "kfold":
+            predictions = ["KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200"]
+        elif validation == "extended":
+            predictions = ["EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
+        else:
+            print("ERROR: No valid validation name")
+            sys.exit(0)
+
+        # Import the dataset according the specified parameters
+        dataset_filename = f"tables/{alg1}_vs_{alg2}/{alg1}_vs_{alg2}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}.csv"
+        data = pd.read_csv(dataset_filename)
+
+        for prediction in predictions:
+            # Select from data only the disease properties
+            # and the winner of just one <prediction>
+            clear_data = data[[#"Num disease genes",
+                                #"LCC_size",
+                                "Density",
+                                "Disgenes Percentage",
+                                #"Disgenes Longpath",
+                                prediction]]
+
+
+            # From the cleared data get only the prediction column
+            # that contain the tuple (winner, by_how_much)
+            winners_with_score = clear_data.pop(prediction) # get the <prediction> column and remove it from the df
+
+            # Extract only the winner names
+            winners = []
+            for winner_tuple in winners_with_score:
+                # print("winner_tuple: ", winner_tuple)
+                winner_tuple = winner_tuple.replace("(", "")
+                winner_tuple = winner_tuple.replace(")", "")
+                winner, score = winner_tuple.split(", ")
+                winner = winner.replace("'", "")
+                score = float(score)
+                # print("winner: ", winner)
+                # print("score: ", score)
+
+                # Append winner name to the winner list
+                winners.append(winner)
+
+            # Replace the popped column with this new one
+            # containing only the winner names
+            clear_data[prediction] = winners
+            # print(clear_data.head())
+
+            # Pop out new winners col to use it
+            # as observation for heatmap
+            winners = clear_data.pop(prediction)
+
+            # We can finally build the clustered heatmap
+            lut = dict(zip(winners.unique(), "rbg"))
+            row_colors = winners.map(lut)
+            g = sns.clustermap(clear_data, row_colors=row_colors)
+
+            g.savefig(f'plots/clustered_heatmaps/{alg1}_vs_{alg2}/{alg1}_vs_{alg2}__{string_to_filename(prediction)}__{metric}__p{precision}__diff_time_{diffusion_time}__iters_pdiamond_{num_iters_pdiamond}.png', bbox_inches='tight')
+
+            # Close previous plots
+            plt.close()
 
 
 # =========== #
@@ -718,7 +802,6 @@ if __name__ == "__main__":
     alg_pairs = list(combinations(algs, 2))
 
     # For each algorithm pair
-
     for metric in metrics:
 
         print( "**************************")
@@ -726,22 +809,25 @@ if __name__ == "__main__":
         print( "**************************")
 
         for alg_pair in alg_pairs:
-            print("                                                          ")
-            print("----------------------------------------------------------")
-            print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
-            print("----------------------------------------------------------")
+            # print("                                                          ")
+            # print("----------------------------------------------------------")
+            # print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
+            # print("----------------------------------------------------------")
 
-            # # Winner tables
-            # print("WINNER TABLES:")
-            # winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+            # Winner tables
+            print("WINNER TABLES:")
+            winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
             # # Heatmaps
             # print("        ")
             # print("HEATMAPS")
             # absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
-            # Num won matches
-            num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+            # Clustered heatmaps
+            clustered_heatmap(alg_pair, validations, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
+
+            # # Num won matches
+            # num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond)
 
 
         # # How many time an algorithm is better than the other for each validation
