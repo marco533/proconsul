@@ -4,3 +4,5 @@ utils/__pycache__
 algorithms/__pycache__
 data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt
 data/all_gene_disease_associations.tsv
+data/adjacency_matrix.npy
+data/distance_matrix.npy
