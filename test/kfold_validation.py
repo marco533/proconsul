@@ -12,7 +12,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, diffusion_time=0.005, num_iters_pdiamond=10):
+def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, diffusion_time=0.005, num_iters_pdiamond=10, pdiamond_mode="classic"):
     '''
     Performs the K-Folf Cross Validation over all the disease genes.
     Input:
@@ -81,7 +81,7 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
 
         elif algorithm == "pdiamond":
             input_list = ["pdiamond.py", interactome, training_set_file, num_genes_to_predict, 1, output_file, num_iters_pdiamond]
-            added_nodes = run_pdiamond(input_list)
+            added_nodes = run_pdiamond(input_list, mode=pdiamond_mode)
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "heat_diffusion":
@@ -130,7 +130,10 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
         csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
 
     if algorithm == "pdiamond":
-        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_{num_iters_pdiamond}_iters.csv"
+        if pdiamond_mode == "classic":
+            csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_{num_iters_pdiamond}_iters.csv"
+        if pdiamond_mode == "alternative":
+            csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_{pdiamond_mode}_on_{string_to_filename(disease_name)}_kfold_{num_iters_pdiamond}_iters.csv"
 
     if algorithm == "heat_diffusion":
         csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_diff_time_{diffusion_time}.csv"

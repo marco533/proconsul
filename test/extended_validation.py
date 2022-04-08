@@ -11,7 +11,7 @@ from utils.metrics_utils import *
 from utils.data_utils import *
 
 
-def extended_validation(network, seed_genes, test_genes, algorithm, disease_name, diffusion_time=0.005, num_iters_pdiamond=10):
+def extended_validation(network, seed_genes, test_genes, algorithm, disease_name, diffusion_time=0.005, num_iters_pdiamond=10, pdiamond_mode="classic"):
     '''
     Perform an extended validation using all the seed genes of the disease
     and test the predicted genes with all the genes in
@@ -53,7 +53,7 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
 
     elif algorithm == "pdiamond":
         input_list = ["pdiamond.py", interactome, seed_genes_file, num_genes_to_predict, 1, output_file, num_iters_pdiamond]
-        added_nodes = run_pdiamond(input_list)
+        added_nodes = run_pdiamond(input_list, mode=pdiamond_mode)
         predicted_genes = [item[0] for item in added_nodes]
 
     elif algorithm == "heat_diffusion":
@@ -89,7 +89,10 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
         csv_file = f"results/extended/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_extended.csv"
 
     if algorithm == "pdiamond":
-        csv_file = f"results/extended/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_extended_{num_iters_pdiamond}_iters.csv"
+        if pdiamond_mode == "classic":
+            csv_file = f"results/extended/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_extended_{num_iters_pdiamond}_iters.csv"
+        if pdiamond_mode == "alternative":
+            csv_file = f"results/extended/{algorithm}/{string_to_filename(algorithm)}_{pdiamond_mode}_on_{string_to_filename(disease_name)}_extended_{num_iters_pdiamond}_iters.csv"
 
     if algorithm == "heat_diffusion":
         csv_file = f"results/extended/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_extended_diff_time_{diffusion_time}.csv"

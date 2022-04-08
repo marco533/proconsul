@@ -374,6 +374,143 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
 
     return added_nodes
 
+def pdiamond_alternative_iteration_of_first_X_nodes(G, S, X, alpha):
+    """
+    Parameters:
+    ----------
+    - G:     graph
+    - S:     seeds
+    - X:     the number of iterations, i.e only the first X gened will be
+             pulled in
+    - alpha: seeds weight
+    Returns:
+    --------
+
+    - added_nodes: ordered list of nodes in the order by which they
+      are agglomerated. Each entry has 4 info:
+      * name : dito
+      * k    : degree of the node
+      * kb   : number of +1 neighbors
+      * p    : p-value at agglomeration
+    """
+
+    N = G.number_of_nodes()
+
+    added_nodes = []
+
+    # ------------------------------------------------------------------
+    # Setting up dictionaries with all neighbor lists
+    # and all degrees
+    # ------------------------------------------------------------------
+    neighbors, all_degrees = get_neighbors_and_degrees(G)
+
+    # ------------------------------------------------------------------
+    # Setting up initial set of nodes in cluster
+    # ------------------------------------------------------------------
+
+    cluster_nodes = set(S)
+    not_in_cluster = set()
+    s0 = len(cluster_nodes)
+
+    s0 += (alpha - 1) * s0
+    N += (alpha - 1) * s0
+
+    # ------------------------------------------------------------------
+    # precompute the logarithmic gamma functions
+    # ------------------------------------------------------------------
+    gamma_ln = compute_all_gamma_ln(N + 1)
+
+    # ------------------------------------------------------------------
+    # Setting initial set of nodes not in cluster
+    # ------------------------------------------------------------------
+    for node in cluster_nodes:
+        not_in_cluster |= neighbors[node]
+    not_in_cluster -= cluster_nodes
+
+    # ------------------------------------------------------------------
+    #
+    # M A I N     L O O P
+    #
+    # ------------------------------------------------------------------
+
+    all_p = {}
+    SNP = 0
+    while len(added_nodes) < X:
+
+        # ------------------------------------------------------------------
+        #
+        # Going through all nodes that are not in the cluster yet and
+        # record k, kb and p
+        #
+        # ------------------------------------------------------------------
+
+        info = {}
+
+        pmin = 10
+        next_node = 'nix'
+        reduced_not_in_cluster = reduce_not_in_cluster_nodes(all_degrees,
+                                                             neighbors, G,
+                                                             not_in_cluster,
+                                                             cluster_nodes, alpha)
+        probable_next_nodes = []
+        inv_p_values = []
+        SNP_iter = 0
+        for node, kbk in reduced_not_in_cluster.items():
+            # Getting the p-value of this kb,k
+            # combination and save it in all_p, so computing it only once!
+            kb, k = kbk
+            try:
+                p = all_p[(k, kb, s0)]
+            except KeyError:
+                p = pvalue(kb, k, N, s0, gamma_ln)
+                all_p[(k, kb, s0)] = p
+
+            '''
+            # recording the node with smallest p-value
+            if p < pmin:
+                pmin = p
+                next_node = node
+            '''
+
+            # Compute the
+
+            info[node] = (k, kb, p)
+            probable_next_nodes.append(node)
+            inv_p_values.append(1 - p[0])
+            SNP_iter += p
+
+        averaged_SNP_iter = SNP_iter / len(reduced_not_in_cluster.items())
+
+        # print(probable_next_nodes)
+
+        # ---------------------------------------------------------------------
+        # Convert the p-value list in a probability distribution and
+        # extract the next node based on it
+        # ---------------------------------------------------------------------
+        probability_distribution = softmax(inv_p_values)
+        next_node = np.random.choice(probable_next_nodes, 1,
+                                     p=probability_distribution)
+        next_node = next_node[0]
+        # print(next_node)
+
+        # ---------------------------------------------------------------------
+        # Adding the chosen node to the list of agglomerated nodes
+        # ---------------------------------------------------------------------
+        added_nodes.append((next_node,
+                            info[next_node][0],
+                            info[next_node][1],
+                            info[next_node][2]))
+
+        # Updating the list of cluster nodes and s0
+        cluster_nodes.add(next_node)
+        s0 = len(cluster_nodes)
+        not_in_cluster |= (neighbors[next_node] - cluster_nodes)
+        not_in_cluster.remove(next_node)
+
+        SNP += averaged_SNP_iter
+
+    return added_nodes, SNP
+
 
 # ===========================================================================
 #
@@ -431,18 +568,53 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
 
     return sorted_nodes
 
-def run_pdiamond(input_list):
+def pDIAMOnD_alternative(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_iterations=10):
+
+    # 1. throwing away the seed genes that are not in the network
+    all_genes_in_network = set(G_original.nodes())
+    seed_genes = set(seed_genes)
+    disease_genes = seed_genes & all_genes_in_network
+
+    if len(disease_genes) != len(seed_genes):
+        print("pDIAMOnD(): ignoring %s of %s seed genes that are not in the network" % (
+            len(seed_genes - all_genes_in_network), len(seed_genes)))
+
+    # 2. run pdiamond different times and get the best
+    #    predicted nodes combination wrt the sum of the
+    #    p-values of the neighbours (SNP).
+    print(f"pDIAMOnD(): number of iterations = {max_iterations}")
+    lowest_SNP = 100
+    best_added_nodes = []
+
+    for i in range(max_iterations):
+        added_nodes, SNP = pdiamond_alternative_iteration_of_first_X_nodes(G_original,
+                                                                            disease_genes,
+                                                                            max_number_of_added_nodes, alpha)
+        if SNP > 0 and SNP < lowest_SNP:
+            lowest_SNP = SNP
+            best_added_nodes = added_nodes
+
+    return best_added_nodes
+
+def run_pdiamond(input_list, mode="classic"):
     network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
 
     # run DIAMOnD
-    added_nodes = pDIAMOnD(G_original,
-                               seed_genes,
-                               max_number_of_added_nodes, alpha,
-                               outfile=outfile_name,
-                               max_iterations=num_iterations)
+    if mode == "classic":
+        added_nodes = pDIAMOnD(G_original,
+                            seed_genes,
+                            max_number_of_added_nodes, alpha,
+                            outfile=outfile_name,
+                            max_iterations=num_iterations)
+    if mode == "alternative":
+        added_nodes = pDIAMOnD_alternative(G_original,
+                                        seed_genes,
+                                        max_number_of_added_nodes, alpha,
+                                        outfile=outfile_name,
+                                        max_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
 
