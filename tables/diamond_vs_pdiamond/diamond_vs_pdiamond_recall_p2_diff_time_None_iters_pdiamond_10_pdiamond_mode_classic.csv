@@ -1,5 +1,5 @@
 Disease,Num disease genes,LCC_size,Density,Disgenes Percentage,Disgenes Longpath,KF Top 25,KF Top 50,KF Top 100,KF Top 200,EX Top 25,EX Top 50,EX Top 100,EX Top 200
-Psoriasis,57,21,0.12857142857142856,0.3684210526315789,-1,"('diamond', 0.02)","('pdiamond', 0.03)","('pdiamond', 0.06)","('pdiamond', 0.08)","('draw', 0.0)","('draw', 0.0)","('draw', 0.0)","('pdiamond', 0.01)"
+Psoriasis,57,21,0.12857142857142856,0.3684210526315789,-1,"('diamond', 0.02)","('pdiamond', 0.03)","('pdiamond', 0.06)","('pdiamond', 0.06)","('draw', 0.0)","('draw', 0.0)","('draw', 0.0)","('pdiamond', 0.01)"
 Liver carcinoma,507,395,0.02990426010409304,0.7790927021696252,-1,"('diamond', 0.01)","('diamond', 0.01)","('draw', 0.0)","('pdiamond', 0.01)","('draw', 0.0)","('draw', 0.0)","('draw', 0.0)","('draw', 0.0)"
 "Liver Cirrhosis, Experimental",774,614,0.01028742075869728,0.7932816537467701,-1,"('draw', 0.0)","('draw', 0.0)","('diamond', 0.01)","('diamond', 0.02)","('diamond', 0.01)","('diamond', 0.01)","('diamond', 0.03)","('diamond', 0.02)"
 "Diabetes Mellitus, Non-Insulin-Dependent",221,91,0.03418803418803419,0.4117647058823529,-1,"('diamond', 0.01)","('diamond', 0.01)","('diamond', 0.03)","('diamond', 0.01)","('draw', 0.0)","('draw', 0.0)","('draw', 0.0)","('draw', 0.0)"

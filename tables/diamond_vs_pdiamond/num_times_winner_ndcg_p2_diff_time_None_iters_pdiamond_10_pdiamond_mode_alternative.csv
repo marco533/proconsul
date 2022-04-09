@@ -1,0 +1,4 @@
+Algorithm,KF Top 25,KF Top 50,KF Top 100,KF Top 200,EX Top 25,EX Top 50,EX Top 100,EX Top 200
+diamond,8,6,6,6,8,8,6,4
+pdiamond,1,2,2,2,1,0,2,3
+draw,1,2,2,2,1,2,2,3

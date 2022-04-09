@@ -1,0 +1,5 @@
+Algorithm,KF Top 25,KF Top 50,KF Top 100,KF Top 200,EX Top 25,EX Top 50,EX Top 100,EX Top 200
+diamond,2,2,1,1,6,6,2,1
+pdiamond,1,1,1,1,1,3,5,7
+heat_diffusion,2,3,1,1,0,0,0,1
+no clear winner,5,4,7,7,3,1,3,1
