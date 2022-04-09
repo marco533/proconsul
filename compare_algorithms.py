@@ -225,6 +225,37 @@ def scores(alg, disease, validation="kfold", metric="f1", precision=2, diffusion
 
     return scores
 
+def get_disease_param(disease, param):
+    """
+    Given the name of a disease and the name of a parameter,
+    Return the value of the parameter of this disease.
+    """
+
+    if param == "Disease":
+        return disease
+    elif param == "Num disease genes":
+        return len(get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease))
+    elif param == "LCC_size":
+        disease_LCC = get_disease_LCC(hhi_df, disease)
+        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+        return nx.number_of_nodes(disease_LCC)
+    elif param == "Density":
+        disease_LCC = get_disease_LCC(hhi_df, disease)
+        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+        return get_density(disease_LCC)
+    elif param == "Disgenes Percentage":
+        disease_LCC = get_disease_LCC(hhi_df, disease)
+        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+        disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease)
+        return get_genes_percentage(disease_genes, disease_LCC)
+    elif param == "Disgenes Longpath":
+        disease_LCC = get_disease_LCC(hhi_df, disease)
+        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+        return disease_LCC, disease_genes
+    else:
+        print(f"ERROR: {param} is no valid parameter.")
+        sys.exit(0)
+
 def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10, pdiamond_mode="classic"):
     """
     Compare the results of 'alg1' and 'alg2' on 'disease'
@@ -661,7 +692,7 @@ def heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", preci
 
             plt.close('all')
 
-def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None, pdiamond_mode="classic"):
+def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None, pdiamond_mode="classic", cluster=False):
     alg1 = alg_pair[0]
     alg2 = alg_pair[1]
 
@@ -671,42 +702,99 @@ def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f
         num_iters_pdiamond = "None"
         pdiamond_mode = "None"
 
-    indices = diseases
+    if cluster:
+        # Define disease parameters
+        params = ["Disease", "LCC_size", "Num disease genes", "Density", "Disgenes Percentage"] #, "Disgenes Longpath"]
+        for param in params:
+            # Create a dictionary disease: param
+            disease_param_dict = {}
+            for disease in diseases:
+                disease_param_dict[disease] = get_disease_param(disease, param)
 
-    for validation in validations:
-        if validation == 'kfold':
-            cols = ['KF Top 25', 'KF Top 50', 'KF Top 100', 'KF Top 200']
-        if validation == 'extended':
-            cols = ['EX Top 25', 'EX Top 50', 'EX Top 100', 'EX Top 200']
+            indices = disease_param_dict.values()
 
-        compared_scores = np.zeros( (len(indices), len(cols)) )
+            for validation in validations:
+                if validation == 'kfold':
+                    cols = ['KF Top 25', 'KF Top 50', 'KF Top 100', 'KF Top 200']
+                if validation == 'extended':
+                    cols = ['EX Top 25', 'EX Top 50', 'EX Top 100', 'EX Top 200']
 
-        for idx, disease in enumerate(diseases):
-            # Get algorithm scores
-            alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision,
-                                 diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
-            alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision,
-                                 diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+                compared_scores = np.zeros( (len(indices), len(cols)) )
 
-            # Compare scores
-            # compared_scores[idx] = alg1_scores  # Copy the alg1_scores
-            # comp_bool_array = alg1_scores < alg2_scores # True when alg1 < alg2, False otherwise
-            # compared_scores[idx][comp_bool_array] = -alg2_scores[comp_bool_array] # When alg1 < alg2 substitute the final score with -alg2
+                for idx, disease in enumerate(diseases):
+                    # Get algorithm scores
+                    alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision,
+                                        diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+                    alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision,
+                                        diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
-            compared_scores[idx] = alg1_scores - alg2_scores
+                    # Compare scores
+                    compared_scores[idx] = alg1_scores - alg2_scores
 
-        # Create DataFrame with the compared scores
-        compared_scores_df = pd.DataFrame(compared_scores, index=indices, columns=cols)
+                # Create DataFrame with the compared scores
+                compared_scores_df = pd.DataFrame(compared_scores, index=indices, columns=cols)
 
-        # Plot HeatMap
-        cmap = sns.diverging_palette(220, 20, as_cmap=True)
-        hm = sns.heatmap(compared_scores_df, annot=False, cmap=cmap, center=0, vmin=-0.1, vmax=0.1)
+                # Plot ClusterMap
+                cmap = sns.diverging_palette(220, 20, as_cmap=True)
+                g = sns.clustermap(compared_scores_df, cmap=cmap, center=0)
 
-        figure = hm.get_figure()
-        figure.savefig(f'plots/heatmaps/absolute_score/{validation}/{metric}/{alg1}_vs_{alg2}_{validation}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}_pdiamond_mode_{pdiamond_mode}.png', bbox_inches='tight')
+                g.savefig(f'plots/clustered_heatmaps/{alg1}_vs_{alg2}/{alg1}_vs_{alg2}__{validation}__{string_to_filename(param)}__{metric}__p{precision}__diff_time_{diffusion_time}__iters_pdiamond_{num_iters_pdiamond}__pdiamond_mode_{pdiamond_mode}.png', bbox_inches='tight')
 
-        # Close previous plots
-        plt.close()
+                # Close previous plots
+                plt.close()
+
+
+    else:
+        # Define disease parameters
+        params = ["Disease", "LCC_size", "Num disease genes", "Density", "Disgenes Percentage"] #, "Disgenes Longpath"]
+        for param in params:
+            # Create a dictionary disease: param
+            disease_param_dict = {}
+            for disease in diseases:
+                disease_param_dict[disease] = get_disease_param(disease, param)
+
+            # Sort the dictionary keys according to their values
+            sorted_tuples = sorted(disease_param_dict.items(), key=lambda item: item[1])
+            sorted_dict = {k: v for k, v in sorted_tuples}
+
+            indices = sorted_dict.values()
+            sorted_diseases = sorted_dict.keys()
+
+            for validation in validations:
+                if validation == 'kfold':
+                    cols = ['KF Top 25', 'KF Top 50', 'KF Top 100', 'KF Top 200']
+                if validation == 'extended':
+                    cols = ['EX Top 25', 'EX Top 50', 'EX Top 100', 'EX Top 200']
+
+                compared_scores = np.zeros( (len(indices), len(cols)) )
+
+                for idx, disease in enumerate(sorted_diseases):
+                    # Get algorithm scores
+                    alg1_scores = scores(alg1, disease, validation=validation, metric=metric, precision=precision,
+                                        diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+                    alg2_scores = scores(alg2, disease, validation=validation, metric=metric, precision=precision,
+                                        diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+
+                    # Compare scores
+                    # compared_scores[idx] = alg1_scores  # Copy the alg1_scores
+                    # comp_bool_array = alg1_scores < alg2_scores # True when alg1 < alg2, False otherwise
+                    # compared_scores[idx][comp_bool_array] = -alg2_scores[comp_bool_array] # When alg1 < alg2 substitute the final score with -alg2
+
+                    compared_scores[idx] = alg1_scores - alg2_scores
+
+                # Create DataFrame with the compared scores
+                compared_scores_df = pd.DataFrame(compared_scores, index=indices, columns=cols)
+
+                # Plot HeatMap
+                cmap = sns.diverging_palette(220, 20, as_cmap=True)
+                hm = sns.heatmap(compared_scores_df, annot=False, cmap=cmap, center=0, vmin=-0.1, vmax=0.1)
+
+                figure = hm.get_figure()
+                figure.savefig(f'plots/heatmaps/absolute_score/{validation}/{metric}/{alg1}_vs_{alg2}_{string_to_filename(param)}_{validation}_{metric}_p{precision}_diff_time_{diffusion_time}_iters_pdiamond_{num_iters_pdiamond}_pdiamond_mode_{pdiamond_mode}.png', bbox_inches='tight')
+
+                # Close previous plots
+                plt.close()
+
 
 def clustered_heatmap(alg_pair, validations, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None, pdiamond_mode="classic"):
     """
@@ -748,8 +836,8 @@ def clustered_heatmap(alg_pair, validations, metric="f1", precision=2, diffusion
         for prediction in predictions:
             # Select from data only the disease properties
             # and the winner of just one <prediction>
-            clear_data = data[[#"Num disease genes",
-                                #"LCC_size",
+            clear_data = data[["Num disease genes",
+                                "LCC_size",
                                 "Density",
                                 "Disgenes Percentage",
                                 #"Disgenes Longpath",
@@ -785,9 +873,10 @@ def clustered_heatmap(alg_pair, validations, metric="f1", precision=2, diffusion
             winners = clear_data.pop(prediction)
 
             # We can finally build the clustered heatmap
-            lut = dict(zip(winners.unique(), "rbg"))
+            lut = dict(zip(["diamond", "pdiamond", "draw"], "rbg"))
             row_colors = winners.map(lut)
-            g = sns.clustermap(clear_data, row_colors=row_colors)
+            print(lut)
+            g = sns.clustermap(clear_data, row_colors=row_colors, standard_scale=1)
 
             g.savefig(f'plots/clustered_heatmaps/{alg1}_vs_{alg2}/{alg1}_vs_{alg2}__{string_to_filename(prediction)}__{metric}__p{precision}__diff_time_{diffusion_time}__iters_pdiamond_{num_iters_pdiamond}_pdiamond_mode_{pdiamond_mode}.png', bbox_inches='tight')
 
@@ -836,22 +925,22 @@ if __name__ == "__main__":
             print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
             print("----------------------------------------------------------")
 
-            # Winner tables
-            print("WINNER TABLES:")
-            winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+            # # Winner tables
+            # print("WINNER TABLES:")
+            # winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
             # Heatmaps
             print("        ")
             print("HEATMAPS")
-            absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+            absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode, cluster=True)
 
-            # Clustered heatmaps
-            clustered_heatmap(alg_pair, validations, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+        #     # Clustered heatmaps
+        #     clustered_heatmap(alg_pair, validations, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
-            # Num won matches
-            num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+        #     # Num won matches
+        #     num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
 
-        # How many time an algorithm is better than the other for each validation
-        how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+        # # How many time an algorithm is better than the other for each validation
+        # how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
