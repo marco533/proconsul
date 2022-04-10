@@ -8,7 +8,7 @@ from numpy import indices
 
 from utils.data_utils import get_disease_genes_from_gda, string_to_filename
 from utils.network_utils import *
-from utils.network_utils import get_density, get_disease_LCC, get_longest_paths
+from utils.network_utils import get_density, get_disease_LCC, get_longest_path_for_a_disease_LCC, get_longest_path_for_a_disease_interactome
 
 import seaborn as sns
 
@@ -345,7 +345,7 @@ def comparison_matrix(data_array, alg_pair, mode):
 
 def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10, pdiamond_mode="classic"):
 
-    header = ["Disease", "Num disease genes", "LCC_size", "Density", "Disgenes Percentage", "Disgenes Longpath",
+    header = ["Disease", "Num disease genes", "LCC_size", "Density", "Disgenes Percentage", "Longpath LCC", "Longpath interactome",
               "KF Top 25", "KF Top 50", "KF Top 100", "KF Top 200",
               "EX Top 25", "EX Top 50", "EX Top 100", "EX Top 200"]
 
@@ -391,13 +391,14 @@ def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1",
 
             # Longest path between disease genes in the LCC
             # TODO: Substitute func name
-            # disease_genes_longpath_in_LCC = get_disease_genes_longpath(disease_LCC, disease_genes)
+            # disease_genes_longpath_in_LCC = get_longest_path_for_a_disease_LCC(disease)
             disease_genes_longpath_in_LCC = 0
             # print(f"{disease} longest path in LCC is: {disease_genes_longpath_in_LCC}")
             # print(f"with length: {len(disease_genes_longpath_in_LCC)}")
 
             # Longest path between disease genes in all the network
-            # disease_genes_longpath_global = get_disease_genes_longpath(LCC_hhi, disease_genes)
+            
+            disease_genes_longpath_in_interactome = get_longest_path_for_a_disease_interactome(disease)
             # print(f"{disease} global longest path is: {disease_genes_longpath_global}")
             # print(f"with length: {len(disease_genes_longpath_global)}")
 
@@ -405,7 +406,7 @@ def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1",
 
 
             # ** Write the data **
-            data = [disease, num_disease_genes, disease_LCC_size, disease_LCC_density, disease_genes_percentage, disease_genes_longpath_in_LCC]
+            data = [disease, num_disease_genes, disease_LCC_size, disease_LCC_density, disease_genes_percentage, disease_genes_longpath_in_LCC,disease_genes_longpath_in_interactome]
 
             for validation in validations:
                 winner = who_win(alg1, alg2, disease, validation=validation, metric=metric)
