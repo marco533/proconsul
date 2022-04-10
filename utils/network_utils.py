@@ -297,3 +297,88 @@ def get_longest_path_for_a_disease_interactome(disease):
     return max
 
 
+
+
+def get_longest_path_for_a_disease_LCC(disease):  
+
+    ''' 
+
+    Retrieving LCC genes for the given disease, it computes the adjacency and distance matrix
+    for the disease, considering only paths of genes included in the LCC, and returns 
+    the longest among all paths
+     
+    '''
+
+    #get lcc genes for the disease
+    biogrid = "./data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+    hhi_df  = select_hhi_only(biogrid)
+    lcc_genes = get_disease_LCC(hhi_df, disease)
+
+    #create a dictionary with key=gene_name and value=a unique progressive integer to identify the gene
+    #(in the dictionary there will be only LCC genes)
+
+    hhi_lcc = './data/HHI_LCC.txt'
+
+    genes_dict = {}    
+    with open(hhi_lcc, 'r') as of:  #read hh interactions
+    
+            i=0
+            for line in of:
+                #retrieve both gene names
+                node1=line.strip().split(',')[0]
+                node2=line.strip().split(',')[1]
+                if node1 in lcc_genes and node2 in lcc_genes:  #check if both genes are LCC genes
+                    #add gene names in the dictionary
+                    if (node1 not in genes_dict):
+                        genes_dict[node1]= i
+                        i+=1
+                    if (node2 not in genes_dict):
+                        genes_dict[node2]= i
+                        i+=1
+
+    #initialize adjacency matrix
+    adjacency_matrix = np.zeros((len(lcc_genes), len(lcc_genes)))
+    #fill adjacency matrix:
+    # (the adjacency matrix is #LCC genes x #LCC genes)
+    with open(hhi_lcc, 'r') as of:
+        for line in of:
+            node1=line.strip().split(',')[0]
+            node2=line.strip().split(',')[1]
+            #retrieve the id present in the dictionary corresponding to the gene
+            if node1 in lcc_genes and node2 in lcc_genes:
+                gene1_id = genes_dict[node1]
+                gene2_id = genes_dict[node2]
+                #set to 1 the cell
+                if (gene1_id != gene2_id):
+                    adjacency_matrix[gene1_id,gene2_id]=1
+
+
+    # Save adjacency matrix as binary file
+    with open("tmp/adjacency_matrix.npy", "wb") as f:
+        np.save(f, adjacency_matrix)
+
+    #call bct library to compute distance matrix (passing adjacency matrix)
+    distance_matrix = bct.distance_bin(adjacency_matrix)
+
+    # Save adjacency matrix as binary file
+    with open("tmp/distance_matrix.npy", "wb") as f:
+        np.save(f, distance_matrix)
+
+    #load distance matrix file
+    distance_matrix = './tmp/distance_matrix.npy'
+    data = np.load(distance_matrix)
+
+    #loop on the distance matrix: find the max among all the cells
+    max=0
+    for i in range(len(data)):  #select a row
+        for j in range(len(data)):    #select a column
+            if i!=j:
+                if str(data[i][j]) != 'inf': # 'inf' must be avoided
+                    #data[i][j] is the selected cell in the matrix
+                    if data[i][j] > max :
+                        max = data[i][j]
+   
+    return max
+
+
+
