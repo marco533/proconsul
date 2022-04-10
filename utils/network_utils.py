@@ -1,9 +1,12 @@
+from pyexpat.model import XML_CQUANT_NONE
 import sys
 from itertools import combinations
 
 import networkx as nx
 import numpy as np
 import pandas as pd
+import bct 
+
 
 from utils.data_utils import get_disease_genes_from_gda
 
@@ -172,150 +175,120 @@ def get_density(G):
 
     return d
 
-def get_longest_paths():
 
-    def read_disease_file(disease_file):
-        '''
-        Read the disease file and return a list of diseases.
-        The file MUST HAVE only a desease name for each line.
-        '''
-        disease_list = []
-        with open(disease_file, 'r') as df:
-            for line in df:
-                if line[0] == "#":  # skip commented lines
-                    continue
-                disease_list.append(line.replace("\n",""))
-        return disease_list
+def get_distance_matrix():
 
-    disease_file = 'data/disease_file.txt'
+    '''
+    Starting from HHI_LCC file, it creates an adjacency matrix,
+    call btcpy library to build the distance matrix and same both 
+    in files
+    '''
 
-    # get disease list from file
-    try:
-        disease_list = read_disease_file(disease_file)
-    except:
-        print(f"Not found file in {disease_file} or no valid location.")
-        sys.exit(0)
+    hhi_lcc = './data/HHI_LCC.txt'
 
-    # if list is empty fill it with default diseases
-    if len(disease_list) == 0:
-        print(f"ERROR: No diseases in disease_file")
-        sys.exit(0)
+    genes_dict = {}
+  
+    #create a dictionary with key=gene_name and value=a unique progressive integer to identify the gene
+    with open(hhi_lcc, 'r') as of:  #read hh interactions
 
-    #create network:
+            i=0
+            for line in of:
+                #retrieve both gene names
+                node1=line.strip().split(',')[0]
+                node2=line.strip().split(',')[1]
+                
+                #add gene names in te dictionary
+                if (node1 not in genes_dict):
+                    genes_dict[node1]= i
+                    i+=1
+                if (node2 not in genes_dict):
+                    genes_dict[node2]= i
+                    i+=1
 
-    # select the human-human interactions from biogrid
-    biogrid_file = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
-    hhi_df = select_hhi_only(biogrid_file)
-
-    # create the hhi from the filtered data frame
-    hhi = nx.from_pandas_edgelist(hhi_df,
-                                  source = "Official Symbol Interactor A",
-                                  target = "Official Symbol Interactor B",
-                                  create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
-    print("Network Info:")
-    print(nx.info(hhi), end="\n\n")
-
-    # remove self loops
-    self_loop_edges = list(nx.selfloop_edges(hhi))
-    hhi.remove_edges_from(self_loop_edges)
-    print("After removing self-loops:")
-    print(nx.info(hhi), end="\n\n")
-
-    # isolate the largest connected component
-    LCC_hhi = isolate_LCC(hhi)
-
-    print("Isolating the LCC:")
-    print(nx.info(LCC_hhi), end="\n\n")
+    #create an adjacency matrix filled of zeros
+    adjacency_matrix = np.zeros((len(genes_dict), len(genes_dict)))
 
 
-    curated_gda_filename = "data/curated_gene_disease_associations.tsv"
-    all_gda_filename = "data/all_gene_disease_associations.tsv"
+    #fill adjacency matrix with 1 where it needs
+    with open(hhi_lcc, 'r') as of:
+        
+        for line in of:
+            node1=line.strip().split(',')[0]
+            node2=line.strip().split(',')[1]
+            #retrieve the id present in the dictionary corresponding to the gene
+            gene1_id = genes_dict[node1]
+            gene2_id = genes_dict[node2]
 
-    results = {}
-    #there are 2 modes: search only on LCC or not only in LCC
-    for mode in ['LCC', 'not_only_LCC']:
+            #set to 1 the cell
+            if (gene1_id != gene2_id):
+                adjacency_matrix[gene1_id,gene2_id]=1
 
-        for disease in disease_list:
+    #IT'S COMMENTED TO AVOID TO OVERWRITE
 
-            #LCC mode:
-
-            if mode == 'LCC':
-                #in LCC mode selected_genes are only LCC genes in hhi
-                selected_genes = get_disease_LCC(hhi_df, disease, from_curated=True)
-                #print(f'genes in LCC: {len(selected_genes)}')
-
-                #build a copy of the graph dropping not-LCC genes
-                hhi_copy = hhi.copy()
-                for gene in hhi.nodes():
-                    if gene not in selected_genes:
-                        hhi_copy.remove_node(gene)
-
-                #print(len(hhi_copy.nodes()))
-                max=0
-                #compute all possible pairs among LCC nodes
-                pairs = list(combinations(hhi_copy.nodes(), 2))
-                #find out maximum path among all possible ones
-                for i in range(len(pairs)):
-                    #all_simple_paths takes the graph and two nodes and return all possible paths
-                    for path in nx.all_simple_paths(hhi_copy, pairs[i][0], pairs[i][1]):
-                        if (len(path) > max):
-                            max = len(path)
-                print(f'{disease}, {max}')
-                results[disease]=max
-
-    return results
-
-            #not only LCC:
-
-#            if mode == 'not_only_LCC':
-#                # get disease genes from curated GDA
-#                curated_disease_genes = get_disease_genes_from_gda(curated_gda_filename, disease)
-#
-#                #In not only LCC mode, selected_genes are all the curated disease-genes
-#                selected_genes = curated_disease_genes
-#                #print(f'genes not only in LCC: {len(selected_genes)}')
-#
-#                max=0
-#                #compute all possible pairs
-#                pairs = list(combinations(selected_genes, 2))
-#                #print(len(pairs))
-#                #find out maximum path among all possible ones
-#                for i in range(len(pairs)):
-#                    #all_simple_paths takes the graph and two nodes and return all possible paths
-#                    for path in nx.all_simple_paths(hhi, pairs[i][0], pairs[i][1]):
-#                        if (len(path) > max):
-#                            max = len(path)
-#                print(f'{disease}, {max}')
-#                results[disease]=max
-
-def get_disease_genes_longpath(network, disease_genes):
-    """
-    Given a network return the longest path between the disease genes.
-    If the given network is the LCC of the disease network, return the
-    longest path between seed genes in the LCC.
-    """
-
-    # Throw away disease genes not in the LCC
-    all_genes_in_network = set(network.nodes())
-    disease_genes = set(disease_genes)
-    disease_genes_in_network = disease_genes & all_genes_in_network
-
-    if len(disease_genes_in_network) != len(disease_genes):
-        print("disease_genes_longpath(): ignoring %s of %s disease genes that are not in the network" % (
-            len(disease_genes - all_genes_in_network), len(disease_genes)))
-
-    # For each pair of disease genes
-    source_genes = disease_genes_in_network
-    target_genes = disease_genes_in_network
-    all_paths = []
-
-    for s in source_genes:
-        for t in target_genes:
-            if (nx.has_path(network, source=s, target=t)):
-                paths = nx.all_simple_paths(network, source=s, target=t)
-                all_paths.extend(paths)
-
-    # Find the longest
-    return max(all_paths, key=len)
+    ## Save adjacency matrix as binary file
+    #with open("data/adjacency_matrix.npy", "wb") as f:
+    #    np.save(f, adjacency_matrix)
+    #
+    #
+    ##call bct library to compute distance matrix (passing adjacency matrix)
+    #distance_matrix = bct.distance_bin(adjacency_matrix)
+    #
+    ## Save adjacency matrix as binary file
+    #with open("data/distance_matrix.npy", "wb") as f:
+    #    np.save(f, distance_matrix)
+    
+    return 
 
 
+def get_longest_path_for_a_disease(disease):
+
+    '''
+    Given a disease, get the longest path searching in the rows
+    and columns of the distance matrix corresponding to disease genes
+    '''
+
+    hhi_lcc = './data/HHI_LCC.txt'
+    genes_dict = {}
+  
+    #create a dictionary with key=gene_name and value=a unique progressive integer to identify the gene
+    with open(hhi_lcc, 'r') as of:  #read hh interactions
+
+            i=0
+            for line in of:
+                #retrieve both gene names
+                node1=line.strip().split(',')[0]
+                node2=line.strip().split(',')[1]
+                
+                #add gene names in te dictionary
+                if (node1 not in genes_dict):
+                    genes_dict[node1]= i
+                    i+=1
+                if (node2 not in genes_dict):
+                    genes_dict[node2]= i
+                    i+=1
+    
+    #load distance matrix file
+    distance_matrix = './data/distance_matrix.npy'
+    data = np.load(distance_matrix)
+    
+    #get genes for this disease
+    gda_filename = "./data/curated_gene_disease_associations.tsv"
+    disease_genes = get_disease_genes_from_gda(gda_filename, disease)
+
+    #for each gene of the disease, retrieve its id in the genes dictionary and add to ids
+    ids = []
+    for gene in disease_genes:
+        if gene in genes_dict:   #not all the genes are in the dictionary (there aren't those ones which don't have interactions)
+            gene_id = genes_dict[gene] 
+            ids.append(gene_id)
+
+    #loop on the distance matrix (considering only rows and columns corresponding to disease genes)    
+    max=0
+    for id in ids:  #select a row
+        for column in ids:    #select a column
+            if id!=column :
+                if str(data[id][column]) != 'inf': # 'inf' must be avoided
+                    #data[id][column] is the selected cell in the matrix
+                    if data[id][column] > max :
+                        max = data[id][column]
+    return max
