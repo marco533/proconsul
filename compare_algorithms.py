@@ -390,17 +390,15 @@ def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1",
             # print(f"{disease} LCC density = {disease_LCC_density}")
 
             # Longest path between disease genes in the LCC
-            # TODO: Substitute func name
-            # disease_genes_longpath_in_LCC = get_longest_path_for_a_disease_LCC(disease)
-            disease_genes_longpath_in_LCC = 0
+            disease_genes_longpath_in_LCC = get_longest_path_for_a_disease_LCC(disease)
             # print(f"{disease} longest path in LCC is: {disease_genes_longpath_in_LCC}")
             # print(f"with length: {len(disease_genes_longpath_in_LCC)}")
 
             # Longest path between disease genes in all the network
             
             disease_genes_longpath_in_interactome = get_longest_path_for_a_disease_interactome(disease)
-            # print(f"{disease} global longest path is: {disease_genes_longpath_global}")
-            # print(f"with length: {len(disease_genes_longpath_global)}")
+            # print(f"{disease} global longest path is: {disease_genes_longpath_in_interactome}")
+            # print(f"with length: {len(disease_genes_longpath_in_interactome)}")
 
             # ------------------------------------------------------------------------------------------
 
