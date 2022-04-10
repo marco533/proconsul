@@ -390,10 +390,9 @@ def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1",
             # print(f"{disease} LCC density = {disease_LCC_density}")
 
             # Longest path between disease genes in the LCC
-            if num_disease_genes < 1:
-                disease_genes_longpath_in_LCC = get_disease_genes_longpath(disease_LCC, disease_genes)
-            else:
-                disease_genes_longpath_in_LCC = -1
+            # TODO: Substitute func name
+            # disease_genes_longpath_in_LCC = get_disease_genes_longpath(disease_LCC, disease_genes)
+            disease_genes_longpath_in_LCC = 0
             # print(f"{disease} longest path in LCC is: {disease_genes_longpath_in_LCC}")
             # print(f"with length: {len(disease_genes_longpath_in_LCC)}")
 
@@ -925,22 +924,22 @@ if __name__ == "__main__":
             print(f"Comparing {alg_pair[0].upper()} and {alg_pair[1].upper()}")
             print("----------------------------------------------------------")
 
-            # # Winner tables
-            # print("WINNER TABLES:")
-            # winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+            # Winner tables
+            print("WINNER TABLES:")
+            winner_table_filename = winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
             # Heatmaps
             print("        ")
             print("HEATMAPS")
             absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode, cluster=True)
 
-        #     # Clustered heatmaps
-        #     clustered_heatmap(alg_pair, validations, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+            # Clustered heatmaps
+            clustered_heatmap(alg_pair, validations, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
-        #     # Num won matches
-        #     num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+            # Num won matches
+            num_won_matches(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
 
-        # # How many time an algorithm is better than the other for each validation
-        # how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
+        # How many time an algorithm is better than the other for each validation
+        how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
 
