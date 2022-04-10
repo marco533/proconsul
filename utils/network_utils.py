@@ -176,12 +176,13 @@ def get_density(G):
     return d
 
 
-def get_distance_matrix():
+def get_distance_matrix_interactome():
 
     '''
-    Starting from HHI_LCC file, it creates an adjacency matrix,
-    call btcpy library to build the distance matrix and same both 
-    in files
+    Starting from HHI_LCC file, it creates an adjacency matrix considering all the interactome,
+    call btcpy library to build the distance matrix and save both in files.
+    NB: This distance matrix consider paths which involve also genes of different diseases 
+    (all the interactome)
     '''
 
     hhi_lcc = './data/HHI_LCC.txt'
@@ -197,7 +198,7 @@ def get_distance_matrix():
                 node1=line.strip().split(',')[0]
                 node2=line.strip().split(',')[1]
                 
-                #add gene names in te dictionary
+                #add gene names in the dictionary
                 if (node1 not in genes_dict):
                     genes_dict[node1]= i
                     i+=1
@@ -240,11 +241,13 @@ def get_distance_matrix():
     return 
 
 
-def get_longest_path_for_a_disease(disease):
+def get_longest_path_for_a_disease_interactome(disease):
 
     '''
     Given a disease, get the longest path searching in the rows
-    and columns of the distance matrix corresponding to disease genes
+    and columns of the distance matrix corresponding to disease genes.
+    NB: the paths includes genes not only of this disease beacuse the distance amtrix
+    is built from the interactome
     '''
 
     hhi_lcc = './data/HHI_LCC.txt'
@@ -292,3 +295,5 @@ def get_longest_path_for_a_disease(disease):
                     if data[id][column] > max :
                         max = data[id][column]
     return max
+
+
