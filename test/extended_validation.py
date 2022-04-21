@@ -42,7 +42,7 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
     print(f"Extended validation of {algorithm.upper()} on {disease_name.upper()}...", end="\n\n")
 
     # output file for diamond-like algorithms
-    output_file = f"tmp/{algorithm}_output.txt"
+    output_file = f"tmp/{algorithm}_{pdiamond_mode}_output.txt"
 
     predicted_genes = []
 

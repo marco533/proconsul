@@ -69,7 +69,7 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
                 ft.write(gene + "\n")
 
         # run algorithm
-        output_file = f"tmp/{algorithm}_output.txt"
+        output_file = f"tmp/{algorithm}_{pdiamond_mode}_output.txt"
 
         # if the algorithm doesn't return a ranking set this flag False
         ranking_flag = True

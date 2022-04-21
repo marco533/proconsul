@@ -225,36 +225,53 @@ def scores(alg, disease, validation="kfold", metric="f1", precision=2, diffusion
 
     return scores
 
-def get_disease_param(disease, param):
+def get_disease_param(disease, param, table=None):
     """
     Given the name of a disease and the name of a parameter,
     Return the value of the parameter of this disease.
+    If we pass a table filename, read those values from that table.
     """
 
-    if param == "Disease":
-        return disease
-    elif param == "Num disease genes":
-        return len(get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease))
-    elif param == "LCC_size":
-        disease_LCC = get_disease_LCC(hhi_df, disease)
-        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
-        return nx.number_of_nodes(disease_LCC)
-    elif param == "Density":
-        disease_LCC = get_disease_LCC(hhi_df, disease)
-        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
-        return get_density(disease_LCC)
-    elif param == "Disgenes Percentage":
-        disease_LCC = get_disease_LCC(hhi_df, disease)
-        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
-        disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease)
-        return get_genes_percentage(disease_genes, disease_LCC)
-    elif param == "Disgenes Longpath":
-        disease_LCC = get_disease_LCC(hhi_df, disease)
-        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
-        return disease_LCC, disease_genes
+    if table is not None:
+        if param == "Disease":
+            return disease
+        else:
+            df = pd.read_csv(table, index_col=0)
+            value = df.at[disease, param]
+            if (type(value) == str):
+                print(f"df[{disease}][{param}] is a string!")
+                sys.exit(0)
+            return df.at[disease, param]
+
     else:
-        print(f"ERROR: {param} is no valid parameter.")
-        sys.exit(0)
+        if param == "Disease":
+            return disease
+        elif param == "Num disease genes":
+            return len(get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease))
+        elif param == "LCC_size":
+            disease_LCC = get_disease_LCC(hhi_df, disease)
+            disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+            return nx.number_of_nodes(disease_LCC)
+        elif param == "Density":
+            disease_LCC = get_disease_LCC(hhi_df, disease)
+            disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+            return get_density(disease_LCC)
+        elif param == "Disgenes Percentage":
+            disease_LCC = get_disease_LCC(hhi_df, disease)
+            disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+            disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease)
+            return get_genes_percentage(disease_genes, disease_LCC)
+        elif param == "Disgenes Longpath":
+            disease_LCC = get_disease_LCC(hhi_df, disease)
+            disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+            return disease_LCC, disease_genes
+        elif param == "Longpath LCC":
+            return get_longest_path_for_a_disease_LCC(disease)
+        elif param == "Longpath interactome":
+            return get_longest_path_for_a_disease_interactome(disease)
+        else:
+            print(f"ERROR: {param} is no valid parameter.")
+            sys.exit(0)
 
 def who_win(alg1, alg2, disease, validation="kfold", metric="f1", precision=2, diffusion_time=0.005, num_iters_pdiamond=10, pdiamond_mode="classic"):
     """
@@ -395,7 +412,7 @@ def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1",
             # print(f"with length: {len(disease_genes_longpath_in_LCC)}")
 
             # Longest path between disease genes in all the network
-            
+
             disease_genes_longpath_in_interactome = get_longest_path_for_a_disease_interactome(disease)
             # print(f"{disease} global longest path is: {disease_genes_longpath_in_interactome}")
             # print(f"with length: {len(disease_genes_longpath_in_interactome)}")
@@ -404,7 +421,7 @@ def winner_tables(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1",
 
 
             # ** Write the data **
-            data = [disease, num_disease_genes, disease_LCC_size, disease_LCC_density, disease_genes_percentage, disease_genes_longpath_in_LCC,disease_genes_longpath_in_interactome]
+            data = [disease, num_disease_genes, disease_LCC_size, disease_LCC_density, disease_genes_percentage, disease_genes_longpath_in_LCC, disease_genes_longpath_in_interactome]
 
             for validation in validations:
                 winner = who_win(alg1, alg2, disease, validation=validation, metric=metric)
@@ -690,7 +707,7 @@ def heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", preci
 
             plt.close('all')
 
-def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None, pdiamond_mode="classic", cluster=False):
+def absolute_heatmap(alg_pair, validations, diseases, table=None, metric="f1", precision=2, diffusion_time=None, num_iters_pdiamond=None, pdiamond_mode="classic", cluster=False):
     alg1 = alg_pair[0]
     alg2 = alg_pair[1]
 
@@ -702,12 +719,12 @@ def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f
 
     if cluster:
         # Define disease parameters
-        params = ["Disease", "LCC_size", "Num disease genes", "Density", "Disgenes Percentage"] #, "Disgenes Longpath"]
+        params = ["Disease", "LCC_size", "Num disease genes", "Density", "Disgenes Percentage", "Longpath LCC", "Longpath interactome"]
         for param in params:
             # Create a dictionary disease: param
             disease_param_dict = {}
             for disease in diseases:
-                disease_param_dict[disease] = get_disease_param(disease, param)
+                disease_param_dict[disease] = get_disease_param(disease, param, table=table)
 
             indices = disease_param_dict.values()
 
@@ -744,12 +761,13 @@ def absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric="f
 
     else:
         # Define disease parameters
-        params = ["Disease", "LCC_size", "Num disease genes", "Density", "Disgenes Percentage"] #, "Disgenes Longpath"]
+        params = ["Disease", "Num disease genes", "LCC_size", "Density", "Disgenes Percentage", "Longpath LCC", "Longpath interactome"]
+        # params = ["Longpath LCC", "Longpath interactome"]
         for param in params:
             # Create a dictionary disease: param
             disease_param_dict = {}
             for disease in diseases:
-                disease_param_dict[disease] = get_disease_param(disease, param)
+                disease_param_dict[disease] = get_disease_param(disease, param, table=table)
 
             # Sort the dictionary keys according to their values
             sorted_tuples = sorted(disease_param_dict.items(), key=lambda item: item[1])
@@ -838,7 +856,8 @@ def clustered_heatmap(alg_pair, validations, metric="f1", precision=2, diffusion
                                 "LCC_size",
                                 "Density",
                                 "Disgenes Percentage",
-                                #"Disgenes Longpath",
+                                "Longpath LCC",
+                                "Longpath interactome",
                                 prediction]]
 
 
@@ -930,7 +949,8 @@ if __name__ == "__main__":
             # Heatmaps
             print("        ")
             print("HEATMAPS")
-            absolute_heatmap(alg_pair, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode, cluster=True)
+            table_filename = "tables/diamond_vs_pdiamond/diamond_vs_pdiamond_f1_p2_diff_time_None_iters_pdiamond_10_pdiamond_mode_classic.csv"
+            absolute_heatmap(alg_pair, validations, diseases, table=table_filename, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode, cluster=False)
 
             # Clustered heatmaps
             clustered_heatmap(alg_pair, validations, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
@@ -941,4 +961,3 @@ if __name__ == "__main__":
 
         # How many time an algorithm is better than the other for each validation
         how_many_time_winner(algs, validations, diseases, hhi_df, LCC_hhi, metric=metric, precision=p, diffusion_time=diffusion_time, num_iters_pdiamond=num_iters_pdiamond, pdiamond_mode=pdiamond_mode)
-
