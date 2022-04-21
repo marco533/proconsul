@@ -5,7 +5,7 @@ from itertools import combinations
 import networkx as nx
 import numpy as np
 import pandas as pd
-import bct 
+import bct
 
 
 from utils.data_utils import get_disease_genes_from_gda
@@ -160,6 +160,29 @@ def get_disease_LCC(interactome_df, disease, from_curated=True):
 
     return LCC
 
+def get_disease_num_connected_components(interactome_df, disease, from_curated=True):
+    '''
+    Given the interactome DataFrame,
+    Return the number of connected components the disease.
+    '''
+
+    # From the dataframe select the disease genes only
+    disease_df = select_disease_interactions_only(interactome_df, disease, curated=from_curated)
+
+    # Create the network
+    disease_network = nx.from_pandas_edgelist(disease_df,
+                                              source = "Official Symbol Interactor A",
+                                              target = "Official Symbol Interactor B",
+                                              create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+    # Remove self loops
+    self_loop_edges = list(nx.selfloop_edges(disease_network))
+    disease_network.remove_edges_from(self_loop_edges)
+
+    # Find connected components
+    conn_comp = list(nx.connected_components(disease_network))
+
+    return len(conn_comp)
+
 def get_genes_percentage(seed_genes, LCC):
     '''
     Given the seed genes and the LCC of a network,
@@ -181,14 +204,14 @@ def get_distance_matrix_interactome():
     '''
     Starting from HHI_LCC file, it creates an adjacency matrix considering all the interactome,
     call btcpy library to build the distance matrix and save both in files.
-    NB: This distance matrix consider paths which involve also genes of different diseases 
+    NB: This distance matrix consider paths which involve also genes of different diseases
     (all the interactome)
     '''
 
     hhi_lcc = './data/HHI_LCC.txt'
 
     genes_dict = {}
-  
+
     #create a dictionary with key=gene_name and value=a unique progressive integer to identify the gene
     with open(hhi_lcc, 'r') as of:  #read hh interactions
 
@@ -197,7 +220,7 @@ def get_distance_matrix_interactome():
                 #retrieve both gene names
                 node1=line.strip().split(',')[0]
                 node2=line.strip().split(',')[1]
-                
+
                 #add gene names in the dictionary
                 if (node1 not in genes_dict):
                     genes_dict[node1]= i
@@ -212,7 +235,7 @@ def get_distance_matrix_interactome():
 
     #fill adjacency matrix with 1 where it needs
     with open(hhi_lcc, 'r') as of:
-        
+
         for line in of:
             node1=line.strip().split(',')[0]
             node2=line.strip().split(',')[1]
@@ -237,8 +260,8 @@ def get_distance_matrix_interactome():
     ## Save adjacency matrix as binary file
     #with open("data/distance_matrix.npy", "wb") as f:
     #    np.save(f, distance_matrix)
-    
-    return 
+
+    return
 
 
 def get_longest_path_for_a_disease_interactome(disease):
@@ -252,7 +275,7 @@ def get_longest_path_for_a_disease_interactome(disease):
 
     hhi_lcc = './data/HHI_LCC.txt'
     genes_dict = {}
-  
+
     #create a dictionary with key=gene_name and value=a unique progressive integer to identify the gene
     with open(hhi_lcc, 'r') as of:  #read hh interactions
 
@@ -261,7 +284,7 @@ def get_longest_path_for_a_disease_interactome(disease):
                 #retrieve both gene names
                 node1=line.strip().split(',')[0]
                 node2=line.strip().split(',')[1]
-                
+
                 #add gene names in te dictionary
                 if (node1 not in genes_dict):
                     genes_dict[node1]= i
@@ -269,11 +292,11 @@ def get_longest_path_for_a_disease_interactome(disease):
                 if (node2 not in genes_dict):
                     genes_dict[node2]= i
                     i+=1
-    
+
     #load distance matrix file
     distance_matrix = './data/distance_matrix.npy'
     data = np.load(distance_matrix)
-    
+
     #get genes for this disease
     gda_filename = "./data/curated_gene_disease_associations.tsv"
     disease_genes = get_disease_genes_from_gda(gda_filename, disease)
@@ -282,10 +305,10 @@ def get_longest_path_for_a_disease_interactome(disease):
     ids = []
     for gene in disease_genes:
         if gene in genes_dict:   #not all the genes are in the dictionary (there aren't those ones which don't have interactions)
-            gene_id = genes_dict[gene] 
+            gene_id = genes_dict[gene]
             ids.append(gene_id)
 
-    #loop on the distance matrix (considering only rows and columns corresponding to disease genes)    
+    #loop on the distance matrix (considering only rows and columns corresponding to disease genes)
     max=0
     for id in ids:  #select a row
         for column in ids:    #select a column
@@ -299,14 +322,14 @@ def get_longest_path_for_a_disease_interactome(disease):
 
 
 
-def get_longest_path_for_a_disease_LCC(disease):  
+def get_longest_path_for_a_disease_LCC(disease):
 
-    ''' 
+    '''
 
     Retrieving LCC genes for the given disease, it computes the adjacency and distance matrix
-    for the disease, considering only paths of genes included in the LCC, and returns 
+    for the disease, considering only paths of genes included in the LCC, and returns
     the longest among all paths
-     
+
     '''
 
     #get lcc genes for the disease
@@ -319,9 +342,9 @@ def get_longest_path_for_a_disease_LCC(disease):
 
     hhi_lcc = './data/HHI_LCC.txt'
 
-    genes_dict = {}    
+    genes_dict = {}
     with open(hhi_lcc, 'r') as of:  #read hh interactions
-    
+
             i=0
             for line in of:
                 #retrieve both gene names
@@ -377,7 +400,7 @@ def get_longest_path_for_a_disease_LCC(disease):
                     #data[i][j] is the selected cell in the matrix
                     if data[i][j] > max :
                         max = data[i][j]
-   
+
     return max
 
 
