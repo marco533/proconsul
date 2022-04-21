@@ -128,11 +128,14 @@ def compare_networks(diseases):
 
         # density
         disease_density = get_density(disease_LCC)
+        disease_attributes_dictionary[disease].append(disease_density)
+
+        # TODO: continue following the attributes order
 
 
 
-        for attribute in attributes:
-            disease_attributes_dictionary[disease].append("test")
+        # for attribute in attributes:
+        #     disease_attributes_dictionary[disease].append("test")
 
     # Save the dictionary as CSV fils
     df = pd.DataFrame.from_dict(disease_attributes_dictionary, orient='index',
