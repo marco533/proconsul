@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 
 from utils.network_utils import *
+from algorithms.diamond import run_diamond
+from algorithms.pdiamond import run_pdiamond
 
 # =======================
 #   R E A D   I N P U T
@@ -24,7 +26,7 @@ def parse_args():
     '''
     parser = argparse.ArgumentParser(description='Get algorithms to compare and on which validation.')
     parser.add_argument('--disease_file', type=str, default="data/disease_file.txt",
-                    help='Relative path to the file containing the disease names to use for the comparison (default: "data/disease_file.txt)')
+                    help='Relative path to the file containing the disease names to use for the analysis (default: "data/disease_file.txt)')
 
     return parser.parse_args()
 
@@ -91,17 +93,17 @@ def compare_networks(diseases):
 
     # Define attributes
     attributes = ["number_of_disease_genes",
-                  "number_of_connected_components"
+                  "number_of_connected_components",
                   "LCC_size",
                   "density",
                   "percentage_of_disease_genes_in_LCC",
                   "longest_path_length_in_LCC",
                   "longest_path_lenght_in_interactome",
-                  "average_path_length"
+                  "average_path_length",
                   "degree_distribution",
                   "average_degree",
                   "clustering_coefficient",
-                  "modularity"
+                  "modularity",
                   "global_efficency",
                   "assortativity"]
 
@@ -112,30 +114,55 @@ def compare_networks(diseases):
     for disease in diseases:
         disease_attributes_dictionary[disease] = []
 
-        # number_of_disease_genes
-        disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_assosiactions.tsv")
+        # 1. number_of_disease_genes
+        disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease, training_mode=True)
         disease_attributes_dictionary[disease].append(len(disease_genes))
 
-        # number_of_connected_components
+        # 2. number_of_connected_components
         num_connected_components = get_disease_num_connected_components(hhi_df, disease, from_curated=True)
         disease_attributes_dictionary[disease].append(num_connected_components)
 
-        # LCC_size
+        # 3. LCC_size
         disease_LCC = get_disease_LCC(hhi_df, disease, from_curated=True)
         disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
 
         disease_attributes_dictionary[disease].append(nx.number_of_nodes(disease_LCC))
 
-        # density
+        # 4. density
         disease_density = get_density(disease_LCC)
         disease_attributes_dictionary[disease].append(disease_density)
 
+        # 5. percentage_of_disease_genes_in_LCC
+        disease_attributes_dictionary[disease].append(get_genes_percentage(disease_genes, disease_LCC))
+
+        # 6. longest_path_in_LCC
+        disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease))
+
+        # 7. longest_path_in_interactome
+        disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
+
         # TODO: continue following the attributes order
 
+        # 8. average_path_length
+        disease_attributes_dictionary[disease].append("test")
 
+        # 9. degree_distribution
+        disease_attributes_dictionary[disease].append("test")
 
-        # for attribute in attributes:
-        #     disease_attributes_dictionary[disease].append("test")
+        # 10. average_degree
+        disease_attributes_dictionary[disease].append("test")
+
+        # 11. clustering_coefficient
+        disease_attributes_dictionary[disease].append("test")
+
+        # 12. modularity
+        disease_attributes_dictionary[disease].append("test")
+
+        # 13. global_efficency
+        disease_attributes_dictionary[disease].append("test")
+
+        # 14. assortativity
+        disease_attributes_dictionary[disease].append("test")
 
     # Save the dictionary as CSV fils
     df = pd.DataFrame.from_dict(disease_attributes_dictionary, orient='index',
@@ -157,3 +184,6 @@ if __name__ == "__main__":
     # Compare disease networks before enrichment
     compare_networks(diseases)
 
+    # Perform enrichment through DIAMOnD and pDIAMOnD
+    # for disease in diseases:
+    #     diamond_predicted_genes = run_diamond()
