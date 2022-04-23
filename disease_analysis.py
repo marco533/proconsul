@@ -149,25 +149,26 @@ def compare_disease_networks(disease_networks, enriching_algorithm=None):
         # TODO: continue following the attributes order
 
         # 10. average_path_length
-        disease_attributes_dictionary[disease].append("test")
+        disease_attributes_dictionary[disease].append(nx.average_shortest_path_length(disease_LCC))
 
         # 11. degree_distribution
         disease_attributes_dictionary[disease].append("test")
+        #THIS IS USUALLY REPRESENTED IN A GRAPH
 
         # 12. average_degree
-        disease_attributes_dictionary[disease].append("test")
+        disease_attributes_dictionary[disease].append(nx.average_degree_connectivity(disease_LCC))
 
         # 13. clustering_coefficient
-        disease_attributes_dictionary[disease].append("test")
+        disease_attributes_dictionary[disease].append(nx.clustering(disease_LCC))
 
         # 14. modularity
         disease_attributes_dictionary[disease].append("test")
 
         # 15. global_efficency
-        disease_attributes_dictionary[disease].append("test")
+        disease_attributes_dictionary[disease].append(nx.global_efficiency(disease_LCC))
 
         # 16. assortativity
-        disease_attributes_dictionary[disease].append("test")
+        disease_attributes_dictionary[disease].append(nx.degree_assortativity_coefficient(disease_LCC))
 
         # Export the network for Cytoscape visualization
         if enriching_algorithm is not None:
