@@ -1,5 +1,5 @@
-,number_of_disease_genes,number_of_connected_components,LCC_size,density,density_of_LCC,percentage_of_disease_genes_in_LCC,longest_path_length_in_LCC,longest_path_lenght_in_interactome,average_path_length,degree_distribution,average_degree,clustering_coefficient,modularity,global_efficency,assortativity
-"Condition, Preneoplastic",120,16,105,0.07857142857142857,0.10274725274725274,0.875,test,test,test,test,test,test,test,test,test
-"Alcoholic Intoxication, Chronic",280,78,196,0.016666666666666666,0.0336996336996337,0.7,test,test,test,test,test,test,test,test,test
-Mouth Neoplasms,78,13,65,0.13952713952713952,0.20096153846153847,0.8333333333333334,test,test,test,test,test,test,test,test,test
-Crohn's disease of the ileum,68,19,48,0.06760316066725197,0.1347517730496454,0.7058823529411765,test,test,test,test,test,test,test,test,test
+,number_of_disease_genes,number_of_connected_components,percentage_of_connected_components,LCC_size,density,density_of_LCC,percentage_of_disease_genes_in_LCC,longest_path_length_in_LCC,longest_path_lenght_in_interactome,average_path_length,degree_distribution,average_degree,clustering_coefficient,modularity,global_efficency,assortativity
+"Condition, Preneoplastic",120,15,0.125,106,0.07801120448179272,0.10008984725965858,0.8833333333333333,test,test,test,test,test,test,test,test,test
+"Alcoholic Intoxication, Chronic",280,78,0.2785714285714286,196,0.015565796210957501,0.031449502878074305,0.7,test,test,test,test,test,test,test,test,test
+Mouth Neoplasms,78,13,0.16666666666666666,65,0.13986013986013987,0.2014423076923077,0.8333333333333334,test,test,test,test,test,test,test,test,test
+Crohn's disease of the ileum,68,20,0.29411764705882354,47,0.0781387181738367,0.16281221091581868,0.6911764705882353,test,test,test,test,test,test,test,test,test
