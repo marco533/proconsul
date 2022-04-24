@@ -73,10 +73,10 @@ def read_terminal_input(args):
 
     return disease_list
 
-# =======================================
-#   N E T W O R K   C O M P A R I S O N
-# =======================================
-def compare_disease_networks(disease_networks, enriching_algorithm=None):
+# ======================================
+#    N E T W O R K   A N A L Y S I S
+# ======================================
+def analyze_disease_networks(disease_networks, enriching_algorithm=None):
 
     # Define attributes
     attributes = ["number_of_disease_genes",
@@ -89,7 +89,7 @@ def compare_disease_networks(disease_networks, enriching_algorithm=None):
                   "longest_path_length_in_LCC",
                   "longest_path_lenght_in_interactome",
                   "average_path_length",
-                  "degree_distribution",
+                  "diameter_of_LCC",
                   "average_degree",
                   "clustering_coefficient",
                   "modularity",
@@ -122,7 +122,7 @@ def compare_disease_networks(disease_networks, enriching_algorithm=None):
 
         # 4. LCC_size
         disease_LCC = max(connected_components, key=len)
-        disease_LCC = LCC_hhi.subgraph(disease_LCC).copy()
+        disease_LCC = disease_network.subgraph(disease_LCC).copy()
         disease_LCC_size = nx.number_of_nodes(disease_LCC)
 
         disease_attributes_dictionary[disease].append(disease_LCC_size)
@@ -146,29 +146,30 @@ def compare_disease_networks(disease_networks, enriching_algorithm=None):
         # disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
         disease_attributes_dictionary[disease].append("test")
 
-        # TODO: continue following the attributes order
-
         # 10. average_path_length
-        disease_attributes_dictionary[disease].append(nx.average_shortest_path_length(disease_LCC))
+        # disease_attributes_dictionary[disease].append(nx.average_shortest_path_length(disease_LCC))
+        shortest_path_lengths = dict(nx.all_pairs_shortest_path_length(disease_network))
+        average_path_lengths = [np.mean(list(spl.values())) for spl in shortest_path_lengths.values()]
+        disease_attributes_dictionary[disease].append(np.mean(average_path_lengths))
 
-        # 11. degree_distribution
-        disease_attributes_dictionary[disease].append("test")
-        #THIS IS USUALLY REPRESENTED IN A GRAPH
+        # 11. diameter_of_LCC
+        disease_attributes_dictionary[disease].append(max(nx.eccentricity(disease_LCC, sp=shortest_path_lengths).values()))
 
         # 12. average_degree
-        disease_attributes_dictionary[disease].append(nx.average_degree_connectivity(disease_LCC))
+        # disease_attributes_dictionary[disease].append(nx.average_degree_connectivity(disease_network))
+        disease_attributes_dictionary[disease].append(np.mean([d for _, d in disease_network.degree()]))
 
         # 13. clustering_coefficient
-        disease_attributes_dictionary[disease].append(nx.clustering(disease_LCC))
+        disease_attributes_dictionary[disease].append(nx.average_clustering(disease_network))
 
         # 14. modularity
         disease_attributes_dictionary[disease].append("test")
 
         # 15. global_efficency
-        disease_attributes_dictionary[disease].append(nx.global_efficiency(disease_LCC))
+        disease_attributes_dictionary[disease].append(nx.global_efficiency(disease_network))
 
         # 16. assortativity
-        disease_attributes_dictionary[disease].append(nx.degree_assortativity_coefficient(disease_LCC))
+        disease_attributes_dictionary[disease].append(nx.degree_assortativity_coefficient(disease_network))
 
         # Export the network for Cytoscape visualization
         if enriching_algorithm is not None:
@@ -185,6 +186,38 @@ def compare_disease_networks(disease_networks, enriching_algorithm=None):
         df.to_csv(f"tables/top_performing_diseases_analysis.{enriching_algorithm}_enriched.csv")
     else:
         df.to_csv("tables/top_performing_diseases_analysis.csv")
+
+    return disease_attributes_dictionary
+
+def compare_network_attributes(N1, N2, attributes, outfile=None):
+    # Define attributes
+    attributes = ["number_of_disease_genes",
+                  "number_of_connected_components",
+                  "percentage_of_connected_components",
+                  "LCC_size",
+                  "density",
+                  "density_of_LCC",
+                  "percentage_of_disease_genes_in_LCC",
+                  "longest_path_length_in_LCC",
+                  "longest_path_lenght_in_interactome",
+                  "average_path_length",
+                  "diameter_of_LCC",
+                  "average_degree",
+                  "clustering_coefficient",
+                  "modularity",
+                  "global_efficency",
+                  "assortativity"]
+
+    # Check that the two networks have the same keys
+    assert(N1.keys() == N2.keys())
+
+    differences_dict = {}
+
+    for key in N1.keys():
+        differences_dict[key] = []
+        for attribute in attributes:
+            break
+    return 0
 
 
 # ============
@@ -217,7 +250,7 @@ if __name__ == "__main__":
     # ******************************
 
     # Dictionary of networks
-    disease_networks = {}
+    original_disease_networks = {}
 
     # Build the network for each disease
     # and append it to the list
@@ -231,11 +264,11 @@ if __name__ == "__main__":
         disease_network.remove_edges_from(nx.selfloop_edges(disease_network))
 
         # Add it to the dictionary of networks
-        disease_networks[disease] = disease_network
+        original_disease_networks[disease] = disease_network
 
     # print("List of Disease Networks: ", disease_networks)
 
-    compare_disease_networks(disease_networks)
+    orginal_network_attributes = analyze_disease_networks(original_disease_networks)
 
     # ***************************************************
     #   Perform enrichment through DIAMOnD and pDIAMOnD
@@ -284,5 +317,14 @@ if __name__ == "__main__":
         pDIAMOnD_enriched_networks[disease] = disease_network
 
     # Compare disease networks AFTER the enrichment
-    compare_disease_networks(DIAMOnD_enriched_networks, enriching_algorithm="DIAMOnD")
-    compare_disease_networks(pDIAMOnD_enriched_networks, enriching_algorithm="pDIAMOnD")
+    DIAMOnD_enriched_network_attributes = analyze_disease_networks(DIAMOnD_enriched_networks, enriching_algorithm="DIAMOnD")
+    pDIAMOnD_enriched_network_attributes = analyze_disease_networks(pDIAMOnD_enriched_networks, enriching_algorithm="pDIAMOnD")
+
+    # ***********************************
+    #   How much the attributes growed
+    # ***********************************
+    compare_network_attributes(orginal_network_attributes, DIAMOnD_enriched_network_attributes, outfile="original_vd_DIAMOnD_enriched_networks.csv")
+    compare_network_attributes(orginal_network_attributes, pDIAMOnD_enriched_network_attributes, outfile="original_vs_pDIAMOnD_enriched_networks.csv")
+
+
+
