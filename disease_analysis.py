@@ -5,8 +5,8 @@ from turtle import title
 import networkx as nx
 import numpy as np
 import pandas as pd
-#from torch import absolute
-#import seaborn as sns
+from torch import absolute
+import seaborn as sns
 from matplotlib import pyplot as plt
 
 from algorithms.diamond import DIAMOnD
