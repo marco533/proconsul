@@ -98,7 +98,8 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
                   "clustering_coefficient",
                   "modularity",
                   "global_efficency",
-                  "assortativity"]
+                  "assortativity",
+                  "community"]
 
 
 
@@ -174,6 +175,16 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
 
         # 16. assortativity
         disease_attributes_dictionary[disease].append(nx.degree_assortativity_coefficient(disease_network))
+
+        # 17. Communities greater than 1
+        communities = nx.algorithms.community.greedy_modularity_communities(disease_network)
+        # compute how many communities are greater than one. Smaller ones are meaningless.
+        communitites_greater_than_1 = 0
+        for community in communities:
+            if len(community) > 1:
+                communitites_greater_than_1 +=1
+        disease_attributes_dictionary[disease].append(communitites_greater_than_1)
+
 
         # Export the network for Cytoscape visualization
         if enriching_algorithm is not None:
