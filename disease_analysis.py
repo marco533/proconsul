@@ -1,9 +1,13 @@
 import argparse
 import csv
+from turtle import title
 
 import networkx as nx
 import numpy as np
 import pandas as pd
+from torch import absolute
+import seaborn as sns
+from matplotlib import pyplot as plt
 
 from algorithms.diamond import DIAMOnD
 from algorithms.pdiamond import pDIAMOnD, pDIAMOnD_alternative
@@ -96,6 +100,8 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
                   "global_efficency",
                   "assortativity"]
 
+
+
     # Init disease attributes dictionary
     disease_attributes_dictionary = {}
 
@@ -187,36 +193,65 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
     else:
         df.to_csv("tables/top_performing_diseases_analysis.csv")
 
-    return disease_attributes_dictionary
+    return df
 
-def compare_network_attributes(N1, N2, attributes, outfile=None):
-    # Define attributes
-    attributes = ["number_of_disease_genes",
-                  "number_of_connected_components",
-                  "percentage_of_connected_components",
-                  "LCC_size",
-                  "density",
-                  "density_of_LCC",
-                  "percentage_of_disease_genes_in_LCC",
-                  "longest_path_length_in_LCC",
-                  "longest_path_lenght_in_interactome",
-                  "average_path_length",
-                  "diameter_of_LCC",
-                  "average_degree",
-                  "clustering_coefficient",
-                  "modularity",
-                  "global_efficency",
-                  "assortativity"]
+def compare_network_attributes(N1, N2, nname1=None, nname2=None, heatmap=False, outfile=None):
 
-    # Check that the two networks have the same keys
-    assert(N1.keys() == N2.keys())
+    # Check that N1 and N2 have the same labels
+    assert(list(N1.index) == list(N2.index))
+    assert(list(N1.columns) == list(N2.columns))
 
-    differences_dict = {}
+    rows = list(N1.index)
+    columns = list(N1.columns)
 
-    for key in N1.keys():
-        differences_dict[key] = []
-        for attribute in attributes:
-            break
+    # Init two DataFrames
+    # 1. Percentage differences
+    # 2. Absolute values
+    percentage_differences  = pd.DataFrame(np.zeros((len(rows), len(columns))),
+                                            index=rows,
+                                            columns=columns)
+
+    for r in rows:
+        for c in columns:
+            # Get attribute value
+            N1_attribute_value = N1.at[r, c]
+            N2_attribute_value = N2.at[r, c]
+
+            # Percentage difference
+            if type(N1_attribute_value) == str or type(N2_attribute_value) == str:
+                percentage_diff = 0.0
+            else:
+                if N1_attribute_value == 0: N1_attribute_value = 0.001
+                percentage_diff = (N2_attribute_value - N1_attribute_value) * 100 / N1_attribute_value
+
+            # Save the percentage value
+            percentage_differences.at[r, c] = percentage_diff
+
+    # Save the DataFrame as CSV file
+    percentage_differences.to_csv(outfile)
+
+    # Visualize the difference of the attributes as an heatmap
+    if heatmap:
+        # Fix the output filename
+        outfile = outfile.replace("tables/","plots/heatmaps/network_attributes/").replace(".csv", ".png")
+
+        # Plot heatmap
+        cmap = sns.diverging_palette(220, 20, as_cmap=True)
+        hm = sns.heatmap(percentage_differences,
+                            annot=False,
+                            cmap=cmap,
+                            cbar_kws={"label": f"<--{nname1}  |  {nname2}-->"},
+                            center=0,
+                            vmin=-100, vmax=100)#.set(title=f"Percentage Differences | {nname2} Vs {nname1} enriched networks")
+
+        hm.set_title(f"Percentage Differences | {nname2} Vs {nname1} enriched networks")
+
+        figure = hm.get_figure()
+        figure.savefig(outfile, bbox_inches='tight')
+
+        # Close previous plots
+        plt.close()
+
     return 0
 
 
@@ -323,8 +358,9 @@ if __name__ == "__main__":
     # ***********************************
     #   How much the attributes growed
     # ***********************************
-    compare_network_attributes(orginal_network_attributes, DIAMOnD_enriched_network_attributes, outfile="original_vd_DIAMOnD_enriched_networks.csv")
-    compare_network_attributes(orginal_network_attributes, pDIAMOnD_enriched_network_attributes, outfile="original_vs_pDIAMOnD_enriched_networks.csv")
+    compare_network_attributes(orginal_network_attributes, DIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="DIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_DIAMOnD_enriched_networks.csv")
+    compare_network_attributes(orginal_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_pDIAMOnD_enriched_networks.csv")
+    compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_enriched_networks.csv")
 
 
 

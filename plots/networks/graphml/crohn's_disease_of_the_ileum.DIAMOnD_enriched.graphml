@@ -1,99 +1,90 @@
 <?xml version='1.0' encoding='utf-8'?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="FUT2"/>
-<node id="TNFSF10"/>
-<node id="TF"/>
-<node id="NOD1"/>
-<node id="TNFRSF1A"/>
-<node id="FAM92B"/>
-<node id="ERAP2"/>
-<node id="TAGAP"/>
-<node id="MAPK8"/>
-<node id="RHOA"/>
-<node id="TNFRSF10B"/>
-<node id="DNMT3A"/>
-<node id="FPR2"/>
-<node id="ARHGDIA"/>
-<node id="DEDD"/>
-<node id="CASP1"/>
-<node id="CASP8"/>
-<node id="IL10"/>
-<node id="TNFAIP3"/>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="IL12B"/>
+<node id="FUT2"/>
 <node id="BID"/>
-<node id="SMAD3"/>
-<node id="DEDD2"/>
-<node id="PPARG"/>
-<node id="LEP"/>
-<node id="ADIPOQ"/>
-<node id="NLRP3"/>
-<node id="NR1H4"/>
-<node id="PTPN2"/>
-<node id="FASLG"/>
-<node id="EZR"/>
-<node id="RIPK1"/>
-<node id="MSN"/>
-<node id="TLR9"/>
-<node id="MTHFR"/>
-<node id="IGFBP3"/>
-<node id="TLR4"/>
-<node id="NKX2-3"/>
-<node id="TYK2"/>
-<node id="IRGM"/>
-<node id="IGF1"/>
-<node id="TNF"/>
-<node id="CCL2"/>
-<node id="CRP"/>
-<node id="IL2RA"/>
-<node id="FADD"/>
-<node id="GPBAR1"/>
-<node id="BACH2"/>
+<node id="TNFRSF1A"/>
+<node id="ARHGDIA"/>
 <node id="FAS"/>
-<node id="ATG16L1"/>
-<node id="FN1"/>
-<node id="IFNG"/>
-<node id="RIPK2"/>
 <node id="CCNY"/>
-<node id="PHOX2B"/>
+<node id="TLR4"/>
+<node id="ADIPOQ"/>
+<node id="SMAD3"/>
+<node id="CCL2"/>
+<node id="IFNG"/>
+<node id="EZR"/>
+<node id="FAM92B"/>
 <node id="DENND1B"/>
-<node id="NOD2"/>
-<node id="MST1"/>
-<node id="CASP10"/>
-<node id="VTN"/>
-<node id="NCF4"/>
-<node id="PPARA"/>
 <node id="NLRC4"/>
-<node id="CFLAR"/>
-<node id="TCF7"/>
+<node id="RIPK2"/>
+<node id="FN1"/>
+<node id="VTN"/>
+<node id="IRGM"/>
+<node id="FPR2"/>
+<node id="GPBAR1"/>
+<node id="PPARG"/>
+<node id="TAGAP"/>
 <node id="HLA-DRB1"/>
+<node id="NOD1"/>
+<node id="MAPK8"/>
+<node id="TYK2"/>
 <node id="IL6"/>
+<node id="BACH2"/>
+<node id="NKX2-3"/>
+<node id="DEDD"/>
+<node id="CFLAR"/>
 <node id="IL23R"/>
-<node id="IL12B"/>
-<edge source="TNFSF10" target="TNFAIP3"/>
-<edge source="TNFSF10" target="FADD"/>
-<edge source="TNFSF10" target="RIPK1"/>
-<edge source="TNFSF10" target="CFLAR"/>
-<edge source="TNFSF10" target="TNFRSF10B"/>
-<edge source="TNFSF10" target="CASP8"/>
-<edge source="TF" target="IGFBP3"/>
-<edge source="TF" target="SMAD3"/>
-<edge source="TF" target="ATG16L1"/>
-<edge source="TF" target="IGF1"/>
-<edge source="TF" target="FN1"/>
-<edge source="TF" target="TYK2"/>
-<edge source="NOD1" target="RIPK2"/>
-<edge source="NOD1" target="CFLAR"/>
-<edge source="NOD1" target="ATG16L1"/>
-<edge source="NOD1" target="CASP8"/>
-<edge source="NOD1" target="NLRC4"/>
-<edge source="NOD1" target="NOD2"/>
-<edge source="NOD1" target="CASP1"/>
-<edge source="NOD1" target="IRGM"/>
+<node id="IGF1"/>
+<node id="TNFSF10"/>
+<node id="CASP1"/>
+<node id="RHOA"/>
+<node id="RIPK1"/>
+<node id="NCF4"/>
+<node id="TF"/>
+<node id="IL10"/>
+<node id="TNF"/>
+<node id="CASP8"/>
+<node id="NLRP3"/>
+<node id="ATG16L1"/>
+<node id="PHOX2B"/>
+<node id="TLR9"/>
+<node id="MST1"/>
+<node id="DNMT3A"/>
+<node id="PPARA"/>
+<node id="IGFBP3"/>
+<node id="NOD2"/>
+<node id="ERAP2"/>
+<node id="TCF7"/>
+<node id="MSN"/>
+<node id="LEP"/>
+<node id="PTPN2"/>
+<node id="CASP10"/>
+<node id="IL2RA"/>
+<node id="TNFAIP3"/>
+<node id="DEDD2"/>
+<node id="CRP"/>
+<node id="MTHFR"/>
+<node id="FADD"/>
+<node id="NR1H4"/>
+<node id="TNFRSF10B"/>
+<node id="FASLG"/>
+<edge source="BID" target="FAS"/>
+<edge source="BID" target="MAPK8"/>
+<edge source="BID" target="RHOA"/>
+<edge source="BID" target="TNFRSF1A"/>
+<edge source="BID" target="MSN"/>
+<edge source="BID" target="FADD"/>
+<edge source="BID" target="EZR"/>
+<edge source="BID" target="ARHGDIA"/>
+<edge source="BID" target="TNFRSF10B"/>
+<edge source="BID" target="FASLG"/>
+<edge source="BID" target="CASP10"/>
+<edge source="BID" target="CASP8"/>
 <edge source="TNFRSF1A" target="FAS"/>
 <edge source="TNFRSF1A" target="MAPK8"/>
 <edge source="TNFRSF1A" target="RHOA"/>
 <edge source="TNFRSF1A" target="TNFAIP3"/>
 <edge source="TNFRSF1A" target="TNF"/>
 <edge source="TNFRSF1A" target="TNFRSF10B"/>
-<edge source="TNFRSF1A" target="BID"/>
 <edge source="TNFRSF1A" target="EZR"/>
 <edge source="TNFRSF1A" target="FADD"/>
 <edge source="TNFRSF1A" target="FASLG"/>
@@ -103,141 +94,150 @@
 <edge source="TNFRSF1A" target="ARHGDIA"/>
 <edge source="TNFRSF1A" target="RIPK2"/>
 <edge source="TNFRSF1A" target="RIPK1"/>
-<edge source="MAPK8" target="SMAD3"/>
-<edge source="MAPK8" target="FAS"/>
+<edge source="ARHGDIA" target="FAS"/>
+<edge source="ARHGDIA" target="MAPK8"/>
+<edge source="ARHGDIA" target="RHOA"/>
+<edge source="ARHGDIA" target="MSN"/>
+<edge source="ARHGDIA" target="FADD"/>
+<edge source="ARHGDIA" target="TNFRSF10B"/>
+<edge source="ARHGDIA" target="EZR"/>
+<edge source="ARHGDIA" target="FASLG"/>
+<edge source="ARHGDIA" target="CASP10"/>
+<edge source="ARHGDIA" target="CASP8"/>
+<edge source="FAS" target="TNFRSF10B"/>
+<edge source="FAS" target="EZR"/>
+<edge source="FAS" target="FADD"/>
+<edge source="FAS" target="FASLG"/>
+<edge source="FAS" target="MAPK8"/>
+<edge source="FAS" target="MSN"/>
+<edge source="FAS" target="CASP10"/>
+<edge source="FAS" target="CASP8"/>
+<edge source="FAS" target="RHOA"/>
+<edge source="FAS" target="RIPK1"/>
+<edge source="FAS" target="CFLAR"/>
+<edge source="FAS" target="TNF"/>
+<edge source="TLR4" target="SMAD3"/>
+<edge source="SMAD3" target="DEDD"/>
+<edge source="SMAD3" target="TF"/>
+<edge source="SMAD3" target="CFLAR"/>
+<edge source="SMAD3" target="PPARG"/>
+<edge source="SMAD3" target="MAPK8"/>
+<edge source="SMAD3" target="ATG16L1"/>
+<edge source="EZR" target="MAPK8"/>
+<edge source="EZR" target="RHOA"/>
+<edge source="EZR" target="MSN"/>
+<edge source="EZR" target="FADD"/>
+<edge source="EZR" target="TNFRSF10B"/>
+<edge source="EZR" target="FASLG"/>
+<edge source="EZR" target="CASP10"/>
+<edge source="EZR" target="CASP8"/>
+<edge source="EZR" target="FN1"/>
+<edge source="EZR" target="ATG16L1"/>
+<edge source="NLRC4" target="FADD"/>
+<edge source="NLRC4" target="CASP8"/>
+<edge source="NLRC4" target="NOD2"/>
+<edge source="NLRC4" target="NOD1"/>
+<edge source="NLRC4" target="NLRP3"/>
+<edge source="NLRC4" target="CASP1"/>
+<edge source="RIPK2" target="RIPK1"/>
+<edge source="RIPK2" target="CFLAR"/>
+<edge source="RIPK2" target="CASP1"/>
+<edge source="RIPK2" target="NOD1"/>
+<edge source="RIPK2" target="NOD2"/>
+<edge source="RIPK2" target="ATG16L1"/>
+<edge source="FN1" target="IGFBP3"/>
+<edge source="FN1" target="MSN"/>
+<edge source="FN1" target="FASLG"/>
+<edge source="FN1" target="TF"/>
+<edge source="FN1" target="CRP"/>
+<edge source="FN1" target="TCF7"/>
+<edge source="IRGM" target="ATG16L1"/>
+<edge source="IRGM" target="NOD2"/>
+<edge source="IRGM" target="NOD1"/>
+<edge source="PPARG" target="IGFBP3"/>
+<edge source="PPARG" target="MSN"/>
+<edge source="NOD1" target="CFLAR"/>
+<edge source="NOD1" target="ATG16L1"/>
+<edge source="NOD1" target="CASP8"/>
+<edge source="NOD1" target="NOD2"/>
+<edge source="NOD1" target="CASP1"/>
 <edge source="MAPK8" target="TNFRSF10B"/>
 <edge source="MAPK8" target="FADD"/>
 <edge source="MAPK8" target="FASLG"/>
-<edge source="MAPK8" target="BID"/>
-<edge source="MAPK8" target="EZR"/>
 <edge source="MAPK8" target="RHOA"/>
-<edge source="MAPK8" target="ARHGDIA"/>
 <edge source="MAPK8" target="MSN"/>
 <edge source="MAPK8" target="CASP10"/>
 <edge source="MAPK8" target="CASP8"/>
-<edge source="RHOA" target="FAS"/>
-<edge source="RHOA" target="ARHGDIA"/>
-<edge source="RHOA" target="BID"/>
+<edge source="TYK2" target="TF"/>
+<edge source="DEDD" target="FADD"/>
+<edge source="DEDD" target="CFLAR"/>
+<edge source="DEDD" target="DEDD2"/>
+<edge source="DEDD" target="CASP8"/>
+<edge source="DEDD" target="CASP10"/>
+<edge source="CFLAR" target="FADD"/>
+<edge source="CFLAR" target="RIPK1"/>
+<edge source="CFLAR" target="CASP8"/>
+<edge source="CFLAR" target="CASP10"/>
+<edge source="CFLAR" target="TNFRSF10B"/>
+<edge source="CFLAR" target="DEDD2"/>
+<edge source="CFLAR" target="TNFSF10"/>
+<edge source="CFLAR" target="FASLG"/>
+<edge source="IGF1" target="IGFBP3"/>
+<edge source="IGF1" target="TF"/>
+<edge source="TNFSF10" target="TNFAIP3"/>
+<edge source="TNFSF10" target="FADD"/>
+<edge source="TNFSF10" target="RIPK1"/>
+<edge source="TNFSF10" target="TNFRSF10B"/>
+<edge source="TNFSF10" target="CASP8"/>
+<edge source="CASP1" target="CASP10"/>
+<edge source="CASP1" target="CASP8"/>
+<edge source="CASP1" target="NOD2"/>
 <edge source="RHOA" target="TNFRSF10B"/>
-<edge source="RHOA" target="EZR"/>
 <edge source="RHOA" target="FADD"/>
 <edge source="RHOA" target="FASLG"/>
 <edge source="RHOA" target="MSN"/>
 <edge source="RHOA" target="CASP10"/>
 <edge source="RHOA" target="CASP8"/>
 <edge source="RHOA" target="ATG16L1"/>
-<edge source="TNFRSF10B" target="FAS"/>
-<edge source="TNFRSF10B" target="TNFAIP3"/>
-<edge source="TNFRSF10B" target="MSN"/>
-<edge source="TNFRSF10B" target="FADD"/>
-<edge source="TNFRSF10B" target="RIPK1"/>
-<edge source="TNFRSF10B" target="BID"/>
-<edge source="TNFRSF10B" target="ARHGDIA"/>
-<edge source="TNFRSF10B" target="EZR"/>
-<edge source="TNFRSF10B" target="CFLAR"/>
-<edge source="TNFRSF10B" target="FASLG"/>
-<edge source="TNFRSF10B" target="CASP10"/>
-<edge source="TNFRSF10B" target="CASP8"/>
-<edge source="ARHGDIA" target="FAS"/>
-<edge source="ARHGDIA" target="MSN"/>
-<edge source="ARHGDIA" target="FADD"/>
-<edge source="ARHGDIA" target="BID"/>
-<edge source="ARHGDIA" target="EZR"/>
-<edge source="ARHGDIA" target="FASLG"/>
-<edge source="ARHGDIA" target="CASP10"/>
-<edge source="ARHGDIA" target="CASP8"/>
-<edge source="DEDD" target="SMAD3"/>
-<edge source="DEDD" target="FADD"/>
-<edge source="DEDD" target="CFLAR"/>
-<edge source="DEDD" target="DEDD2"/>
-<edge source="DEDD" target="CASP8"/>
-<edge source="DEDD" target="CASP10"/>
-<edge source="CASP1" target="RIPK2"/>
-<edge source="CASP1" target="CASP10"/>
-<edge source="CASP1" target="CASP8"/>
-<edge source="CASP1" target="NLRC4"/>
-<edge source="CASP1" target="NOD2"/>
-<edge source="CASP8" target="FAS"/>
+<edge source="RIPK1" target="TNFAIP3"/>
+<edge source="RIPK1" target="FADD"/>
+<edge source="RIPK1" target="TNFRSF10B"/>
+<edge source="RIPK1" target="CASP8"/>
+<edge source="RIPK1" target="CASP10"/>
+<edge source="RIPK1" target="TNF"/>
+<edge source="RIPK1" target="NOD2"/>
+<edge source="NCF4" target="MSN"/>
+<edge source="TF" target="IGFBP3"/>
+<edge source="TF" target="ATG16L1"/>
+<edge source="TNF" target="TNFAIP3"/>
+<edge source="TNF" target="FADD"/>
+<edge source="TNF" target="CASP8"/>
 <edge source="CASP8" target="TNFAIP3"/>
 <edge source="CASP8" target="MSN"/>
 <edge source="CASP8" target="FADD"/>
 <edge source="CASP8" target="NR1H4"/>
-<edge source="CASP8" target="RIPK1"/>
-<edge source="CASP8" target="BID"/>
-<edge source="CASP8" target="EZR"/>
-<edge source="CASP8" target="CFLAR"/>
-<edge source="CASP8" target="TNF"/>
+<edge source="CASP8" target="TNFRSF10B"/>
 <edge source="CASP8" target="FASLG"/>
 <edge source="CASP8" target="CASP10"/>
 <edge source="CASP8" target="DEDD2"/>
-<edge source="CASP8" target="NLRC4"/>
 <edge source="CASP8" target="NLRP3"/>
-<edge source="TNFAIP3" target="RIPK1"/>
-<edge source="TNFAIP3" target="TNF"/>
-<edge source="TNFAIP3" target="FADD"/>
-<edge source="TNFAIP3" target="NOD2"/>
-<edge source="TNFAIP3" target="TLR9"/>
-<edge source="BID" target="FAS"/>
-<edge source="BID" target="MSN"/>
-<edge source="BID" target="FADD"/>
-<edge source="BID" target="EZR"/>
-<edge source="BID" target="FASLG"/>
-<edge source="BID" target="CASP10"/>
-<edge source="SMAD3" target="TLR4"/>
-<edge source="SMAD3" target="CFLAR"/>
-<edge source="SMAD3" target="PPARG"/>
-<edge source="SMAD3" target="ATG16L1"/>
-<edge source="DEDD2" target="CFLAR"/>
-<edge source="DEDD2" target="ATG16L1"/>
-<edge source="DEDD2" target="CASP10"/>
-<edge source="PPARG" target="IGFBP3"/>
-<edge source="PPARG" target="MSN"/>
-<edge source="NLRP3" target="NLRC4"/>
-<edge source="FASLG" target="FAS"/>
-<edge source="FASLG" target="MSN"/>
-<edge source="FASLG" target="FADD"/>
-<edge source="FASLG" target="EZR"/>
-<edge source="FASLG" target="CFLAR"/>
-<edge source="FASLG" target="CASP10"/>
-<edge source="FASLG" target="FN1"/>
-<edge source="EZR" target="FAS"/>
-<edge source="EZR" target="MSN"/>
-<edge source="EZR" target="FADD"/>
-<edge source="EZR" target="CASP10"/>
-<edge source="EZR" target="FN1"/>
-<edge source="EZR" target="ATG16L1"/>
-<edge source="RIPK1" target="FAS"/>
-<edge source="RIPK1" target="FADD"/>
-<edge source="RIPK1" target="CFLAR"/>
-<edge source="RIPK1" target="CASP10"/>
-<edge source="RIPK1" target="TNF"/>
-<edge source="RIPK1" target="NOD2"/>
-<edge source="RIPK1" target="RIPK2"/>
-<edge source="MSN" target="FAS"/>
-<edge source="MSN" target="NCF4"/>
-<edge source="MSN" target="FADD"/>
-<edge source="MSN" target="CASP10"/>
-<edge source="MSN" target="FN1"/>
-<edge source="MSN" target="ATG16L1"/>
-<edge source="TLR9" target="MTHFR"/>
-<edge source="IGFBP3" target="IGF1"/>
-<edge source="IGFBP3" target="FN1"/>
-<edge source="IRGM" target="ATG16L1"/>
-<edge source="IRGM" target="NOD2"/>
-<edge source="TNF" target="FAS"/>
-<edge source="TNF" target="FADD"/>
-<edge source="CRP" target="FN1"/>
-<edge source="FADD" target="FAS"/>
-<edge source="FADD" target="CASP10"/>
-<edge source="FADD" target="CFLAR"/>
-<edge source="FADD" target="NLRC4"/>
-<edge source="FAS" target="CASP10"/>
-<edge source="FAS" target="CFLAR"/>
-<edge source="ATG16L1" target="RIPK2"/>
+<edge source="ATG16L1" target="MSN"/>
 <edge source="ATG16L1" target="NOD2"/>
-<edge source="FN1" target="TCF7"/>
-<edge source="RIPK2" target="CFLAR"/>
-<edge source="RIPK2" target="NOD2"/>
-<edge source="NOD2" target="NLRC4"/>
-<edge source="CASP10" target="CFLAR"/>
+<edge source="ATG16L1" target="DEDD2"/>
+<edge source="TLR9" target="TNFAIP3"/>
+<edge source="TLR9" target="MTHFR"/>
+<edge source="NOD2" target="TNFAIP3"/>
+<edge source="MSN" target="TNFRSF10B"/>
+<edge source="MSN" target="FADD"/>
+<edge source="MSN" target="FASLG"/>
+<edge source="MSN" target="CASP10"/>
+<edge source="CASP10" target="FADD"/>
+<edge source="CASP10" target="TNFRSF10B"/>
+<edge source="CASP10" target="FASLG"/>
+<edge source="CASP10" target="DEDD2"/>
+<edge source="TNFAIP3" target="FADD"/>
+<edge source="TNFAIP3" target="TNFRSF10B"/>
+<edge source="FADD" target="TNFRSF10B"/>
+<edge source="FADD" target="FASLG"/>
+<edge source="TNFRSF10B" target="FASLG"/>
 </graph></graphml>
