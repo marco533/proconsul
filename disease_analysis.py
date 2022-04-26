@@ -5,8 +5,8 @@ from turtle import title
 import networkx as nx
 import numpy as np
 import pandas as pd
-from torch import absolute
-import seaborn as sns
+#from torch import absolute
+#import seaborn as sns
 from matplotlib import pyplot as plt
 
 from algorithms.diamond import DIAMOnD
@@ -145,12 +145,10 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
         disease_attributes_dictionary[disease].append(disease_LCC_size / number_of_disease_genes)
 
         # 8. longest_path_in_LCC
-        # disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease))
-        disease_attributes_dictionary[disease].append("test")
+        disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease))
 
         # 9. longest_path_in_interactome
-        # disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
-        disease_attributes_dictionary[disease].append("test")
+        disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
 
         # 10. average_path_length
         # disease_attributes_dictionary[disease].append(nx.average_shortest_path_length(disease_LCC))
