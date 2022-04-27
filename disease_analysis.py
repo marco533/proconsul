@@ -8,6 +8,8 @@ import pandas as pd
 from torch import absolute
 import seaborn as sns
 from matplotlib import pyplot as plt
+from sklearn.preprocessing import robust_scale
+from graph_tiger.measures import run_measure
 
 from algorithms.diamond import DIAMOnD
 from algorithms.pdiamond import pDIAMOnD, pDIAMOnD_alternative
@@ -99,8 +101,17 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
                   "modularity",
                   "global_efficency",
                   "assortativity",
-                  "community"]
-
+                  "community",
+                  'node_connectivity',              # robustness parameters: from here
+                  'edge_connectivity',              #
+                  'spectral_radius',                #
+                  'spectral_gap',                   #
+                  'natural_connectivity',           #
+                  'algebraic_connectivity',         #
+                  'num_spanning_trees',             #
+                  'effective_resistance',           #
+                  'generalized_robustness_index'    # to here
+                  ]
 
 
     # Init disease attributes dictionary
@@ -184,6 +195,42 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
             if len(community) > 1:
                 communitites_greater_than_1 +=1
         disease_attributes_dictionary[disease].append(communitites_greater_than_1)
+
+        # 18. Node connectivity
+        node_connectivity = run_measure(disease_network, measure='node_connectivity')
+        disease_attributes_dictionary[disease].append(node_connectivity)
+
+        # 19. Edge connectivity
+        edge_connectivity = run_measure(disease_network, measure='edge_connectivity')
+        disease_attributes_dictionary[disease].append(edge_connectivity)
+
+        # 20. Spectral radius
+        spectral_radius = run_measure(disease_network, measure='spectral_radius')
+        disease_attributes_dictionary[disease].append(spectral_radius)
+
+        # 21. Spectral gap
+        spectral_gap = run_measure(disease_network, measure='spectral_gap')
+        disease_attributes_dictionary[disease].append(spectral_gap)
+
+        # 22. Natural connectivity
+        natural_connectivity = run_measure(disease_network, measure='natural_connectivity')
+        disease_attributes_dictionary[disease].append(natural_connectivity)
+
+        # 23. Algebraic connectivity
+        algebraic_connectivity = run_measure(disease_network, measure='algebraic_connectivity')
+        disease_attributes_dictionary[disease].append(algebraic_connectivity)
+
+        # 24. Number of spanning trees
+        number_spanning_trees = run_measure(disease_network, measure='number_spanning_trees')
+        disease_attributes_dictionary[disease].append(number_spanning_trees)
+
+        # 25. Effective resistance
+        effective_resistance = run_measure(disease_network, measure='effective_resistance')
+        disease_attributes_dictionary[disease].append(effective_resistance)
+        
+        # 26. Generalized robustness index (IT SHOULD RETURN ALWAYS NONE )
+        generalized_robustness_index = run_measure(disease_network, measure='generalized_robustness_index')
+        disease_attributes_dictionary[disease].append(generalized_robustness_index)
 
 
         # Export the network for Cytoscape visualization
@@ -317,7 +364,7 @@ if __name__ == "__main__":
     # ***************************************************
     #   Perform enrichment through DIAMOnD and pDIAMOnD
     # ***************************************************
-
+#
     DIAMOnD_enriched_networks   = {}    # Dict of disease networks enriched with DIAMOnD
     pDIAMOnD_enriched_networks  = {}    # Dict of disease networks enriched with pDIAMOnD
 
@@ -370,6 +417,3 @@ if __name__ == "__main__":
     compare_network_attributes(orginal_network_attributes, DIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="DIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_DIAMOnD_enriched_networks.csv")
     compare_network_attributes(orginal_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_pDIAMOnD_enriched_networks.csv")
     compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_enriched_networks.csv")
-
-
-
