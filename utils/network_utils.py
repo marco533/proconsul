@@ -269,7 +269,7 @@ def get_longest_path_for_a_disease_interactome(disease):
     '''
     Given a disease, get the longest path searching in the rows
     and columns of the distance matrix corresponding to disease genes.
-    NB: the paths includes genes not only of this disease beacuse the distance amtrix
+    NB: the paths includes genes not only of this disease beacuse the distance matrix
     is built from the interactome
     '''
 

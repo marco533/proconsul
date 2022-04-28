@@ -110,10 +110,10 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
                   'spectral_gap',                   #
                   'natural_connectivity',           #
                   'algebraic_connectivity',         #
-                  'num_spanning_trees',             #
-                  'effective_resistance',           #
-                  'generalized_robustness_index',    # to here
-                  'small-world'
+                  'num_spanning_trees'            #
+                #   'effective_resistance',           #
+                   #'generalized_robustness_index',   # to here
+                #   'small-world'
                   ]
 
 
@@ -160,10 +160,12 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
         disease_attributes_dictionary[disease].append(disease_LCC_size / number_of_disease_genes)
 
         # 8. longest_path_in_LCC
-        disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease))
+        # disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease))
+        disease_attributes_dictionary[disease].append("test")
 
         # 9. longest_path_in_interactome
-        disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
+        # disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
+        disease_attributes_dictionary[disease].append("test")
 
         # 10. average_path_length
         # disease_attributes_dictionary[disease].append(nx.average_shortest_path_length(disease_LCC))
@@ -201,11 +203,13 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
         disease_attributes_dictionary[disease].append(communitites_greater_than_1)
 
         # 18. Node connectivity
-        node_connectivity = run_measure(disease_network, measure='node_connectivity')
+        # node_connectivity = run_measure(disease_network, measure='node_connectivity')
+        node_connectivity = nx.node_connectivity(disease_network)
         disease_attributes_dictionary[disease].append(node_connectivity)
 
         # 19. Edge connectivity
-        edge_connectivity = run_measure(disease_network, measure='edge_connectivity')
+        # edge_connectivity = run_measure(disease_network, measure='edge_connectivity')
+        edge_connectivity = nx.edge_connectivity(disease_network)
         disease_attributes_dictionary[disease].append(edge_connectivity)
 
         # 20. Spectral radius
@@ -228,17 +232,16 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
         number_spanning_trees = run_measure(disease_network, measure='number_spanning_trees')
         disease_attributes_dictionary[disease].append(number_spanning_trees)
 
-        # 25. Effective resistance
-        effective_resistance = run_measure(disease_network, measure='effective_resistance')
-        disease_attributes_dictionary[disease].append(effective_resistance)
-        
-        # 26. Generalized robustness index (IT SHOULD RETURN ALWAYS NONE )
-        generalized_robustness_index = run_measure(disease_network, measure='generalized_robustness_index')
-        disease_attributes_dictionary[disease].append(generalized_robustness_index)
+        # # 25. Effective resistance
+        # effective_resistance = run_measure(disease_network, measure='effective_resistance')
+        # disease_attributes_dictionary[disease].append(effective_resistance)
+
+        # # 26. Generalized robustness index (IT SHOULD RETURN ALWAYS NONE)
+        # generalized_robustness_index = run_measure(disease_network, measure='generalized_robustness_index')
+        # disease_attributes_dictionary[disease].append(generalized_robustness_index)
 
         # 27. Small-world
-        disease_network_LCC = isolate_LCC(disease_network)  #nx.sigma takes a connected graph
-        disease_attributes_dictionary[disease].append(nx.sigma(disease_network_LCC))
+        # disease_attributes_dictionary[disease].append(nx.sigma(disease_LCC))
 
 
         # Export the network for Cytoscape visualization
@@ -268,9 +271,7 @@ def compare_network_attributes(N1, N2, nname1=None, nname2=None, heatmap=False, 
     rows = list(N1.index)
     columns = list(N1.columns)
 
-    # Init two DataFrames
-    # 1. Percentage differences
-    # 2. Absolute values
+    # Init DataFrame
     percentage_differences  = pd.DataFrame(np.zeros((len(rows), len(columns))),
                                             index=rows,
                                             columns=columns)
@@ -285,7 +286,9 @@ def compare_network_attributes(N1, N2, nname1=None, nname2=None, heatmap=False, 
             if type(N1_attribute_value) == str or type(N2_attribute_value) == str:
                 percentage_diff = 0.0
             else:
-                if N1_attribute_value == 0: N1_attribute_value = 0.001
+                if N1_attribute_value == 0:
+                        N1_attribute_value = 0.001
+
                 percentage_diff = (N2_attribute_value - N1_attribute_value) * 100 / N1_attribute_value
 
             # Save the percentage value
@@ -306,7 +309,7 @@ def compare_network_attributes(N1, N2, nname1=None, nname2=None, heatmap=False, 
                             cmap=cmap,
                             cbar_kws={"label": f"<--{nname1}  |  {nname2}-->"},
                             center=0,
-                            vmin=-100, vmax=100)#.set(title=f"Percentage Differences | {nname2} Vs {nname1} enriched networks")
+                            vmin=-100, vmax=100)
 
         hm.set_title(f"Percentage Differences | {nname2} Vs {nname1} enriched networks")
 
@@ -330,8 +333,8 @@ if __name__ == "__main__":
     diseases = read_terminal_input(args)
 
     # Create Human-Human Interactome network
-    biogrid = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
-    hhi_df  = select_hhi_only(biogrid)
+    interactome = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+    hhi_df  = select_hhi_only(interactome)
     hhi     = nx.from_pandas_edgelist(hhi_df,
                                       source = "Official Symbol Interactor A",
                                       target = "Official Symbol Interactor B",
