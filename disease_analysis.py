@@ -110,7 +110,8 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
                   'algebraic_connectivity',         #
                   'num_spanning_trees',             #
                   'effective_resistance',           #
-                  'generalized_robustness_index'    # to here
+                  'generalized_robustness_index',    # to here
+                  'small-world'
                   ]
 
 
@@ -231,6 +232,9 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
         # 26. Generalized robustness index (IT SHOULD RETURN ALWAYS NONE )
         generalized_robustness_index = run_measure(disease_network, measure='generalized_robustness_index')
         disease_attributes_dictionary[disease].append(generalized_robustness_index)
+
+        # 27. Small-world
+        disease_attributes_dictionary[disease].append(nx.sigma(disease_network))
 
 
         # Export the network for Cytoscape visualization
