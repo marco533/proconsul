@@ -8,6 +8,7 @@ import pandas as pd
 from torch import absolute
 import seaborn as sns
 from matplotlib import pyplot as plt
+import networkx.algorithms.community as nx_comm
 from sklearn.preprocessing import robust_scale
 from graph_tiger.measures import run_measure
 
@@ -83,6 +84,7 @@ def read_terminal_input(args):
 #    N E T W O R K   A N A L Y S I S
 # ======================================
 def analyze_disease_networks(disease_networks, enriching_algorithm=None):
+
 
     # Define attributes
     attributes = ["number_of_disease_genes",
@@ -180,7 +182,8 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
         disease_attributes_dictionary[disease].append(nx.average_clustering(disease_network))
 
         # 14. modularity
-        disease_attributes_dictionary[disease].append("test")
+        modularity = nx_comm.modularity(disease_network, nx_comm.label_propagation_communities(disease_network))
+        disease_attributes_dictionary[disease].append(modularity)
 
         # 15. global_efficency
         disease_attributes_dictionary[disease].append(nx.global_efficiency(disease_network))
@@ -234,7 +237,8 @@ def analyze_disease_networks(disease_networks, enriching_algorithm=None):
         disease_attributes_dictionary[disease].append(generalized_robustness_index)
 
         # 27. Small-world
-        disease_attributes_dictionary[disease].append(nx.sigma(disease_network))
+        disease_network_LCC = isolate_LCC(disease_network)  #nx.sigma takes a connected graph
+        disease_attributes_dictionary[disease].append(nx.sigma(disease_network_LCC))
 
 
         # Export the network for Cytoscape visualization
@@ -368,7 +372,7 @@ if __name__ == "__main__":
     # ***************************************************
     #   Perform enrichment through DIAMOnD and pDIAMOnD
     # ***************************************************
-#
+
     DIAMOnD_enriched_networks   = {}    # Dict of disease networks enriched with DIAMOnD
     pDIAMOnD_enriched_networks  = {}    # Dict of disease networks enriched with pDIAMOnD
 
