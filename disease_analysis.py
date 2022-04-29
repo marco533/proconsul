@@ -376,8 +376,9 @@ if __name__ == "__main__":
     #   Perform enrichment through DIAMOnD and pDIAMOnD
     # ***************************************************
 
-    DIAMOnD_enriched_networks   = {}    # Dict of disease networks enriched with DIAMOnD
-    pDIAMOnD_enriched_networks  = {}    # Dict of disease networks enriched with pDIAMOnD
+    DIAMOnD_enriched_networks = {}      # Dict of disease networks enriched with DIAMOnD
+    pDIAMOnD_enriched_networks = {}     # Dict of disease networks enriched with pDIAMOnD
+    pDIAMOnD_alternative_enriched_networks = {}
 
     for disease in diseases:
         disease_genes = get_disease_genes_from_gda("data/curated_gene_disease_associations.tsv", disease, training_mode=True)
@@ -418,9 +419,28 @@ if __name__ == "__main__":
         # Add it to the dictionary of pDIAMOnD enriched networks
         pDIAMOnD_enriched_networks[disease] = disease_network
 
+        #pDIAMOnD_alternative
+        print(f"\nPerforming the enrichemt of {disease} with pDIAMOnD_alternative\n")
+
+        added_nodes = pDIAMOnD_alternative(LCC_hhi, disease_genes, 25, 1, outfile="tmp/pdiamond_output.txt")
+        predicted_genes = [item[0] for item in added_nodes]
+        pDIAMOnD_alternative_enriched_genes = disease_genes + predicted_genes
+
+        print(f"num_orginal_genes: {len(disease_genes)} genes")
+        print(f"num_predicted_genes: {len(predicted_genes)} genes")
+        print(f"total_enriched_genes: {len(pDIAMOnD_alternative_enriched_genes)} genes")
+
+        # Extract the subgraph from the HHI LCC and remove the self-loops
+        disease_network = LCC_hhi.subgraph(pDIAMOnD_alternative_enriched_genes).copy()
+        disease_network.remove_edges_from(nx.selfloop_edges(disease_network))
+
+        # Add it to the dictionary of pDIAMOnD enriched networks
+        pDIAMOnD_alternative_enriched_networks[disease] = disease_network
+
     # Compare disease networks AFTER the enrichment
     DIAMOnD_enriched_network_attributes = analyze_disease_networks(DIAMOnD_enriched_networks, enriching_algorithm="DIAMOnD")
     pDIAMOnD_enriched_network_attributes = analyze_disease_networks(pDIAMOnD_enriched_networks, enriching_algorithm="pDIAMOnD")
+    pDIAMOnD_alternative_enriched_network_attributes = analyze_disease_networks(pDIAMOnD_enriched_networks, enriching_algorithm="pDIAMOnD_alternative")
 
     # ***********************************
     #   How much the attributes growed
@@ -428,3 +448,5 @@ if __name__ == "__main__":
     compare_network_attributes(orginal_network_attributes, DIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="DIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_DIAMOnD_enriched_networks.csv")
     compare_network_attributes(orginal_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_pDIAMOnD_enriched_networks.csv")
     compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_enriched_networks.csv")
+    compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_alternative_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD_alternative", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_alternative_enriched_networks.csv")
+

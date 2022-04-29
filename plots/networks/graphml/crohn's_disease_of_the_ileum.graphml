@@ -1,54 +1,54 @@
 <?xml version='1.0' encoding='utf-8'?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="TLR4"/>
-<node id="CRP"/>
-<node id="TNF"/>
-<node id="ERAP2"/>
-<node id="NKX2-3"/>
-<node id="IL12B"/>
-<node id="MTHFR"/>
-<node id="HLA-DRB1"/>
-<node id="IRGM"/>
-<node id="CCNY"/>
-<node id="NR1H4"/>
-<node id="TCF7"/>
-<node id="NCF4"/>
-<node id="FAM92B"/>
-<node id="IL23R"/>
-<node id="CCL2"/>
-<node id="PPARA"/>
-<node id="TLR9"/>
-<node id="FPR2"/>
-<node id="FUT2"/>
-<node id="IFNG"/>
-<node id="SMAD3"/>
-<node id="VTN"/>
-<node id="IGF1"/>
-<node id="ATG16L1"/>
-<node id="NOD2"/>
-<node id="IL2RA"/>
-<node id="PPARG"/>
-<node id="NLRP3"/>
-<node id="DENND1B"/>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="ATG16L1"/>
 <node id="IL10"/>
-<node id="IL6"/>
-<node id="LEP"/>
+<node id="IL12B"/>
 <node id="ADIPOQ"/>
-<node id="BACH2"/>
-<node id="MST1"/>
-<node id="PHOX2B"/>
+<node id="TNF"/>
+<node id="PPARA"/>
+<node id="NR1H4"/>
+<node id="CCL2"/>
 <node id="GPBAR1"/>
-<node id="TAGAP"/>
-<node id="FN1"/>
+<node id="IL23R"/>
+<node id="CRP"/>
+<node id="PHOX2B"/>
+<node id="MST1"/>
+<node id="TLR9"/>
+<node id="VTN"/>
+<node id="PPARG"/>
 <node id="DNMT3A"/>
+<node id="CCNY"/>
+<node id="IGF1"/>
+<node id="ERAP2"/>
+<node id="IRGM"/>
+<node id="FUT2"/>
+<node id="IL6"/>
+<node id="FN1"/>
+<node id="NCF4"/>
+<node id="LEP"/>
+<node id="BACH2"/>
+<node id="SMAD3"/>
+<node id="NKX2-3"/>
+<node id="MTHFR"/>
+<node id="IL2RA"/>
+<node id="DENND1B"/>
+<node id="TLR4"/>
+<node id="NOD2"/>
 <node id="PTPN2"/>
+<node id="NLRP3"/>
+<node id="TAGAP"/>
+<node id="FPR2"/>
+<node id="FAM92B"/>
 <node id="TYK2"/>
-<edge source="TLR4" target="SMAD3"/>
-<edge source="CRP" target="FN1"/>
-<edge source="MTHFR" target="TLR9"/>
-<edge source="IRGM" target="ATG16L1"/>
-<edge source="IRGM" target="NOD2"/>
-<edge source="TCF7" target="FN1"/>
-<edge source="SMAD3" target="PPARG"/>
-<edge source="SMAD3" target="ATG16L1"/>
+<node id="IFNG"/>
+<node id="TCF7"/>
+<node id="HLA-DRB1"/>
+<edge source="ATG16L1" target="SMAD3"/>
 <edge source="ATG16L1" target="NOD2"/>
+<edge source="ATG16L1" target="IRGM"/>
+<edge source="CRP" target="FN1"/>
+<edge source="TLR9" target="MTHFR"/>
+<edge source="PPARG" target="SMAD3"/>
+<edge source="IRGM" target="NOD2"/>
+<edge source="FN1" target="TCF7"/>
+<edge source="SMAD3" target="TLR4"/>
 </graph></graphml>

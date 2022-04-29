@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="SST"/>
+<node id="CYCS"/>
+<node id="HMOX1"/>
+<node id="EGR1"/>
+<node id="ADORA1"/>
+<node id="PLAU"/>
+<node id="NOS3"/>
+<node id="SOD2"/>
+<node id="PPARG"/>
+<node id="ADORA3"/>
+<node id="PCNA"/>
+<node id="AVP"/>
+<node id="IL6"/>
+<node id="XDH"/>
+<node id="SOD1"/>
+<node id="CP"/>
+<node id="CD68"/>
+<node id="CXCR3"/>
+<node id="CKM"/>
+<node id="REN"/>
+<node id="ACTA2"/>
+<node id="S100A4"/>
+<node id="SERPINH1"/>
+<node id="BAX"/>
+<node id="OXT"/>
+<node id="MAPK9"/>
+<node id="TP53"/>
+<node id="CXCL12"/>
+<edge source="CYCS" target="BAX"/>
+<edge source="EGR1" target="TP53"/>
+<edge source="SOD2" target="SOD1"/>
+<edge source="PPARG" target="TP53"/>
+<edge source="PPARG" target="SERPINH1"/>
+<edge source="PPARG" target="MAPK9"/>
+<edge source="PCNA" target="TP53"/>
+<edge source="SOD1" target="SERPINH1"/>
+<edge source="ACTA2" target="TP53"/>
+<edge source="S100A4" target="TP53"/>
+<edge source="SERPINH1" target="TP53"/>
+<edge source="SERPINH1" target="BAX"/>
+<edge source="BAX" target="TP53"/>
+<edge source="MAPK9" target="TP53"/>
+</graph></graphml>

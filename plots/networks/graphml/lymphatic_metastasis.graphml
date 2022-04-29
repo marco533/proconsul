@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="TRMT11"/>
+<node id="ANGPTL4"/>
+<node id="MT1A"/>
+<node id="MET"/>
+<node id="ANXA1"/>
+<node id="TP53BP1"/>
+<node id="SOD2"/>
+<node id="MSLN"/>
+<node id="AQP3"/>
+<node id="SFN"/>
+<node id="RASSF2"/>
+<node id="FOXP1"/>
+<node id="CCNH"/>
+<node id="STAT3"/>
+<node id="KISS1"/>
+<node id="LRRC59"/>
+<node id="BRAF"/>
+<node id="MTOR"/>
+<node id="CDKN2A"/>
+<node id="SHBG"/>
+<node id="GRIK2"/>
+<node id="ING4"/>
+<node id="ERBB2"/>
+<node id="TSHR"/>
+<edge source="ANGPTL4" target="CDKN2A"/>
+<edge source="MET" target="STAT3"/>
+<edge source="MET" target="SFN"/>
+<edge source="MET" target="ERBB2"/>
+<edge source="AQP3" target="ERBB2"/>
+<edge source="SFN" target="BRAF"/>
+<edge source="SFN" target="CCNH"/>
+<edge source="SFN" target="LRRC59"/>
+<edge source="STAT3" target="ERBB2"/>
+<edge source="STAT3" target="MTOR"/>
+<edge source="STAT3" target="TSHR"/>
+<edge source="CDKN2A" target="ING4"/>
+</graph></graphml>
