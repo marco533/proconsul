@@ -264,13 +264,16 @@ def get_distance_matrix_interactome():
     return
 
 
-def get_longest_path_for_a_disease_interactome(disease):
+def get_longest_path_for_a_disease_interactome(disease, predicted_genes = []):
 
     '''
     Given a disease, get the longest path searching in the rows
     and columns of the distance matrix corresponding to disease genes.
     NB: the paths includes genes not only of this disease beacuse the distance matrix
     is built from the interactome
+
+    - predicted_genes are enriched genes which are added to the disease genes(this parameter is used in disease_analysis.py).
+      If call this function after enrichment, give predicted_genes in input
     '''
 
     hhi_lcc = './data/HHI_LCC.txt'
@@ -300,6 +303,8 @@ def get_longest_path_for_a_disease_interactome(disease):
     #get genes for this disease
     gda_filename = "./data/curated_gene_disease_associations.tsv"
     disease_genes = get_disease_genes_from_gda(gda_filename, disease)
+    #add predicted genes given in input to disease genes
+    disease_genes += predicted_genes
 
     #for each gene of the disease, retrieve its id in the genes dictionary and add to ids
     ids = []
@@ -322,7 +327,7 @@ def get_longest_path_for_a_disease_interactome(disease):
 
 
 
-def get_longest_path_for_a_disease_LCC(disease):
+def get_longest_path_for_a_disease_LCC(disease, predicted_genes = []):
 
     '''
 
@@ -330,12 +335,18 @@ def get_longest_path_for_a_disease_LCC(disease):
     for the disease, considering only paths of genes included in the LCC, and returns
     the longest among all paths
 
+    - predicted_genes are enriched genes which are added to the disease genes(this parameter is used in disease_analysis.py)
+      If call this function after enrichment, give predicted_genes in input
     '''
 
     #get lcc genes for the disease
     biogrid = "./data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
     hhi_df  = select_hhi_only(biogrid)
     lcc_genes = get_disease_LCC(hhi_df, disease)
+    #add predicted genes given in input to disease genes
+    for elem in predicted_genes:
+        lcc_genes.add(elem)
+
 
     #create a dictionary with key=gene_name and value=a unique progressive integer to identify the gene
     #(in the dictionary there will be only LCC genes)
