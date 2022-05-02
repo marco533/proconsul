@@ -5,8 +5,8 @@ from turtle import title
 import networkx as nx
 import numpy as np
 import pandas as pd
-#from torch import absolute
-#import seaborn as sns
+from torch import absolute
+import seaborn as sns
 from matplotlib import pyplot as plt
 import networkx.algorithms.community as nx_comm
 from sklearn.preprocessing import robust_scale
@@ -466,9 +466,9 @@ if __name__ == "__main__":
 
     # ***********************************
     #   How much the attributes growed
-#    # ***********************************
-#    compare_network_attributes(orginal_network_attributes, DIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="DIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_DIAMOnD_enriched_networks.csv")
-#    compare_network_attributes(orginal_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_pDIAMOnD_enriched_networks.csv")
-#    compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_enriched_networks.csv")
-#    compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_alternative_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD_alternative", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_alternative_enriched_networks.csv")
+    # ***********************************
+    compare_network_attributes(orginal_network_attributes, DIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="DIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_DIAMOnD_enriched_networks.csv")
+    compare_network_attributes(orginal_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="Orginial", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.original_vs_pDIAMOnD_enriched_networks.csv")
+    compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_enriched_networks.csv")
+    compare_network_attributes(DIAMOnD_enriched_network_attributes, pDIAMOnD_alternative_enriched_network_attributes, nname1="DIAMOnD", nname2="pDIAMOnD_alternative", heatmap=True, outfile="tables/percentage_differences.DIAMOnD_vs_pDIAMOnD_alternative_enriched_networks.csv")
 
