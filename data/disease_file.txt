@@ -1,8 +1,8 @@
-Condition, Preneoplastic
+#Condition, Preneoplastic
 Anaplastic carcinoma
-Alcoholic Intoxication, Chronic
+#Alcoholic Intoxication, Chronic
 Lymphatic Metastasis
-Mouth Neoplasms
-Crohn's disease of the ileum
-Stomach Neoplasms
+#Mouth Neoplasms
+#Crohn's disease of the ileum
+#Stomach Neoplasms
 Ischemia

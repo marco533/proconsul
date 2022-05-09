@@ -1,239 +1,220 @@
 <?xml version='1.0' encoding='utf-8'?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="ATG16L1"/>
-<node id="HSP90AA1"/>
-<node id="IL10"/>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="NOD2"/>
+<node id="RNF207"/>
+<node id="HLA-DRB1"/>
+<node id="PPARA"/>
+<node id="RXRA"/>
+<node id="VCP"/>
+<node id="IGFBP3"/>
+<node id="CCNY"/>
+<node id="PHOX2B"/>
+<node id="CCL2"/>
+<node id="PTPN2"/>
+<node id="GPBAR1"/>
+<node id="FN1"/>
+<node id="IFNG"/>
+<node id="MTHFR"/>
+<node id="HSPA8"/>
+<node id="PDLIM5"/>
+<node id="NOD1"/>
 <node id="IL12B"/>
+<node id="IL6"/>
+<node id="LEP"/>
+<node id="NR1H4"/>
+<node id="IL23A"/>
+<node id="TLR4"/>
+<node id="IL23R"/>
+<node id="HSP90AA1"/>
+<node id="FAM92B"/>
+<node id="NKX2-3"/>
+<node id="TRIL"/>
+<node id="TAGAP"/>
+<node id="FUT2"/>
+<node id="TCF7"/>
+<node id="TF"/>
+<node id="NLRC4"/>
+<node id="KCNQ4"/>
+<node id="DNAJA1"/>
+<node id="FPR2"/>
+<node id="NCF4"/>
+<node id="TLR9"/>
+<node id="NCOA1"/>
+<node id="PACRG"/>
+<node id="ERAP2"/>
+<node id="NAT16"/>
+<node id="VHL"/>
+<node id="IL10"/>
+<node id="IL2RA"/>
+<node id="STUB1"/>
+<node id="CHAT"/>
+<node id="TYK2"/>
+<node id="SMAD3"/>
+<node id="MST1"/>
+<node id="UBC"/>
+<node id="NLRP3"/>
+<node id="CRP"/>
+<node id="IRGM"/>
+<node id="DNMT3A"/>
+<node id="TCP1"/>
+<node id="HSPA5"/>
 <node id="ADIPOQ"/>
 <node id="TNF"/>
-<node id="PPARA"/>
-<node id="TRIL"/>
-<node id="STUB1"/>
-<node id="NR1H4"/>
-<node id="CCL2"/>
-<node id="GPBAR1"/>
-<node id="IL23R"/>
-<node id="CRP"/>
-<node id="VDR"/>
-<node id="PHOX2B"/>
-<node id="MST1"/>
-<node id="TLR9"/>
-<node id="VTN"/>
-<node id="PPARG"/>
-<node id="DNMT3A"/>
-<node id="CCNY"/>
 <node id="IGF1"/>
-<node id="STK32B"/>
-<node id="ERAP2"/>
-<node id="NCOA1"/>
-<node id="IRGM"/>
-<node id="FUT2"/>
-<node id="NOX5"/>
-<node id="IL6"/>
-<node id="FN1"/>
-<node id="NCF4"/>
-<node id="VHL"/>
-<node id="VCP"/>
-<node id="LEP"/>
+<node id="ST8SIA6"/>
+<node id="ATG16L1"/>
 <node id="BACH2"/>
-<node id="SMAD3"/>
-<node id="TF"/>
-<node id="NKX2-3"/>
-<node id="HSPA8"/>
-<node id="MTHFR"/>
-<node id="TCP1"/>
-<node id="IL2RA"/>
+<node id="VTN"/>
+<node id="ZNF705G"/>
+<node id="PPARG"/>
 <node id="DENND1B"/>
-<node id="HSPA5"/>
-<node id="RXRG"/>
-<node id="TLR4"/>
-<node id="NOD1"/>
-<node id="NOD2"/>
-<node id="IL23A"/>
-<node id="NCOR2"/>
-<node id="HSPA4"/>
-<node id="NR1H3"/>
-<node id="PTPN2"/>
-<node id="MED24"/>
-<node id="KCNQ4"/>
-<node id="RPL23AP42"/>
-<node id="RXRA"/>
-<node id="NLRP3"/>
-<node id="TAGAP"/>
-<node id="UBC"/>
-<node id="FPR2"/>
-<node id="FAM92B"/>
-<node id="TYK2"/>
-<node id="IFNG"/>
-<node id="TCF7"/>
-<node id="STAT1"/>
-<node id="HLA-DRB1"/>
-<edge source="ATG16L1" target="SMAD3"/>
-<edge source="ATG16L1" target="STAT1"/>
-<edge source="ATG16L1" target="UBC"/>
-<edge source="ATG16L1" target="VCP"/>
-<edge source="ATG16L1" target="HSPA4"/>
-<edge source="ATG16L1" target="NOD2"/>
-<edge source="ATG16L1" target="NOD1"/>
-<edge source="ATG16L1" target="IRGM"/>
-<edge source="ATG16L1" target="TF"/>
-<edge source="ATG16L1" target="HSP90AA1"/>
-<edge source="ATG16L1" target="TCP1"/>
-<edge source="ATG16L1" target="MED24"/>
-<edge source="HSP90AA1" target="HSPA5"/>
-<edge source="HSP90AA1" target="PPARA"/>
-<edge source="HSP90AA1" target="VHL"/>
-<edge source="HSP90AA1" target="PPARG"/>
-<edge source="HSP90AA1" target="HSPA8"/>
-<edge source="HSP90AA1" target="VCP"/>
-<edge source="HSP90AA1" target="HSPA4"/>
-<edge source="HSP90AA1" target="STUB1"/>
-<edge source="HSP90AA1" target="HLA-DRB1"/>
-<edge source="HSP90AA1" target="NLRP3"/>
-<edge source="HSP90AA1" target="NOD1"/>
-<edge source="HSP90AA1" target="NOX5"/>
-<edge source="HSP90AA1" target="KCNQ4"/>
-<edge source="HSP90AA1" target="TCP1"/>
-<edge source="HSP90AA1" target="FN1"/>
-<edge source="HSP90AA1" target="TYK2"/>
-<edge source="HSP90AA1" target="NR1H3"/>
-<edge source="HSP90AA1" target="STK32B"/>
-<edge source="HSP90AA1" target="TF"/>
-<edge source="IL12B" target="IL23A"/>
-<edge source="ADIPOQ" target="HSPA5"/>
-<edge source="ADIPOQ" target="VHL"/>
-<edge source="TNF" target="HSPA5"/>
-<edge source="TNF" target="UBC"/>
+<edge source="NOD2" target="HSPA8"/>
+<edge source="NOD2" target="UBC"/>
+<edge source="NOD2" target="PDLIM5"/>
+<edge source="NOD2" target="VCP"/>
+<edge source="NOD2" target="DNAJA1"/>
+<edge source="NOD2" target="ATG16L1"/>
+<edge source="NOD2" target="TCP1"/>
+<edge source="NOD2" target="NLRC4"/>
+<edge source="NOD2" target="NAT16"/>
+<edge source="NOD2" target="NOD1"/>
+<edge source="NOD2" target="IRGM"/>
+<edge source="NOD2" target="STUB1"/>
+<edge source="RNF207" target="HSPA8"/>
+<edge source="RNF207" target="DNAJA1"/>
+<edge source="HLA-DRB1" target="HSPA8"/>
+<edge source="HLA-DRB1" target="VCP"/>
+<edge source="HLA-DRB1" target="HSP90AA1"/>
 <edge source="PPARA" target="NCOA1"/>
-<edge source="PPARA" target="RXRG"/>
 <edge source="PPARA" target="RXRA"/>
-<edge source="PPARA" target="NCOR2"/>
-<edge source="PPARA" target="NR1H3"/>
-<edge source="PPARA" target="MED24"/>
-<edge source="PPARA" target="STAT1"/>
+<edge source="PPARA" target="HSP90AA1"/>
 <edge source="PPARA" target="VHL"/>
-<edge source="TRIL" target="TLR4"/>
-<edge source="STUB1" target="SMAD3"/>
-<edge source="STUB1" target="HSPA5"/>
-<edge source="STUB1" target="VHL"/>
-<edge source="STUB1" target="PPARG"/>
-<edge source="STUB1" target="HSPA8"/>
-<edge source="STUB1" target="TLR4"/>
-<edge source="STUB1" target="TLR9"/>
-<edge source="STUB1" target="UBC"/>
-<edge source="STUB1" target="VCP"/>
-<edge source="STUB1" target="HSPA4"/>
-<edge source="STUB1" target="NOD2"/>
-<edge source="STUB1" target="NLRP3"/>
-<edge source="STUB1" target="KCNQ4"/>
-<edge source="STUB1" target="NOX5"/>
-<edge source="NR1H4" target="RXRA"/>
-<edge source="NR1H4" target="NCOR2"/>
-<edge source="NR1H4" target="NCOA1"/>
-<edge source="NR1H4" target="RXRG"/>
-<edge source="IL23R" target="IL23A"/>
-<edge source="CRP" target="HSPA5"/>
-<edge source="CRP" target="FN1"/>
-<edge source="VDR" target="SMAD3"/>
-<edge source="VDR" target="RXRA"/>
-<edge source="VDR" target="STAT1"/>
-<edge source="VDR" target="NCOR2"/>
-<edge source="VDR" target="PPARG"/>
-<edge source="VDR" target="NCOA1"/>
-<edge source="VDR" target="RXRG"/>
-<edge source="VDR" target="MED24"/>
-<edge source="VDR" target="NLRP3"/>
-<edge source="MST1" target="HSPA5"/>
-<edge source="TLR9" target="HSPA5"/>
-<edge source="TLR9" target="HSPA8"/>
-<edge source="TLR9" target="HSPA4"/>
-<edge source="TLR9" target="MTHFR"/>
-<edge source="PPARG" target="SMAD3"/>
-<edge source="PPARG" target="HSPA5"/>
-<edge source="PPARG" target="RXRA"/>
-<edge source="PPARG" target="VHL"/>
-<edge source="PPARG" target="STAT1"/>
-<edge source="PPARG" target="NCOR2"/>
-<edge source="PPARG" target="MED24"/>
-<edge source="PPARG" target="NCOA1"/>
-<edge source="PPARG" target="UBC"/>
-<edge source="PPARG" target="RXRG"/>
-<edge source="PPARG" target="HSPA8"/>
-<edge source="PPARG" target="TCP1"/>
-<edge source="PPARG" target="VCP"/>
-<edge source="PPARG" target="NR1H3"/>
-<edge source="IGF1" target="TF"/>
-<edge source="ERAP2" target="HSPA5"/>
-<edge source="NCOA1" target="SMAD3"/>
-<edge source="NCOA1" target="HSPA5"/>
-<edge source="NCOA1" target="RXRA"/>
-<edge source="NCOA1" target="NR1H3"/>
-<edge source="NCOA1" target="VCP"/>
-<edge source="IRGM" target="NOD2"/>
-<edge source="IRGM" target="NOD1"/>
-<edge source="NOX5" target="HSPA8"/>
-<edge source="NOX5" target="HSPA4"/>
-<edge source="NOX5" target="MTHFR"/>
+<edge source="RXRA" target="IGFBP3"/>
+<edge source="RXRA" target="NR1H4"/>
+<edge source="RXRA" target="PPARG"/>
+<edge source="RXRA" target="NCOA1"/>
+<edge source="RXRA" target="VCP"/>
+<edge source="VCP" target="HSPA5"/>
+<edge source="VCP" target="PPARG"/>
+<edge source="VCP" target="HSPA8"/>
+<edge source="VCP" target="NCOA1"/>
+<edge source="VCP" target="UBC"/>
+<edge source="VCP" target="HSP90AA1"/>
+<edge source="VCP" target="STUB1"/>
+<edge source="VCP" target="PACRG"/>
+<edge source="VCP" target="TCP1"/>
+<edge source="VCP" target="FN1"/>
+<edge source="VCP" target="ATG16L1"/>
+<edge source="IGFBP3" target="IGF1"/>
+<edge source="IGFBP3" target="FN1"/>
+<edge source="IGFBP3" target="TF"/>
+<edge source="IGFBP3" target="PPARG"/>
+<edge source="PTPN2" target="UBC"/>
 <edge source="FN1" target="HSPA5"/>
 <edge source="FN1" target="VHL"/>
 <edge source="FN1" target="HSPA8"/>
 <edge source="FN1" target="UBC"/>
-<edge source="FN1" target="VCP"/>
+<edge source="FN1" target="PDLIM5"/>
+<edge source="FN1" target="HSP90AA1"/>
 <edge source="FN1" target="TCP1"/>
 <edge source="FN1" target="TF"/>
-<edge source="FN1" target="RPL23AP42"/>
+<edge source="FN1" target="CRP"/>
 <edge source="FN1" target="TCF7"/>
-<edge source="VHL" target="HSPA5"/>
-<edge source="VHL" target="TCP1"/>
-<edge source="VHL" target="HSPA8"/>
-<edge source="VHL" target="HSPA4"/>
-<edge source="VHL" target="UBC"/>
-<edge source="VCP" target="HSPA5"/>
-<edge source="VCP" target="RXRA"/>
-<edge source="VCP" target="STAT1"/>
-<edge source="VCP" target="HSPA8"/>
-<edge source="VCP" target="UBC"/>
-<edge source="VCP" target="HSPA4"/>
-<edge source="VCP" target="HLA-DRB1"/>
-<edge source="VCP" target="TCP1"/>
-<edge source="VCP" target="NOD2"/>
-<edge source="LEP" target="HSPA5"/>
-<edge source="BACH2" target="NCOR2"/>
-<edge source="SMAD3" target="MED24"/>
-<edge source="SMAD3" target="HSPA4"/>
-<edge source="SMAD3" target="TCP1"/>
-<edge source="SMAD3" target="TF"/>
-<edge source="SMAD3" target="TLR4"/>
-<edge source="TF" target="TYK2"/>
+<edge source="MTHFR" target="TLR9"/>
 <edge source="HSPA8" target="HSPA5"/>
-<edge source="HSPA8" target="STAT1"/>
+<edge source="HSPA8" target="VHL"/>
+<edge source="HSPA8" target="PPARG"/>
 <edge source="HSPA8" target="UBC"/>
+<edge source="HSPA8" target="DNAJA1"/>
+<edge source="HSPA8" target="HSP90AA1"/>
+<edge source="HSPA8" target="STUB1"/>
 <edge source="HSPA8" target="TLR4"/>
-<edge source="HSPA8" target="HLA-DRB1"/>
-<edge source="HSPA8" target="HSPA4"/>
+<edge source="HSPA8" target="TLR9"/>
 <edge source="HSPA8" target="KCNQ4"/>
 <edge source="HSPA8" target="TCP1"/>
-<edge source="HSPA8" target="NOD2"/>
-<edge source="HSPA8" target="NR1H3"/>
-<edge source="TCP1" target="UBC"/>
-<edge source="TCP1" target="HSPA4"/>
-<edge source="TCP1" target="TYK2"/>
-<edge source="TCP1" target="NOD2"/>
-<edge source="HSPA5" target="HSPA4"/>
-<edge source="HSPA5" target="UBC"/>
-<edge source="HSPA5" target="NCOR2"/>
-<edge source="RXRG" target="RXRA"/>
-<edge source="RXRG" target="NCOR2"/>
-<edge source="RXRG" target="NR1H3"/>
-<edge source="TLR4" target="HSPA4"/>
+<edge source="HSPA8" target="PDLIM5"/>
+<edge source="HSPA8" target="NAT16"/>
+<edge source="PDLIM5" target="SMAD3"/>
+<edge source="PDLIM5" target="UBC"/>
+<edge source="PDLIM5" target="STUB1"/>
 <edge source="NOD1" target="UBC"/>
-<edge source="NOD1" target="NOD2"/>
-<edge source="NOD2" target="UBC"/>
-<edge source="NCOR2" target="RXRA"/>
-<edge source="NR1H3" target="RXRA"/>
-<edge source="NR1H3" target="STAT1"/>
-<edge source="PTPN2" target="STAT1"/>
-<edge source="PTPN2" target="UBC"/>
-<edge source="MED24" target="RXRA"/>
-<edge source="RXRA" target="STAT1"/>
-<edge source="TYK2" target="STAT1"/>
+<edge source="NOD1" target="ATG16L1"/>
+<edge source="NOD1" target="HSP90AA1"/>
+<edge source="NOD1" target="NLRC4"/>
+<edge source="NOD1" target="IRGM"/>
+<edge source="IL12B" target="IL23A"/>
+<edge source="LEP" target="HSPA5"/>
+<edge source="NR1H4" target="NCOA1"/>
+<edge source="IL23A" target="IL23R"/>
+<edge source="TLR4" target="SMAD3"/>
+<edge source="TLR4" target="STUB1"/>
+<edge source="TLR4" target="TRIL"/>
+<edge source="HSP90AA1" target="HSPA5"/>
+<edge source="HSP90AA1" target="VHL"/>
+<edge source="HSP90AA1" target="PPARG"/>
+<edge source="HSP90AA1" target="DNAJA1"/>
+<edge source="HSP90AA1" target="ATG16L1"/>
+<edge source="HSP90AA1" target="STUB1"/>
+<edge source="HSP90AA1" target="NLRP3"/>
+<edge source="HSP90AA1" target="PACRG"/>
+<edge source="HSP90AA1" target="KCNQ4"/>
+<edge source="HSP90AA1" target="TCP1"/>
+<edge source="HSP90AA1" target="TYK2"/>
+<edge source="HSP90AA1" target="CHAT"/>
+<edge source="HSP90AA1" target="TF"/>
+<edge source="TF" target="SMAD3"/>
+<edge source="TF" target="ATG16L1"/>
+<edge source="TF" target="IGF1"/>
+<edge source="TF" target="TYK2"/>
+<edge source="NLRC4" target="NLRP3"/>
+<edge source="KCNQ4" target="DNAJA1"/>
+<edge source="KCNQ4" target="STUB1"/>
+<edge source="DNAJA1" target="HSPA5"/>
+<edge source="DNAJA1" target="VHL"/>
+<edge source="DNAJA1" target="PPARG"/>
+<edge source="DNAJA1" target="UBC"/>
+<edge source="DNAJA1" target="PACRG"/>
+<edge source="DNAJA1" target="TNF"/>
+<edge source="DNAJA1" target="ATG16L1"/>
+<edge source="DNAJA1" target="STUB1"/>
+<edge source="TLR9" target="HSPA5"/>
+<edge source="TLR9" target="STUB1"/>
+<edge source="NCOA1" target="SMAD3"/>
+<edge source="NCOA1" target="HSPA5"/>
+<edge source="NCOA1" target="PPARG"/>
+<edge source="PACRG" target="TNF"/>
+<edge source="PACRG" target="TCP1"/>
+<edge source="PACRG" target="STUB1"/>
+<edge source="ERAP2" target="HSPA5"/>
+<edge source="NAT16" target="STUB1"/>
+<edge source="VHL" target="HSPA5"/>
+<edge source="VHL" target="STUB1"/>
+<edge source="VHL" target="TCP1"/>
+<edge source="VHL" target="UBC"/>
+<edge source="VHL" target="PPARG"/>
+<edge source="VHL" target="ADIPOQ"/>
+<edge source="STUB1" target="SMAD3"/>
+<edge source="STUB1" target="HSPA5"/>
+<edge source="STUB1" target="PPARG"/>
+<edge source="STUB1" target="UBC"/>
+<edge source="STUB1" target="NLRP3"/>
+<edge source="STUB1" target="CHAT"/>
+<edge source="TYK2" target="TCP1"/>
+<edge source="SMAD3" target="TCP1"/>
+<edge source="SMAD3" target="PPARG"/>
+<edge source="SMAD3" target="ATG16L1"/>
+<edge source="MST1" target="HSPA5"/>
+<edge source="UBC" target="HSPA5"/>
+<edge source="UBC" target="PPARG"/>
+<edge source="UBC" target="TNF"/>
+<edge source="UBC" target="ZNF705G"/>
+<edge source="UBC" target="ATG16L1"/>
+<edge source="UBC" target="TCP1"/>
+<edge source="CRP" target="HSPA5"/>
+<edge source="CRP" target="ST8SIA6"/>
+<edge source="IRGM" target="ATG16L1"/>
+<edge source="TCP1" target="PPARG"/>
+<edge source="TCP1" target="ATG16L1"/>
+<edge source="HSPA5" target="TNF"/>
+<edge source="HSPA5" target="PPARG"/>
+<edge source="HSPA5" target="ADIPOQ"/>
 </graph></graphml>
