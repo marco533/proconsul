@@ -3,8 +3,12 @@ import sys
 import networkx as nx
 import numpy as np
 import pandas as pd
-from algorithms.diamond import run_diamond
-from algorithms.pdiamond import run_pdiamond
+from algorithms.diamond import DIAMOnD
+from algorithms.pdiamond import pDIAMOnD
+from algorithms.pdiamond_rank import pDIAMOnD_rank
+from algorithms.pdiamond_temp import pDIAMOnD_temp
+from algorithms.pdiamond_topk import pDIAMOnD_topk
+from algorithms.pdiamond_all import pDIAMOnD_all
 from algorithms.heat_diffusion import run_heat_diffusion
 from utils.network_utils import *
 from utils.metrics_utils import *
@@ -12,7 +16,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, diffusion_time=0.005, num_iters_pdiamond=10, pdiamond_mode="classic"):
+def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, diffusion_time=0.005, num_iters_pdiamond=10):
     '''
     Performs the K-Folf Cross Validation over all the disease genes.
     Input:
@@ -27,20 +31,12 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
     # get all genes in the network
     all_genes = list(network.nodes)
 
-    # write connections in a file
-    interactome = "data/HHI_LCC.txt"
-    write_edges_in_file(network, interactome)
-
     # split  list in K equal parts
     splitted_disease_genes = split_list(seed_genes, K)
     num_disease_genes = len(seed_genes)
 
     # how many genes predict
     num_genes_to_predict = 200
-
-    # prepare the files for the computation
-    test_set_file = "tmp/test_set.txt"
-    training_set_file = "tmp/training_set.txt"
 
     # K-fold cross validation:
     # Compute the score for each algorithm using the top 25, top 50, top 100 and top 200 predicted genes
@@ -61,27 +57,34 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
         test_genes = disease_genes.pop(k)
         training_genes = [gene for sublist in disease_genes for gene in sublist] # flatten the list of lists
 
-        # write genes in a file
-        with open(test_set_file, 'w') as fp, open(training_set_file, 'w') as ft:
-            for gene in test_genes:
-                fp.write(gene + "\n")
-            for gene in training_genes:
-                ft.write(gene + "\n")
-
         # run algorithm
-        output_file = f"tmp/{algorithm}_{pdiamond_mode}_output.txt"
+        outfile = f"tmp/{algorithm}_output.txt"
 
         # if the algorithm doesn't return a ranking set this flag False
         ranking_flag = True
 
         if algorithm == "diamond":
-            input_list = ["DIAMOnD.py", interactome, training_set_file, num_genes_to_predict, 1, output_file]
-            added_nodes = run_diamond(input_list)   # take only firs elements of each sublist
+            added_nodes = DIAMOnD(network, training_genes, num_genes_to_predict, 1, outfile=outfile)
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "pdiamond":
-            input_list = ["pdiamond.py", interactome, training_set_file, num_genes_to_predict, 1, output_file, num_iters_pdiamond]
-            added_nodes = run_pdiamond(input_list, mode=pdiamond_mode)
+            added_nodes = pDIAMOnD(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
+            predicted_genes = [item[0] for item in added_nodes]
+
+        elif algorithm == "pdiamond_rank":
+            added_nodes = pDIAMOnD_rank(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
+            predicted_genes = [item[0] for item in added_nodes]
+
+        elif algorithm == "pdiamond_temp":
+            added_nodes = pDIAMOnD_temp(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond, T_start=0.1, T_step=0.1)
+            predicted_genes = [item[0] for item in added_nodes]
+
+        elif algorithm == "pdiamond_topk":
+            added_nodes = pDIAMOnD_topk(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
+            predicted_genes = [item[0] for item in added_nodes]
+
+        elif algorithm == "pdiamond_all":
+            added_nodes = pDIAMOnD_all(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond, T_start=0.1, T_step=0.1)
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "heat_diffusion":
@@ -91,7 +94,11 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
             print("  ERROR: No valid algorithm.    ")
             print("  Choose one of the following:  ")
             print("    - diamond                   ")
-            print("    - pdiamond              ")
+            print("    - pdiamond                  ")
+            print("    - pdiamond_rank             ")
+            print("    - pdiamond_temp             ")
+            print("    - pdiamond_topk             ")
+            print("    - pdiamond_all              ")
             print("    - heat_diffusion            ")
             sys.exit(0)
 
@@ -126,16 +133,13 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
     result_df = pd.DataFrame(final_scores, metrics, sizes)
 
     # save it as csv file
-    if algorithm == "diamond":
-        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold.csv"
+    csv_filename = f"results/kfold/algorithm/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_-_{K}-fold.csv"
 
-    if algorithm == "pdiamond":
-        if pdiamond_mode == "classic":
-            csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_{num_iters_pdiamond}_iters.csv"
-        if pdiamond_mode == "alternative":
-            csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_{pdiamond_mode}_on_{string_to_filename(disease_name)}_kfold_{num_iters_pdiamond}_iters.csv"
+    # add additional information in the filename
+    if "pdiamond" in algorithm:
+        csv_filename = csv_filename.replace(".csv", f"_-_{num_iters_pdiamond}_iterations.csv")
 
     if algorithm == "heat_diffusion":
-        csv_file = f"results/kfold/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_kfold_diff_time_{diffusion_time}.csv"
+        csv_filename = csv_filename.replace(".csv", f"_-_diffusion_time_{diffusion_time}.csv")
 
-    result_df.to_csv(csv_file)
+    result_df.to_csv(csv_filename)

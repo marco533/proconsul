@@ -1,8 +1,15 @@
-#Condition, Preneoplastic
+# Best diseases for pDIAMOnD
+Condition, Preneoplastic
 Anaplastic carcinoma
-#Alcoholic Intoxication, Chronic
+Alcoholic Intoxication, Chronic
 Lymphatic Metastasis
-#Mouth Neoplasms
-#Crohn's disease of the ileum
-#Stomach Neoplasms
+# Best diseases for DIAMONnD
+Mouth Neoplasms
+Crohn's disease of the ileum
+Stomach Neoplasms
 Ischemia
+# Draw diseases
+Liver carcinoma
+Diabetes Mellitus, Non-Insulin-Dependent
+Hearing Loss, Extreme
+Single Seizure

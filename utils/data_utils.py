@@ -67,6 +67,7 @@ def string_to_filename(s):
     s = s.replace(" ", "_")
     s = s.replace("/", "_")
     s = s.replace(",", "")
+    s = s.replace("_-_", "_")
     s = s.lower()
     return s
 

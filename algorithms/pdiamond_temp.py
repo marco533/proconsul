@@ -15,7 +15,7 @@ import sys
 def print_usage():
 
     print(' ')
-    print('        usage: python3 pdiamond.py network_file seed_file n alpha(optional) outfile_name (optional)')
+    print('        usage: python3 pdiamond_temp.py network_file seed_file n alpha(optional) outfile_name (optional)')
     print('        -----------------------------------------------------------------')
     print('        network_file : The edgelist must be provided as any delimiter-separated')
     print('                       table. Make sure the delimiter does not exit in gene IDs')
@@ -237,22 +237,32 @@ def reduce_not_in_cluster_nodes(all_degrees, neighbors, G, not_in_cluster, clust
 # =============================================================================
 # Transform a list in a probabilistic array
 # =============================================================================
-def softmax(x):
-    """Compute softmax values for each sets of scores in x."""
-    return np.exp(x) / np.sum(np.exp(x), axis=0)
+def softmax_with_temperature(values, T):
+    """
+    Compute softmax values for each sets of scores in x
+    using a temperature value to modify its confidence.
+    """
+
+    values_exp = np.exp(values / T)
+    values_softmax = values_exp / np.sum(values_exp, axis=0)
+
+    return values_softmax
 
 # ======================================================================================
 #   C O R E    A L G O R I T H M
 # ======================================================================================
-def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
+def pdiamond_temp_iteration_of_first_X_nodes(G, S, X, alpha, T_start, T_step):
     """
     Parameters:
     ----------
-    - G:     graph
-    - S:     seeds
-    - X:     the number of iterations, i.e only the first X gened will be
-             pulled in
-    - alpha: seeds weight
+    - G:        graph
+    - S:        seeds
+    - X:        the number of iterations, i.e only the first X gened will be
+                pulled in
+    - alpha:    seeds weight
+    - T_start:  initial temperature vale
+    - T_value:  how much the T value increase at each iteration
+
     Returns:
     --------
 
@@ -304,6 +314,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
     # ------------------------------------------------------------------
 
     all_p = {}
+    T = T_start
 
     while len(added_nodes) < X:
 
@@ -313,6 +324,8 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
         # record k, kb and p
         #
         # ------------------------------------------------------------------
+
+        # print(f"Temperature: {T}")
 
         info = {}
 
@@ -348,7 +361,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
         # Convert the p-value list in a probability distribution and
         # extract the next node based on it
         # ---------------------------------------------------------------------
-        probability_distribution = softmax(inv_p_values)
+        probability_distribution = softmax_with_temperature(np.array(inv_p_values), T)
         next_node = np.random.choice(probable_next_nodes, 1,
                                      p=probability_distribution)
         next_node = next_node[0]
@@ -368,14 +381,18 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
         not_in_cluster |= (neighbors[next_node] - cluster_nodes)
         not_in_cluster.remove(next_node)
 
+        # Update temperature
+        T += T_step
+
     return added_nodes
+
 
 # ===========================================================================
 #
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10):
+def pDIAMOnD_temp(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, T_start=0.1, T_step=0.1):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -388,31 +405,41 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
 
     # 2. agglomeration algorithm.
     print(f"pDIAMOnD(): number of iterations = {max_num_iterations}")
-    all_nodes_dict = {}
+
+    node_ranks = {}
     for i in range(max_num_iterations):
-        added_nodes = pdiamond_iteration_of_first_X_nodes(G_original,
-                                                        disease_genes,
-                                                        max_number_of_added_nodes, alpha)
-        for node in added_nodes:
+        print(f"pDIAMOnD_temp Run {i+1}/{max_num_iterations}")
+        print(f"--------------------")
+
+        added_nodes = pdiamond_temp_iteration_of_first_X_nodes(G_original,
+                                                            disease_genes,
+                                                            max_number_of_added_nodes,
+                                                            alpha,
+                                                            T_start,
+                                                            T_step)
+
+        # Assign rank value to the node
+        for pos, node in enumerate(added_nodes):
             node_number = node[0]
             # print(node_number)
-            if node_number not in all_nodes_dict:
-                all_nodes_dict[node_number] = 1
+            if node_number not in node_ranks:
+                node_ranks[node_number] = len(added_nodes) - pos    # pos 0 => rank 100 - 0 = 100
             else:
-                all_nodes_dict[node_number] = all_nodes_dict[node_number] + 1
+                node_ranks[node_number] += len(added_nodes) - pos
 
-    # print(all_nodes_dict)
+        print("")
 
-    # sort the dictionary in descendig order
-    sorted_nodes = sorted(all_nodes_dict.items(), key=lambda x: x[1], reverse=True)
+    # Average the rank of each node by the total number of pDIAMOnD iterations
+    for key in node_ranks.keys():
+        node_ranks[key] /= max_num_iterations
 
-    # for sn in sort_nodes:
-    #     print(sn[0], sn[1])
+    # Sort the dictionary in descendig order wrt the rank values
+    sorted_nodes = sorted(node_ranks.items(), key=lambda x: x[1], reverse=True)
 
     # 3. saving the results
     with open(outfile, 'w') as fout:
 
-        fout.write('\t'.join(['rank', 'node', 'num_occ']) + '\n')
+        fout.write('\t'.join(['rank', 'node', 'rank_score']) + '\n')
         rank = 0
         for sn in sorted_nodes:
             # if rank > max_number_of_added_nodes:
@@ -420,24 +447,27 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
 
             rank += 1
             node = sn[0]
-            num_occ = sn[1]
+            rank_score = sn[1]
 
-            fout.write('\t'.join(map(str, ([rank, node, num_occ]))) + '\n')
+            fout.write('\t'.join(map(str, ([rank, node, rank_score]))) + '\n')
 
     return sorted_nodes[:max_number_of_added_nodes]
 
-def run_pdiamond(input_list):
+
+def run_pdiamond_temp(input_list):
     network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
 
     # run DIAMOnD
-    added_nodes = pDIAMOnD(G_original,
-                        seed_genes,
-                        max_number_of_added_nodes, alpha,
-                        outfile=outfile_name,
-                        max_num_iterations=num_iterations)
+    added_nodes = pDIAMOnD_temp(G_original,
+                                seed_genes,
+                                max_number_of_added_nodes, alpha,
+                                outfile=outfile_name,
+                                max_num_iterations=num_iterations,
+                                T_start = 0.1,
+                                T_step = 0.1)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
 
@@ -477,10 +507,10 @@ if __name__ == '__main__':
 
 
     # run Prob DIAMOnD
-    added_nodes = pDIAMOnD(G_original,
-                               seed_genes,
-                               max_number_of_added_nodes, alpha,
-                               outfile=outfile_name,
-                               max_iterations=num_iterations)
+    added_nodes = pDIAMOnD_temp(G_original,
+                                seed_genes,
+                                max_number_of_added_nodes, alpha,
+                                outfile=outfile_name,
+                                max_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)

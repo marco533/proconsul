@@ -14,9 +14,10 @@ from utils.data_utils import *
 
 def print_usage():
     print(' ')
-    print('        usage: python3 project.py --algorithm --validation --disease_file --diffusion_time --num_iters_pdiamond --pdiamond_mode')
+    print('        usage: python3 project.py --algs --validation --disease_file --diffusion_time --num_iters_pdiamond --pdiamond_mode')
     print('        -----------------------------------------------------------------')
-    print('        algorithm                : Algorithm of whic collect the results. It can be "diamond", "pdiamond", "heat_diffusion" or "all".')
+    print('        algs                     : List of algorithms to use to collect results.')
+    print('                                   They can be: "diamond", "pdiamond", "pdiamond_rank", "pdiamond_temp", "pdiamond_topk", "pdiamond_all", "heat_diffusion"')
     print('                                   If all, run all the algorithms. (default: all')
     print('        validation               : Type of validation on which test the algorithms. It can be')
     print('                                   "kfold", "extended" or "all".')
@@ -36,8 +37,8 @@ def parse_args():
     Parse the terminal arguments.
     '''
     parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
-    parser.add_argument('--algorithm', type=str, default='all',
-                    help='Algorithm to test. (default: all)')
+    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "pdiamond_temp", "pdiamond_rank", "pdiamond_topk", "pdiamond_all", "heat_diffusion"],
+                    help='List of algorithms to run (default: all)')
     parser.add_argument('--validation', type=str, default='all',
                     help='Type of validation. (default: all')
     parser.add_argument('--disease_file', type=str, default="data/disease_file.txt",
@@ -70,82 +71,69 @@ def read_terminal_input(args):
 
         return disease_list
 
-    # read the parsed values
-    algorithm           = args.algorithm
+    # Read parsed values
+    algs                = args.algs
     validation          = args.validation
     disease_file        = args.disease_file
     diffusion_time      = args.diffusion_time
     num_iters_pdiamond  = args.num_iters_pdiamond
     pdiamond_mode       = args.pdiamond_mode
 
-    # check if is a valid algorithm
-    if algorithm not in ["diamond", "pdiamond", "heat_diffusion", "all"]:
-        print(f"ERROR: {algorithm} is no valid algorithm!")
-        print_usage()
-        sys.exit(0)
+    # Check algorithm names
+    for alg in algs:
+        if alg not in ["diamond", "pdiamond", "pdiamond_rank", "pdiamond_temp", "pdiamond_topk", "pdiamond_all", "heat_diffusion"]:
+            print(f"ERROR: {alg} is not a valid algorithm!")
+            print_usage()
+            sys.exit(0)
 
-    # check if is a valid validation
+    # Check validation
     if validation not in ["kfold", "extended", "all"]:
         print(f"ERROR: {validation} is no valid validation method!")
         print_usage()
         sys.exit(0)
 
-    # get disease list from file
+    # Get diesease list from file
     try:
         disease_list = read_disease_file(disease_file)
     except:
         print(f"Not found file in {disease_file} or no valid location.")
         sys.exit(0)
 
-    # if list is empty fill it with default diseases
+    # if empty, exit with error
     if len(disease_list) == 0:
         print(f"ERROR: No diseases in disease_file")
-        sys.exit(0)
+        sys.exit(1)
 
-    # get the list of validations
+    # Get list of validations
     if validation == 'all':
         validation_list = ['kfold', 'extended']
     else:
         validation_list = [validation]
 
-    # get the list of algorithms
-    if algorithm == 'all':
-        algorithm_list = ["diamond",
-                          "pdiamond",
-                          "heat_diffusion"]
-    else:
-        algorithm_list = [algorithm]
-
-    # test diffusion time
+    # Check diffusion time
     if diffusion_time < 0:
         print(f"ERROR: diffusion time must be greater than 0")
         sys.exit(0)
 
-    # test num_iters_pdiamond
+    # Check num_iters_pdiamond
     if num_iters_pdiamond <= 0:
         print(f"ERROR: num_iters_pdiamond must be greater or equal of 1")
         sys.exit(0)
 
-    # test pdiamond mode
-    if pdiamond_mode not in ["classic", "alternative"]:
-        print(f"ERROR: No valid mode for pdiamond, choose between 'classic' or 'alternative'")
-        sys.exit(0)
-
     print('')
     print(f"============================")
 
-    print(f"Algorithm: {algorithm}")
+    print(f"Algorithm: {algs}")
     print(f"Validations: {validation_list}")
     print(f"Diseases: {len(disease_list)}")
     print(f"Diffusion Time: {diffusion_time}")
     print(f"Num iterations pDIAMOnD: {num_iters_pdiamond}")
-    print(f"pDIAMOnD mode: {pdiamond_mode}")
 
     print(f"============================")
     print('')
 
 
-    return algorithm_list, validation_list, disease_list, diffusion_time, num_iters_pdiamond, pdiamond_mode
+    return algs, validation_list, disease_list, diffusion_time, num_iters_pdiamond
 
 
 # main
@@ -156,7 +144,7 @@ if __name__ == "__main__":
     # ============ #
 
     args = parse_args()
-    algorithms, validations, diseases, diffusion_time, num_iters_pdiamond, pdiamond_mode= read_terminal_input(args)
+    algorithms, validations, diseases, diffusion_time, num_iters_pdiamond = read_terminal_input(args)
 
     # ================ #
     #  CREATE NETWORK  #
@@ -206,8 +194,7 @@ if __name__ == "__main__":
                                         disease,
                                         K=5,
                                         diffusion_time=diffusion_time,
-                                        num_iters_pdiamond=num_iters_pdiamond,
-                                        pdiamond_mode=pdiamond_mode)
+                                        num_iters_pdiamond=num_iters_pdiamond)
 
     # ===================== #
     #  EXTENDED VALIDATION  #
@@ -233,5 +220,4 @@ if __name__ == "__main__":
                                     alg,
                                     disease,
                                     diffusion_time=diffusion_time,
-                                    num_iters_pdiamond=num_iters_pdiamond,
-                                    pdiamond_mode=pdiamond_mode)
+                                    num_iters_pdiamond=num_iters_pdiamond)

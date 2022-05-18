@@ -15,7 +15,7 @@ import sys
 def print_usage():
 
     print(' ')
-    print('        usage: python3 prob_diamond.py network_file seed_file n alpha(optional) outfile_name (optional)')
+    print('        usage: python3 pdiamond.py network_file seed_file n alpha(optional) outfile_name (optional)')
     print('        -----------------------------------------------------------------')
     print('        network_file : The edgelist must be provided as any delimiter-separated')
     print('                       table. Make sure the delimiter does not exit in gene IDs')
@@ -304,7 +304,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
     # ------------------------------------------------------------------
 
     all_p = {}
-    SNP = 0
+
     while len(added_nodes) < X:
 
         # ------------------------------------------------------------------
@@ -316,7 +316,6 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
 
         info = {}
 
-        pmin = 10
         next_node = 'nix'
         reduced_not_in_cluster = reduce_not_in_cluster_nodes(all_degrees,
                                                              neighbors, G,
@@ -324,7 +323,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                                                              cluster_nodes, alpha)
         probable_next_nodes = []
         inv_p_values = []
-        SNP_iter = 0
+
         for node, kbk in reduced_not_in_cluster.items():
             # Getting the p-value of this kb,k
             # combination and save it in all_p, so computing it only once!
@@ -335,21 +334,13 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                 p = pvalue(kb, k, N, s0, gamma_ln)
                 all_p[(k, kb, s0)] = p
 
-            '''
-            # recording the node with smallest p-value
-            if p < pmin:
-                pmin = p
-                next_node = node
-            '''
-
-            # Compute the
 
             info[node] = (k, kb, p)
+
+            # Save the neighbour in the probable next nodes array
+            # and the inverse of its p_value
             probable_next_nodes.append(node)
             inv_p_values.append(1 - p[0])
-            SNP_iter += p
-
-        averaged_SNP_iter = SNP_iter / len(reduced_not_in_cluster.items())
 
         # print(probable_next_nodes)
 
@@ -364,7 +355,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
         # print(next_node)
 
         # ---------------------------------------------------------------------
-        # Adding the chosen node to the list of agglomerated nodes
+        # Adding the sorted node to the list of agglomerated nodes
         # ---------------------------------------------------------------------
         added_nodes.append((next_node,
                             info[next_node][0],
@@ -377,9 +368,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
         not_in_cluster |= (neighbors[next_node] - cluster_nodes)
         not_in_cluster.remove(next_node)
 
-        SNP += averaged_SNP_iter
-
-    return added_nodes, SNP
+    return added_nodes
 
 
 # ===========================================================================
@@ -387,7 +376,8 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_iterations=10):
+
+def pDIAMOnD_rank(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -398,35 +388,62 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
         print("pDIAMOnD(): ignoring %s of %s seed genes that are not in the network" % (
             len(seed_genes - all_genes_in_network), len(seed_genes)))
 
-    # 2. run pdiamond different times and get the best
-    #    predicted nodes combination wrt the sum of the
-    #    p-values of the neighbours (SNP).
-    print(f"pDIAMOnD(): number of iterations = {max_iterations}")
-    lowest_SNP = 100
-    best_added_nodes = []
+    # 2. agglomeration algorithm.
+    print(f"pDIAMOnD(): number of iterations = {max_num_iterations}")
 
-    for i in range(max_iterations):
-        added_nodes, SNP = pdiamond_iteration_of_first_X_nodes(G_original,
-                                                              disease_genes,
-                                                              max_number_of_added_nodes, alpha)
-        if SNP > 0 and SNP < lowest_SNP:
-            lowest_SNP = SNP
-            best_added_nodes = added_nodes
+    node_ranks = {}
+    for i in range(max_num_iterations):
+        added_nodes = pdiamond_iteration_of_first_X_nodes(G_original,
+                                                        disease_genes,
+                                                        max_number_of_added_nodes, alpha)
 
-    return best_added_nodes
+        # Assign rank value to the node
+        for pos, node in enumerate(added_nodes):
+            node_number = node[0]
+            # print(node_number)
+            if node_number not in node_ranks:
+                node_ranks[node_number] = len(added_nodes) - pos    # pos 0 => rank 100 - 0 = 100
+            else:
+                node_ranks[node_number] += len(added_nodes) - pos
 
-def run_prob_diamond(input_list):
+
+    # Average the rank of each node by the total number of pDIAMOnD iterations
+    for key in node_ranks.keys():
+        node_ranks[key] /= max_num_iterations
+
+    # Sort the dictionary in descendig order wrt the rank values
+    sorted_nodes = sorted(node_ranks.items(), key=lambda x: x[1], reverse=True)
+
+    # 3. saving the results
+    with open(outfile, 'w') as fout:
+
+        fout.write('\t'.join(['rank', 'node', 'rank_score']) + '\n')
+        rank = 0
+        for sn in sorted_nodes:
+            # if rank > max_number_of_added_nodes:
+            #     break
+
+            rank += 1
+            node = sn[0]
+            rank_score = sn[1]
+
+            fout.write('\t'.join(map(str, ([rank, node, rank_score]))) + '\n')
+
+    return sorted_nodes[:max_number_of_added_nodes]
+
+
+def run_pdiamond_rank(input_list):
     network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
 
     # run DIAMOnD
-    added_nodes = pDIAMOnD(G_original,
-                               seed_genes,
-                               max_number_of_added_nodes, alpha,
-                               outfile=outfile_name,
-                               max_iterations=num_iterations)
+    added_nodes = pDIAMOnD_rank(G_original,
+                                seed_genes,
+                                max_number_of_added_nodes, alpha,
+                                outfile=outfile_name,
+                                max_num_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
 
@@ -466,10 +483,10 @@ if __name__ == '__main__':
 
 
     # run Prob DIAMOnD
-    added_nodes = pDIAMOnD(G_original,
-                               seed_genes,
-                               max_number_of_added_nodes, alpha,
-                               outfile=outfile_name,
-                               max_iterations=num_iterations)
+    added_nodes = pDIAMOnD_rank(G_original,
+                                seed_genes,
+                                max_number_of_added_nodes, alpha,
+                                outfile=outfile_name,
+                                max_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
