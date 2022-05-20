@@ -1,14 +1,17 @@
 #! /usr/bin/env python
 
 
-import time
-import networkx as nx
-import numpy as np
 import copy
-import scipy.stats
-from collections import defaultdict
 import csv
 import sys
+import time
+from collections import defaultdict
+
+import networkx as nx
+import numpy as np
+import scipy.stats
+import torch
+import torch.nn.functional as F
 
 
 # =============================================================================
@@ -168,7 +171,7 @@ def pvalue(kb, k, N, s, gamma_ln):
     """
     -------------------------------------------------------------------
     Computes the p-value for a node that has kb out of k links to
-    seeds, given that there's a total of s sees in a network of N nodes.
+    seeds, given that there's a total of s seeds in a network of N nodes.
 
     p-val = \sum_{n=kb}^{k} HypergemetricPDF(n,k,N,s)
     -------------------------------------------------------------------
@@ -237,14 +240,33 @@ def reduce_not_in_cluster_nodes(all_degrees, neighbors, G, not_in_cluster, clust
 # =============================================================================
 # Transform a list in a probabilistic array
 # =============================================================================
-def softmax(x):
-    """Compute softmax values for each sets of scores in x."""
-    return np.exp(x) / np.sum(np.exp(x), axis=0)
+def normalize(x):
+    """Normalize an array x"""
+    return F.normalize(x, dim=0)
 
+def softmax_stable(x):
+    """
+    Compute softmax values for each sets of scores in x.
+    Subtraction of the max value of the array to handle the
+    exponential for very large numbers.
+    """
+    # return ( torch.exp(x - torch.max(x)) ) / ( torch.exp(x - torch.max(x)).sum() )
+    return F.softmax(x, dim=0)
+
+def softmax_with_temperature(x, T):
+    """
+    Compute softmax values for each sets of scores in x
+    using a temperature value to modify its confidence.
+    """
+
+    x_exp = torch.exp((x - torch.max(x)) / T)
+    x_softmax = x_exp / x_exp.sum()
+
+    return x_softmax
 # ======================================================================================
 #   C O R E    A L G O R I T H M
 # ======================================================================================
-def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
+def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
     """
     Parameters:
     ----------
@@ -321,8 +343,9 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                                                              neighbors, G,
                                                              not_in_cluster,
                                                              cluster_nodes, alpha)
+
         probable_next_nodes = []
-        inv_p_values = []
+        inverse_p_values = []
 
         for node, kbk in reduced_not_in_cluster.items():
             # Getting the p-value of this kb,k
@@ -334,25 +357,80 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                 p = pvalue(kb, k, N, s0, gamma_ln)
                 all_p[(k, kb, s0)] = p
 
-
             info[node] = (k, kb, p)
 
-            # Save the neighbour in the probable next nodes array
-            # and the inverse of its p_value
+            # Save the neighbour in the probable next nodes array and its p-value
             probable_next_nodes.append(node)
-            inv_p_values.append(1 - p[0])
-
-        # print(probable_next_nodes)
+            inverse_p_values.append(1/p[0])
 
         # ---------------------------------------------------------------------
         # Convert the p-value list in a probability distribution and
         # extract the next node based on it
         # ---------------------------------------------------------------------
-        probability_distribution = softmax(inv_p_values)
-        next_node = np.random.choice(probable_next_nodes, 1,
-                                     p=probability_distribution)
-        next_node = next_node[0]
-        # print(next_node)
+
+        # Cast the p-values list to a Tensor
+        inverse_p_values = torch.tensor(inverse_p_values, dtype=torch.float64)
+
+        # Normalize it to remove the very high values
+        inverse_p_values = normalize(inverse_p_values)
+
+        # Sort the p-values by the descenfing order and get the currespondent node indices.
+        # From highest to lowest since we're interested in the first lower pvalues
+        # (low p-value mean high inverse p-value and then high probability to be a disease gene).
+        sorted_inverse_p_values, sorted_node_indices = torch.sort(inverse_p_values, descending=True)
+        # print("sorted p-values: ", len(sorted_inverse_p_values))
+
+        # Transform the inverse p-values into a probability distribution
+        inverse_p_values_distribution = softmax_stable(sorted_inverse_p_values)
+        # print("original_probability_distribution: ", inverse_p_values_distribution)
+
+        # ======================================================================
+        # See https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
+        # for the following implementation
+
+        filter_value = -float('Inf')
+
+        # Compute the comulative distribution
+        CDS = torch.cumsum(inverse_p_values_distribution, dim=-1)
+        # print("CDS: ", CDS)
+
+        # Remove nodes with cumulative distribution above the threshold
+        sorted_indices_to_remove = CDS > p_threshold
+        # print("sorted_indices_to_remove: ", sorted_indices_to_remove)
+
+        # Shift the indices to the right to keep also the first token above the threshold
+        sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+        sorted_indices_to_remove[..., 0] = 0
+
+        # Filter out the nodes above the thres
+        indices_to_remove = sorted_node_indices[sorted_indices_to_remove]
+        filtered_inverse_p_values = inverse_p_values.clone()
+        filtered_inverse_p_values[indices_to_remove] = filter_value
+
+        '''
+        # Keep only the nodes with cumulative probability under the threshold.
+        top_k_indices = sorted_node_indices[CDS < p_threshold]
+        top_k_inverse_pvalues = sorted_inverse_p_values[CDS < p_threshold]
+        print("top_k_indices: ", len(top_k_indices))
+        print("top_k_inverse_p_values: ", len(top_k_inverse_pvalues))
+        sys.exit(0)
+        '''
+        # ======================================================================
+
+        # Re-compute Softmax over the new subset of inverse p-values.
+        top_k_inverse_p_values_distribution = softmax_stable(filtered_inverse_p_values)
+        # print("top_k_probability_distribution: ", top_k_inverse_p_values_distribution)
+
+        # Finally draw the next node
+        """
+        next_node = np.random.choice(filtered_probable_next_nodes, 1,
+                                     p=inverted_probability_distribution.tolist())
+        """
+        next_node_idx = torch.multinomial(top_k_inverse_p_values_distribution, 1)
+        # print("next_node_idx: ", next_node_idx)
+
+        next_node = probable_next_nodes[next_node_idx]
+        # print("next_node: ", next_node)
 
         # ---------------------------------------------------------------------
         # Adding the sorted node to the list of agglomerated nodes
@@ -376,7 +454,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def pDIAMOnD_topk(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10):
+def pDIAMOnD_topk(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, p_threshold=0.6):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -392,9 +470,11 @@ def pDIAMOnD_topk(G_original, seed_genes, max_number_of_added_nodes, alpha, outf
 
     node_ranks = {}
     for i in range(max_num_iterations):
-        added_nodes = pdiamond_iteration_of_first_X_nodes(G_original,
+        added_nodes = pdiamond_topk_iteration_of_first_X_nodes(G_original,
                                                         disease_genes,
-                                                        max_number_of_added_nodes, alpha)
+                                                        max_number_of_added_nodes,
+                                                        alpha,
+                                                        p_threshold)
 
         # Assign rank value to the node
         for pos, node in enumerate(added_nodes):
@@ -486,6 +566,7 @@ if __name__ == '__main__':
                                 seed_genes,
                                 max_number_of_added_nodes, alpha,
                                 outfile=outfile_name,
-                                max_iterations=num_iterations)
+                                max_iterations=num_iterations,
+                                p_threshold = 0.9)
 
     print("\n results have been saved to '%s' \n" % outfile_name)

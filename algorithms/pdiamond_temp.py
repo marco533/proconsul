@@ -325,8 +325,6 @@ def pdiamond_temp_iteration_of_first_X_nodes(G, S, X, alpha, T_start, T_step):
         #
         # ------------------------------------------------------------------
 
-        # print(f"Temperature: {T}")
-
         info = {}
 
         next_node = 'nix'
@@ -335,6 +333,7 @@ def pdiamond_temp_iteration_of_first_X_nodes(G, S, X, alpha, T_start, T_step):
                                                              not_in_cluster,
                                                              cluster_nodes, alpha)
         probable_next_nodes = []
+        p_values = []
         inv_p_values = []
 
         for node, kbk in reduced_not_in_cluster.items():
