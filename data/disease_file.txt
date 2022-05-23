@@ -1,15 +1,21 @@
+#
 # Best diseases for pDIAMOnD
-Condition, Preneoplastic
-#Anaplastic carcinoma
-#Alcoholic Intoxication, Chronic
+#
+#Colorectal Carcinoma
 #Lymphatic Metastasis
-# Best diseases for DIAMONnD
-Mouth Neoplasms
-#Crohn's disease of the ileum
-#Stomach Neoplasms
-#Ischemia
+Condition, Preneoplastic
+#Alzheimer's Disease
+#
 # Draw diseases
-Liver carcinoma
-#Diabetes Mellitus, Non-Insulin-Dependent
-#Hearing Loss, Extreme
+#
+Ovarian Mucinous Adenocarcinoma
+#Female infertility
 #Single Seizure
+#Hearing Loss, Extreme
+#
+# Best diseases for DIAMONnD
+#
+#Stomach Neoplasms
+#Pneumonitis
+#Malignant neoplasm of prostate
+#Neuroblastoma

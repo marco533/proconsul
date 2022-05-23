@@ -8,7 +8,7 @@ from algorithms.pdiamond import pDIAMOnD
 from algorithms.pdiamond_rank import pDIAMOnD_rank
 from algorithms.pdiamond_temp import pDIAMOnD_temp
 from algorithms.pdiamond_topk import pDIAMOnD_topk
-from algorithms.pdiamond_all import pDIAMOnD_all
+from algorithms.pdiamond_complete import pDIAMOnD_complete
 from algorithms.heat_diffusion import run_heat_diffusion
 from utils.network_utils import *
 from utils.metrics_utils import *
@@ -58,7 +58,7 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
         training_genes = [gene for sublist in disease_genes for gene in sublist] # flatten the list of lists
 
         # run algorithm
-        outfile = f"tmp/{algorithm}_output.txt"
+        outfile = f"predicted_genes/kfold/{algorithm}.{string_to_filename(disease_name)}.kfold_{k}.txt"
 
         # if the algorithm doesn't return a ranking set this flag False
         ranking_flag = True
@@ -76,15 +76,15 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "pdiamond_temp":
-            added_nodes = pDIAMOnD_temp(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond, T_start=0.1, T_step=0.1)
+            added_nodes = pDIAMOnD_temp(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "pdiamond_topk":
             added_nodes = pDIAMOnD_topk(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
             predicted_genes = [item[0] for item in added_nodes]
 
-        elif algorithm == "pdiamond_all":
-            added_nodes = pDIAMOnD_all(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond, T_start=0.1, T_step=0.1)
+        elif algorithm == "pdiamond_complete":
+            added_nodes = pDIAMOnD_complete(network, training_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
             predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "heat_diffusion":
@@ -98,7 +98,7 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
             print("    - pdiamond_rank             ")
             print("    - pdiamond_temp             ")
             print("    - pdiamond_topk             ")
-            print("    - pdiamond_all              ")
+            print("    - pdiamond_complete              ")
             print("    - heat_diffusion            ")
             sys.exit(0)
 

@@ -1,14 +1,18 @@
 #! /usr/bin/env python
 
 
-import time
-import networkx as nx
-import numpy as np
 import copy
-import scipy.stats
-from collections import defaultdict
 import csv
 import sys
+import time
+from collections import defaultdict
+
+import networkx as nx
+import numpy as np
+from numpy import average
+import scipy.stats
+import torch
+import torch.nn.functional as F
 
 
 # =============================================================================
@@ -168,7 +172,7 @@ def pvalue(kb, k, N, s, gamma_ln):
     """
     -------------------------------------------------------------------
     Computes the p-value for a node that has kb out of k links to
-    seeds, given that there's a total of s sees in a network of N nodes.
+    seeds, given that there's a total of s seeds in a network of N nodes.
 
     p-val = \sum_{n=kb}^{k} HypergemetricPDF(n,k,N,s)
     -------------------------------------------------------------------
@@ -237,14 +241,80 @@ def reduce_not_in_cluster_nodes(all_degrees, neighbors, G, not_in_cluster, clust
 # =============================================================================
 # Transform a list in a probabilistic array
 # =============================================================================
-def softmax(x):
-    """Compute softmax values for each sets of scores in x."""
-    return np.exp(x) / np.sum(np.exp(x), axis=0)
+def normalize(x, min=0, max=1):
+    """Normalize an array x in range [min, max]"""
+    start = min
+    width = max - min
+    x_norm = (x - torch.min(x)) / (torch.max(x) - torch.min(x)) * width + start
+
+    return x_norm
+
+def stable_softmax(x, dim=0):
+    """
+    Compute softmax values for each sets of scores in x.
+    Subtraction of the max value of the array to handle the
+    exponential of very large numbers.
+    """
+    stable_tempered_x = (x - torch.max(x))
+    return F.softmax(stable_tempered_x, dim=dim)
+
+'''
+def softmax_with_temperature(x, T):
+    """
+    Compute softmax values for each sets of scores in x
+    using a temperature value to modify its confidence.
+    """
+
+    x_exp = torch.exp(x / T)
+
+    # if there is at least one infinite value means that the T value was 0.
+    # Then return 1.0 for the first value and 0.0 for the others
+    if True in torch.isinf(x_exp):
+        x_exp[0] = 1.0
+        x_exp[1:] = 0.0
+
+    x_softmax = x_exp / x_exp.sum()
+
+    return x_softmax
+'''
+
+# See: https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
+def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
+    """ Filter a distribution of logits using top-k and/or nucleus (top-p) filtering
+        Args:
+            logits: logits distribution shape (vocabulary size)
+            top_k >0: keep only top k tokens with highest probability (top-k filtering).
+            top_p >0.0: keep the top tokens with cumulative probability >= top_p (nucleus filtering).
+                Nucleus filtering is described in Holtzman et al. (http://arxiv.org/abs/1904.09751)
+    """
+    assert logits.dim() == 1  # batch size 1 for now - could be updated for more but the code would be less clear
+    top_k = min(top_k, logits.size(-1))  # Safety check
+    if top_k > 0:
+        # Remove all tokens with a probability less than the last token of the top-k
+        indices_to_remove = logits < torch.topk(logits, top_k)[0][..., -1, None]
+        logits[indices_to_remove] = filter_value
+
+    if top_p > 0.0:
+        sorted_logits, sorted_indices = torch.sort(logits, descending=True)
+        cumulative_probs = torch.cumsum(F.softmax(sorted_logits, dim=-1), dim=-1)
+        # print("sorted_logits: ", sorted_logits)
+        # print("sorted_logits_softmax: ", F.softmax(sorted_logits, dim=-1))
+        # print("CDS: ", cumulative_probs)
+
+        # Remove tokens with cumulative probability above the threshold
+        sorted_indices_to_remove = cumulative_probs > top_p
+        # Shift the indices to the right to keep also the first token above the threshold
+        sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+        sorted_indices_to_remove[..., 0] = 0
+
+        indices_to_remove = sorted_indices[sorted_indices_to_remove]
+        logits[indices_to_remove] = filter_value
+    return logits
 
 # ======================================================================================
 #   C O R E    A L G O R I T H M
 # ======================================================================================
-def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
+def pdiamond_complete_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0, top_k=0, top_p=0.9):
     """
     Parameters:
     ----------
@@ -304,9 +374,9 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
     # ------------------------------------------------------------------
 
     all_p = {}
-
+    it = 0
     while len(added_nodes) < X:
-
+        it += 1
         # ------------------------------------------------------------------
         #
         # Going through all nodes that are not in the cluster yet and
@@ -321,8 +391,9 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                                                              neighbors, G,
                                                              not_in_cluster,
                                                              cluster_nodes, alpha)
+
         probable_next_nodes = []
-        inv_p_values = []
+        inverse_p_values = []
 
         for node, kbk in reduced_not_in_cluster.items():
             # Getting the p-value of this kb,k
@@ -334,25 +405,47 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                 p = pvalue(kb, k, N, s0, gamma_ln)
                 all_p[(k, kb, s0)] = p
 
-
             info[node] = (k, kb, p)
 
-            # Save the neighbour in the probable next nodes array
-            # and the inverse of its p_value
+            # Save the neighbour in the probable next nodes array and its p-value
             probable_next_nodes.append(node)
-            inv_p_values.append(1 - p[0])
-
-        # print(probable_next_nodes)
+            inverse_p_values.append(1/p[0])
 
         # ---------------------------------------------------------------------
         # Convert the p-value list in a probability distribution and
         # extract the next node based on it
         # ---------------------------------------------------------------------
-        probability_distribution = softmax(inv_p_values)
-        next_node = np.random.choice(probable_next_nodes, 1,
-                                     p=probability_distribution)
-        next_node = next_node[0]
-        # print(next_node)
+
+        # Cast the p-values list to a Tensor
+        inverse_p_values = torch.tensor(inverse_p_values, dtype=torch.float64)
+        # print("inverse_p_values: ", inverse_p_values)
+
+        inverse_p_values = normalize(inverse_p_values, min=0, max=1)   # Normalize
+        # inverse_p_values = F.normalize(inverse_p_values, p=2.0, dim=-1) # Normalize
+        # print("normalized_inverse_p_values: ", inverse_p_values)
+
+        inverse_p_values /= temperature  # Scale by the temperature
+        # print("tempered_inverse_p_values: ", inverse_p_values)
+
+        # Top-K and Top-P filtering
+        filtered_inverse_p_values = top_k_top_p_filtering(inverse_p_values, top_k=top_k, top_p=top_p)
+        # print("filtered_inverse_p_values: ", inverse_p_values)
+
+        # Sample from the filtered distribution
+        probabilities = F.softmax(filtered_inverse_p_values, dim=-1)
+        # print("filtered_probabilities: ", probabilities)
+
+        # Check on probabilities
+        if True in torch.isnan(probabilities):
+            print("ERROR: found nan value")
+            sys.exit(1)
+
+        # Finally draw the next node
+        next_node_idx = torch.multinomial(probabilities, 1)
+        # print("next_node_idx: ", next_node_idx)
+
+        next_node = probable_next_nodes[next_node_idx]
+        # print("next_node: ", next_node)
 
         # ---------------------------------------------------------------------
         # Adding the sorted node to the list of agglomerated nodes
@@ -368,6 +461,12 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
         not_in_cluster |= (neighbors[next_node] - cluster_nodes)
         not_in_cluster.remove(next_node)
 
+
+        # Increase temperature value
+        # print("temperature: ", temperature)
+        temperature += 0.1
+
+        # sys.exit(0)
     return added_nodes
 
 
@@ -376,7 +475,7 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def pDIAMOnD_all(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, T_start=0.1, T_step=0.1):
+def pDIAMOnD_complete(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, temperature=0.1, top_k=0, top_p=0.9):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -388,13 +487,18 @@ def pDIAMOnD_all(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
             len(seed_genes - all_genes_in_network), len(seed_genes)))
 
     # 2. agglomeration algorithm.
-    print(f"pDIAMOnD(): number of iterations = {max_num_iterations}")
+    print(f"pDIAMOnD(): number of rounds = {max_num_iterations}")
 
     node_ranks = {}
     for i in range(max_num_iterations):
-        added_nodes = pdiamond_iteration_of_first_X_nodes(G_original,
-                                                        disease_genes,
-                                                        max_number_of_added_nodes, alpha)
+        print(f"pDIAMOnD(): Round {i+1}/{max_num_iterations}")
+        added_nodes = pdiamond_complete_iteration_of_first_X_nodes(G_original,
+                                                            disease_genes,
+                                                            max_number_of_added_nodes,
+                                                            alpha,
+                                                            temperature=temperature,
+                                                            top_k=top_k,
+                                                            top_p=top_p)
 
         # Assign rank value to the node
         for pos, node in enumerate(added_nodes):
@@ -431,18 +535,18 @@ def pDIAMOnD_all(G_original, seed_genes, max_number_of_added_nodes, alpha, outfi
     return sorted_nodes[:max_number_of_added_nodes]
 
 
-def run_pdiamond_all(input_list):
+def run_pdiamond_complete(input_list):
     network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
 
     # run DIAMOnD
-    added_nodes = pDIAMOnD_all(G_original,
-                            seed_genes,
-                            max_number_of_added_nodes, alpha,
-                            outfile=outfile_name,
-                            max_num_iterations=num_iterations)
+    added_nodes = pDIAMOnD_complete(G_original,
+                                seed_genes,
+                                max_number_of_added_nodes, alpha,
+                                outfile=outfile_name,
+                                max_num_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
 
@@ -482,10 +586,10 @@ if __name__ == '__main__':
 
 
     # run Prob DIAMOnD
-    added_nodes = pDIAMOnD_all(G_original,
-                               seed_genes,
-                               max_number_of_added_nodes, alpha,
-                               outfile=outfile_name,
-                               max_iterations=num_iterations)
+    added_nodes = pDIAMOnD_complete(G_original,
+                                    seed_genes,
+                                    max_number_of_added_nodes, alpha,
+                                    outfile=outfile_name,
+                                    max_iterations=num_iterations)
 
     print("\n results have been saved to '%s' \n" % outfile_name)

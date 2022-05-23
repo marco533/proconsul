@@ -8,7 +8,7 @@ from algorithms.pdiamond import pDIAMOnD
 from algorithms.pdiamond_rank import pDIAMOnD_rank
 from algorithms.pdiamond_temp import pDIAMOnD_temp
 from algorithms.pdiamond_topk import pDIAMOnD_topk
-from algorithms.pdiamond_all import pDIAMOnD_all
+from algorithms.pdiamond_complete import pDIAMOnD_complete
 from algorithms.heat_diffusion import run_heat_diffusion
 from utils.network_utils import *
 from utils.metrics_utils import *
@@ -36,7 +36,7 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
     print(f"Extended validation of {algorithm.upper()} on {disease_name.upper()}...", end="\n\n")
 
     # output file for diamond-like algorithms
-    outfile = f"tmp/{algorithm}_output.txt"
+    outfile = f"predicted_genes/extended/{algorithm}.{string_to_filename(disease_name)}.extended.txt"
 
     predicted_genes = []
 
@@ -53,15 +53,15 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
         predicted_genes = [item[0] for item in added_nodes]
 
     elif algorithm == "pdiamond_temp":
-        added_nodes = pDIAMOnD_temp(network, seed_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond, T_start=0.1, T_step=0.1)
+        added_nodes = pDIAMOnD_temp(network, seed_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
         predicted_genes = [item[0] for item in added_nodes]
 
     elif algorithm == "pdiamond_topk":
         added_nodes = pDIAMOnD_topk(network, seed_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
         predicted_genes = [item[0] for item in added_nodes]
 
-    elif algorithm == "pdiamond_all":
-        added_nodes = pDIAMOnD_all(network, seed_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond, T_start=0.1, T_step=0.1)
+    elif algorithm == "pdiamond_complete":
+        added_nodes = pDIAMOnD_complete(network, seed_genes, num_genes_to_predict, 1, outfile=outfile, max_num_iterations=num_iters_pdiamond)
         predicted_genes = [item[0] for item in added_nodes]
 
     elif algorithm == "heat_diffusion":
@@ -76,7 +76,7 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
         print("    - pdiamond_rank             ")
         print("    - pdiamond_temp             ")
         print("    - pdiamond_topk             ")
-        print("    - pdiamond_all              ")
+        print("    - pdiamond_complete              ")
         print("    - heat_diffusion            ")
         sys.exit(0)
 
@@ -95,13 +95,13 @@ def extended_validation(network, seed_genes, test_genes, algorithm, disease_name
     result_df = pd.DataFrame(scores, metrics, sizes)
 
     # save it as csv file
-    csv_filename = f"results/extended/{algorithm}/{string_to_filename(algorithm)}_on_{string_to_filename(disease_name)}_-_extended.csv"
+    csv_filename = f"results/extended/{algorithm}/{string_to_filename(algorithm)}.{string_to_filename(disease_name)}.extended.csv"
 
     # add additional information in the filename
     if "pdiamond" in algorithm:
-        csv_filename = csv_filename.replace(".csv", f"_-_{num_iters_pdiamond}_iterations.csv")
+        csv_filename = csv_filename.replace(".csv", f".{num_iters_pdiamond}_iterations.csv")
 
     if algorithm == "heat_diffusion":
-        csv_filename = csv_filename.replace(".csv", f"_-_diffusion_time_{diffusion_time}.csv")
+        csv_filename = csv_filename.replace(".csv", f".diffusion_time_{diffusion_time}.csv")
 
     result_df.to_csv(csv_filename)

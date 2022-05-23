@@ -17,7 +17,7 @@ def print_usage():
     print('        usage: python3 project.py --algs --validation --disease_file --diffusion_time --num_iters_pdiamond --pdiamond_mode')
     print('        -----------------------------------------------------------------')
     print('        algs                     : List of algorithms to use to collect results.')
-    print('                                   They can be: "diamond", "pdiamond", "pdiamond_rank", "pdiamond_temp", "pdiamond_topk", "pdiamond_all", "heat_diffusion"')
+    print('                                   They can be: "diamond", "pdiamond", "pdiamond_rank", "pdiamond_temp", "pdiamond_topk", "pdiamond_complete", "heat_diffusion"')
     print('                                   If all, run all the algorithms. (default: all')
     print('        validation               : Type of validation on which test the algorithms. It can be')
     print('                                   "kfold", "extended" or "all".')
@@ -37,7 +37,7 @@ def parse_args():
     Parse the terminal arguments.
     '''
     parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
-    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "pdiamond_temp", "pdiamond_rank", "pdiamond_topk", "pdiamond_all", "heat_diffusion"],
+    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "pdiamond_temp", "pdiamond_rank", "pdiamond_topk", "pdiamond_complete", "heat_diffusion"],
                     help='List of algorithms to run (default: all)')
     parser.add_argument('--validation', type=str, default='all',
                     help='Type of validation. (default: all')
@@ -81,7 +81,7 @@ def read_terminal_input(args):
 
     # Check algorithm names
     for alg in algs:
-        if alg not in ["diamond", "pdiamond", "pdiamond_rank", "pdiamond_temp", "pdiamond_topk", "pdiamond_all", "heat_diffusion"]:
+        if alg not in ["diamond", "pdiamond", "pdiamond_rank", "pdiamond_temp", "pdiamond_topk", "pdiamond_complete", "heat_diffusion"]:
             print(f"ERROR: {alg} is not a valid algorithm!")
             print_usage()
             sys.exit(0)

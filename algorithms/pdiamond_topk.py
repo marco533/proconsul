@@ -266,7 +266,7 @@ def softmax_with_temperature(x, T):
 # ======================================================================================
 #   C O R E    A L G O R I T H M
 # ======================================================================================
-def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
+def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, max_p_threshold):
     """
     Parameters:
     ----------
@@ -326,6 +326,7 @@ def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
     # ------------------------------------------------------------------
 
     all_p = {}
+    adaptive_p_threshold = -1
 
     while len(added_nodes) < X:
 
@@ -384,6 +385,17 @@ def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
         inverse_p_values_distribution = softmax_stable(sorted_inverse_p_values)
         # print("original_probability_distribution: ", inverse_p_values_distribution)
 
+        # Get optimal p_threshold
+        if adaptive_p_threshold < 0:
+            adaptive_p_threshold = (inverse_p_values_distribution[1] / inverse_p_values_distribution[0]).item()
+            adaptive_p_threshold = round(adaptive_p_threshold, 1)   # round it
+
+            # Clamp it if above max_p_threshold
+            if adaptive_p_threshold > max_p_threshold:
+                adaptive_p_threshold = max_p_threshold
+
+            print("adaptive_p_threshold: ", adaptive_p_threshold)
+
         # ======================================================================
         # See https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
         # for the following implementation
@@ -395,7 +407,7 @@ def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
         # print("CDS: ", CDS)
 
         # Remove nodes with cumulative distribution above the threshold
-        sorted_indices_to_remove = CDS > p_threshold
+        sorted_indices_to_remove = CDS > adaptive_p_threshold
         # print("sorted_indices_to_remove: ", sorted_indices_to_remove)
 
         # Shift the indices to the right to keep also the first token above the threshold
@@ -407,14 +419,6 @@ def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
         filtered_inverse_p_values = inverse_p_values.clone()
         filtered_inverse_p_values[indices_to_remove] = filter_value
 
-        '''
-        # Keep only the nodes with cumulative probability under the threshold.
-        top_k_indices = sorted_node_indices[CDS < p_threshold]
-        top_k_inverse_pvalues = sorted_inverse_p_values[CDS < p_threshold]
-        print("top_k_indices: ", len(top_k_indices))
-        print("top_k_inverse_p_values: ", len(top_k_inverse_pvalues))
-        sys.exit(0)
-        '''
         # ======================================================================
 
         # Re-compute Softmax over the new subset of inverse p-values.
@@ -445,7 +449,7 @@ def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
         s0 = len(cluster_nodes)
         not_in_cluster |= (neighbors[next_node] - cluster_nodes)
         not_in_cluster.remove(next_node)
-
+        # sys.exit(0)
     return added_nodes
 
 
@@ -454,7 +458,7 @@ def pdiamond_topk_iteration_of_first_X_nodes(G, S, X, alpha, p_threshold):
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def pDIAMOnD_topk(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, p_threshold=0.6):
+def pDIAMOnD_topk(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, max_p_threshold=0.9):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -466,15 +470,16 @@ def pDIAMOnD_topk(G_original, seed_genes, max_number_of_added_nodes, alpha, outf
             len(seed_genes - all_genes_in_network), len(seed_genes)))
 
     # 2. agglomeration algorithm.
-    print(f"pDIAMOnD(): number of iterations = {max_num_iterations}")
+    print(f"pDIAMOnD(): number of rounds = {max_num_iterations}")
 
     node_ranks = {}
     for i in range(max_num_iterations):
+        print(f"pDIAMOnD(): Round {i+1}/{max_num_iterations}")
         added_nodes = pdiamond_topk_iteration_of_first_X_nodes(G_original,
                                                         disease_genes,
                                                         max_number_of_added_nodes,
                                                         alpha,
-                                                        p_threshold)
+                                                        max_p_threshold)
 
         # Assign rank value to the node
         for pos, node in enumerate(added_nodes):
@@ -567,6 +572,6 @@ if __name__ == '__main__':
                                 max_number_of_added_nodes, alpha,
                                 outfile=outfile_name,
                                 max_iterations=num_iterations,
-                                p_threshold = 0.9)
+                                max_p_threshold = 0.9)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
