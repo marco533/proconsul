@@ -6,6 +6,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import bct
+import re
 
 
 from utils.data_utils import get_disease_genes_from_gda
@@ -415,4 +416,45 @@ def get_longest_path_for_a_disease_LCC(disease, predicted_genes = []):
     return max
 
 
+def translate_from_stringdb(stringdb_file, stringdb_aliases_file):
+    '''
+    Given stringdb associations file and aliases file, it translates each gene in the original
+    file to the gene symbol and return the dataframe with the associations among genes expressed
+    as gene symbols
+    '''
 
+    df = pd.read_csv(stringdb_file, sep="\s+", header=0)
+    df_aliases = pd.read_csv(stringdb_aliases_file, sep="\t", header=0)
+
+    #TRANSLATION FROM ORIGINAL STRINGDB NAMES TO GENE SYMBOLS
+    for i in range(len(df.protein1)): #loop of every row in the associations file
+        
+        #if the selected gene start with '9606.ENSP' it's not translated yet
+        if len(re.findall("9606.ENSP.*", df.protein1[i])) == 1:
+
+            #find alias in aliases file:
+            filter1 = df_aliases['string_protein_id'] == df.protein1[i]  
+            filter2 = df_aliases['source'] == 'Ensembl_HGNC'
+            length =len(df_aliases.loc[filter1 & filter2 ]['alias'].values) #df_aliases.loc[filter1 & filter2 ] filters the file, ['alias'] takes the alias column, .values extract the values
+            #if you found only one alias
+            if length == 1: 
+                alias1 = (df_aliases.loc[filter1 & filter2 ]['alias'].values)[0]   #acces the first and only value
+                #replace each occurrence of the gene in the assosiactions file with the alias 
+                df=df.replace(to_replace=df.protein1[i] ,value=alias1)                
+
+        #let's do again for the second column
+
+        #if the selected gene start with '9606.ENSP' it's not translated yet        
+        if len(re.findall("9606.ENSP.*", df.protein2[i])) == 1:
+
+            #find alias in aliases file:
+            filter1 = df_aliases['string_protein_id'] == df.protein2[i]  
+            filter2 = df_aliases['source'] == 'Ensembl_HGNC'
+            length = len(df_aliases.loc[filter1 & filter2 ]['alias'].values) #df_aliases.loc[filter1 & filter2 ] filters the file, ['alias'] takes the alias column, .values extract the values
+            #if you found only one alias
+            if length == 1:
+                alias2 = (df_aliases.loc[filter1 & filter2 ]['alias'].values)[0]   #acces the first and only value
+                #replace each occurrence of the gene in the assosiactions file with the alias 
+                df=df.replace(to_replace=df.protein2[i] ,value=alias2)        
+           
+    return df
