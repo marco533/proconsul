@@ -258,25 +258,6 @@ def stable_softmax(x, dim=0):
     stable_tempered_x = (x - torch.max(x))
     return F.softmax(stable_tempered_x, dim=dim)
 
-'''
-def softmax_with_temperature(x, T):
-    """
-    Compute softmax values for each sets of scores in x
-    using a temperature value to modify its confidence.
-    """
-
-    x_exp = torch.exp(x / T)
-
-    # if there is at least one infinite value means that the T value was 0.
-    # Then return 1.0 for the first value and 0.0 for the others
-    if True in torch.isinf(x_exp):
-        x_exp[0] = 1.0
-        x_exp[1:] = 0.0
-
-    x_softmax = x_exp / x_exp.sum()
-
-    return x_softmax
-'''
 
 # See: https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
@@ -296,9 +277,9 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 
     if top_p > 0.0:
         sorted_logits, sorted_indices = torch.sort(logits, descending=True)
-        cumulative_probs = torch.cumsum(F.softmax(sorted_logits, dim=-1), dim=-1)
+        cumulative_probs = torch.cumsum(stable_softmax(sorted_logits, dim=-1), dim=-1)
         # print("sorted_logits: ", sorted_logits)
-        # print("sorted_logits_softmax: ", F.softmax(sorted_logits, dim=-1))
+        # print("sorted_logits_softmax: ", stable_softmax(sorted_logits, dim=-1))
         # print("CDS: ", cumulative_probs)
 
         # Remove tokens with cumulative probability above the threshold
@@ -409,7 +390,7 @@ def pdiamond_complete_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0
 
             # Save the neighbour in the probable next nodes array and its p-value
             probable_next_nodes.append(node)
-            inverse_p_values.append(1/p[0])
+            inverse_p_values.append(1 - p[0])
 
         # ---------------------------------------------------------------------
         # Convert the p-value list in a probability distribution and
@@ -420,9 +401,11 @@ def pdiamond_complete_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0
         inverse_p_values = torch.tensor(inverse_p_values, dtype=torch.float64)
         # print("inverse_p_values: ", inverse_p_values)
 
-        inverse_p_values = normalize(inverse_p_values, min=0, max=1)   # Normalize
-        # inverse_p_values = F.normalize(inverse_p_values, p=2.0, dim=-1) # Normalize
+        '''
+        # inverse_p_values = normalize(inverse_p_values, min=0, max=1)   # Normalize
+        # # inverse_p_values = F.normalize(inverse_p_values, p=2.0, dim=-1) # Normalize
         # print("normalized_inverse_p_values: ", inverse_p_values)
+        '''
 
         inverse_p_values /= temperature  # Scale by the temperature
         # print("tempered_inverse_p_values: ", inverse_p_values)
@@ -432,8 +415,8 @@ def pdiamond_complete_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0
         # print("filtered_inverse_p_values: ", inverse_p_values)
 
         # Sample from the filtered distribution
-        probabilities = F.softmax(filtered_inverse_p_values, dim=-1)
-        # print("filtered_probabilities: ", probabilities)
+        probabilities = stable_softmax(filtered_inverse_p_values, dim=-1)
+        # print("sum of filtered_probabilities: ", probabilities.sum())
 
         # Check on probabilities
         if True in torch.isnan(probabilities):
@@ -475,7 +458,7 @@ def pdiamond_complete_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0
 #   M A I N    P R O B   D I A M O n D    A L G O R I T H M
 #
 # ===========================================================================
-def pDIAMOnD_complete(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, temperature=0.1, top_k=0, top_p=0.9):
+def pDIAMOnD_complete(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10, temperature=1, top_k=10, top_p=0.9):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())

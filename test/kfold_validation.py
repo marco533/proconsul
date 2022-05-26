@@ -1,4 +1,5 @@
 import sys
+from unittest import result
 
 import networkx as nx
 import numpy as np
@@ -143,3 +144,5 @@ def k_fold_cross_validation(network, seed_genes, algorithm, disease_name, K=5, d
         csv_filename = csv_filename.replace(".csv", f"_-_diffusion_time_{diffusion_time}.csv")
 
     result_df.to_csv(csv_filename)
+
+    return result_df
