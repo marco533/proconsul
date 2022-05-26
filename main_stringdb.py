@@ -172,57 +172,56 @@ if __name__ == "__main__":
     print("After removing self-loops:")
     print(nx.info(hhi), end="\n\n")
 
-#    # isolate the largest connected component
-#    LCC_hhi = isolate_LCC(hhi)
-#
-#    print("Isolating the LCC:")
-#    print(nx.info(LCC_hhi), end="\n\n")
-#
-#    # =================== #
-#    #  K-FOLD VALIDATION  #
-#    # =================== #
-#
-#    gda_filename = "data/curated_gene_disease_associations.tsv"
-#
-#    if 'kfold' in validations:
-#        for alg in algorithms:
-#            for disease in diseases:
-#
-#                # get disease genes from curated GDA
-#                disease_genes = get_disease_genes_from_gda(gda_filename, disease)
-#
-#                # run the k-fold validation on {algorithm}
-#                k_fold_cross_validation(LCC_hhi,
-#                                        disease_genes,
-#                                        alg,
-#                                        disease,
-#                                        K=5,
-#                                        diffusion_time=diffusion_time,
-#                                        num_iters_pdiamond=num_iters_pdiamond)
-#
-#    # ===================== #
-#    #  EXTENDED VALIDATION  #
-#    # ===================== #
-#
-#    all_gda_filename = "data/all_gene_disease_associations.tsv"
-#
-#    if 'extended' in validations:
-#        for alg in algorithms:
-#            for disease in diseases:
-#
-#                # get disease genes from curated and all GDA
-#                curated_disease_genes = get_disease_genes_from_gda(gda_filename, disease)
-#                all_disease_genes = get_disease_genes_from_gda(all_gda_filename, disease)
-#
-#                # remove from all the genes that are already in curated
-#                new_disease_genes = list(set(all_disease_genes) - set(curated_disease_genes))
-#
-#                # run the extended validation on {algorithm}
-#                extended_validation(LCC_hhi,
-#                                    curated_disease_genes,
-#                                    new_disease_genes,
-#                                    alg,
-#                                    disease,
-#                                    diffusion_time=diffusion_time,
-#                                    num_iters_pdiamond=num_iters_pdiamond)
-#
+    # isolate the largest connected component
+    LCC_hhi = isolate_LCC(hhi)
+
+    print("Isolating the LCC:")
+    print(nx.info(LCC_hhi), end="\n\n")
+
+    # =================== #
+    #  K-FOLD VALIDATION  #
+    # =================== #
+
+    gda_filename = "data/curated_gene_disease_associations.tsv"
+
+    if 'kfold' in validations:
+        for alg in algorithms:
+            for disease in diseases:
+
+                # get disease genes from curated GDA
+                disease_genes = get_disease_genes_from_gda(gda_filename, disease)
+
+                # run the k-fold validation on {algorithm}
+                k_fold_cross_validation(LCC_hhi,
+                                        disease_genes,
+                                        alg,
+                                        disease,
+                                        K=5,
+                                        diffusion_time=diffusion_time,
+                                        num_iters_pdiamond=num_iters_pdiamond)
+
+    # ===================== #
+    #  EXTENDED VALIDATION  #
+    # ===================== #
+
+    all_gda_filename = "data/all_gene_disease_associations.tsv"
+
+    if 'extended' in validations:
+        for alg in algorithms:
+            for disease in diseases:
+
+                # get disease genes from curated and all GDA
+                curated_disease_genes = get_disease_genes_from_gda(gda_filename, disease)
+                all_disease_genes = get_disease_genes_from_gda(all_gda_filename, disease)
+
+                # remove from all the genes that are already in curated
+                new_disease_genes = list(set(all_disease_genes) - set(curated_disease_genes))
+
+                # run the extended validation on {algorithm}
+                extended_validation(LCC_hhi,
+                                    curated_disease_genes,
+                                    new_disease_genes,
+                                    alg,
+                                    disease,
+                                    diffusion_time=diffusion_time,
+                                    num_iters_pdiamond=num_iters_pdiamond)
