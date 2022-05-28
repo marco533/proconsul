@@ -435,7 +435,7 @@ def translate_from_stringdb(stringdb_file, stringdb_aliases_file):
 
     j=0
     #TRANSLATION FROM ORIGINAL STRINGDB NAMES TO GENE SYMBOLS
-    for i in range(10):  #len(df.protein1)): #loop of every row in the associations file
+    for i in range(len(df.protein1)): #loop of every row in the associations file
         
         #flags to check if both proteins have an alias
         protein1_exists = False
