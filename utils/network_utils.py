@@ -426,35 +426,68 @@ def translate_from_stringdb(stringdb_file, stringdb_aliases_file):
     df = pd.read_csv(stringdb_file, sep="\s+", header=0)
     df_aliases = pd.read_csv(stringdb_aliases_file, sep="\t", header=0)
 
-    #TRANSLATION FROM ORIGINAL STRINGDB NAMES TO GENE SYMBOLS
-    for i in range(len(df.protein1)): #loop of every row in the associations file
-        
-        #if the selected gene start with '9606.ENSP' it's not translated yet
-        if len(re.findall("9606.ENSP.*", df.protein1[i])) == 1:
+    #create the DataFrame for results
+    d = {'protein1': [], 'protein2': []}
+    df_translated = pd.DataFrame(data=d)
 
+    #create the dictionary with keys = original StringDB names and values = traslated name
+    alias_dict = {}
+
+    j=0
+    #TRANSLATION FROM ORIGINAL STRINGDB NAMES TO GENE SYMBOLS
+    for i in range(10):  #len(df.protein1)): #loop of every row in the associations file
+        
+        #flags to check if both proteins have an alias
+        protein1_exists = False
+        protein2_exists = False
+
+        #if protein not in the dictionary
+        if df.protein1[i] not in alias_dict:
+                
             #find alias in aliases file:
             filter1 = df_aliases['string_protein_id'] == df.protein1[i]  
             filter2 = df_aliases['source'] == 'Ensembl_HGNC'
-            length =len(df_aliases.loc[filter1 & filter2 ]['alias'].values) #df_aliases.loc[filter1 & filter2 ] filters the file, ['alias'] takes the alias column, .values extract the values
+            aliases_list = df_aliases.loc[filter1 & filter2 ]['alias'].values
+            length =len(aliases_list) #df_aliases.loc[filter1 & filter2 ] filters the file, ['alias'] takes the alias column, .values extract the values
             #if you found only one alias
             if length == 1: 
-                alias1 = (df_aliases.loc[filter1 & filter2 ]['alias'].values)[0]   #acces the first and only value
-                #replace each occurrence of the gene in the assosiactions file with the alias 
-                df=df.replace(to_replace=df.protein1[i] ,value=alias1)                
+                protein1_exists = True  #the alias has been found
+                alias1 = aliases_list[0]   #acces the first and only value
+                #set the dictionary
+                alias_dict[df.protein1[i]] = alias1
+
+        #if protein has been never traslated  
+        else: 
+            protein1_exists = True
+            #add to the dictionary
+            alias1 = alias_dict[df.protein1[i]]
+
 
         #let's do again for the second column
 
-        #if the selected gene start with '9606.ENSP' it's not translated yet        
-        if len(re.findall("9606.ENSP.*", df.protein2[i])) == 1:
+        #if protein not in the dictionary
+        if df.protein2[i] not in alias_dict:
 
             #find alias in aliases file:
             filter1 = df_aliases['string_protein_id'] == df.protein2[i]  
             filter2 = df_aliases['source'] == 'Ensembl_HGNC'
-            length = len(df_aliases.loc[filter1 & filter2 ]['alias'].values) #df_aliases.loc[filter1 & filter2 ] filters the file, ['alias'] takes the alias column, .values extract the values
+            aliases_list = df_aliases.loc[filter1 & filter2 ]['alias'].values
+            length = len(aliases_list) #df_aliases.loc[filter1 & filter2 ] filters the file, ['alias'] takes the alias column, .values extract the values
             #if you found only one alias
             if length == 1:
-                alias2 = (df_aliases.loc[filter1 & filter2 ]['alias'].values)[0]   #acces the first and only value
-                #replace each occurrence of the gene in the assosiactions file with the alias 
-                df=df.replace(to_replace=df.protein2[i] ,value=alias2)        
-           
-    return df
+                protein2_exists = True     #the alias has been found         
+                alias2 = aliases_list[0]   #acces the first and only value
+                #set the dictionary
+                alias_dict[df.protein2[i]] = alias2
+        #if protein has been never traslated          
+        else:
+            protein2_exists = True
+            #add to the dictionary
+            alias2 = alias_dict[df.protein2[i]]
+
+        #if both proteins has been traslated we can add a row in the dataframe
+        if protein1_exists and protein2_exists:
+            df_translated.loc[j] = [alias1, alias2]
+            j+=1
+
+    return df_translated
