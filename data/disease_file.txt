@@ -1,21 +1,21 @@
 #
 # Best diseases for pDIAMOnD
 #
-#Colorectal Carcinoma
-#Lymphatic Metastasis
-#Condition, Preneoplastic
-#Alzheimer's Disease
+Colorectal Carcinoma
+Lymphatic Metastasis
+Condition, Preneoplastic
+Alzheimer's Disease
 #
 # Draw diseases
 #
-#Ovarian Mucinous Adenocarcinoma
-#Female infertility
-#Single Seizure
-#Hearing Loss, Extreme
+Ovarian Mucinous Adenocarcinoma
+Female infertility
+Single Seizure
+Hearing Loss, Extreme
 #
 # Best diseases for DIAMONnD
 #
 Stomach Neoplasms
-#Pneumonitis
-#Malignant neoplasm of prostate
-#Neuroblastoma
+Pneumonitis
+Malignant neoplasm of prostate
+Neuroblastoma
