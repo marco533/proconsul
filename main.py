@@ -182,7 +182,7 @@ def read_terminal_input(args):
 
     print('                                                    ')
     print(f"===================================================")
-    print(f"Algorithma: {algs}"                                 )
+    print(f"Algorithms: {algs}"                                 )
     print(f"Validations: {validations}"                         )
     print(f"Diseases: {len(diseases)}"                          )
     print(f"Database: {database}"                               )

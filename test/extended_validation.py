@@ -36,8 +36,8 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
     ranking_flag = True
 
     if algorithm == "diamond":
-        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}.{string_to_filename(disease_name)}.extended.txt"
-        csv_outfile = f"results/extended/{algorithm}/{algorithm}.{string_to_filename(disease_name)}.extended.csv"
+        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_extended.txt"
+        csv_outfile = f"results/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_extended.csv"
 
         added_nodes = DIAMOnD(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile)
         predicted_genes = [item[0] for item in added_nodes]
@@ -45,8 +45,8 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
     elif algorithm == "pdiamond":
         n_iters = hyperparams["pdiamond_n_iters"]
 
-        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{string_to_filename(disease_name)}.{n_iters}_iters.extended.txt"
-        csv_outfile = f"results/extended/{algorithm}/{algorithm}.{string_to_filename(disease_name)}.{n_iters}_iters.extended.csv"
+        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_extended.txt"
+        csv_outfile = f"results/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_extended.csv"
 
         added_nodes = pDIAMOnD(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters)
         predicted_genes = [item[0] for item in added_nodes]
@@ -57,8 +57,8 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
         top_p = hyperparams["pdiamond_top_p"]
         top_k = hyperparams["pdiamond_top_k"]
 
-        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}.{string_to_filename(disease_name)}.{n_iters}_iters.temp_{temp}.top_p_{top_p}.top_k{top_k}.extended.txt"
-        csv_outfile = f"results/extended/{algorithm}/{algorithm}.{string_to_filename(disease_name)}.{n_iters}_iters.temp_{temp}.top_p_{top_p}.top_k_{top_k}.extended.csv"
+        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_temp_{temp}_-_top_p_{top_p}_-_top_k{top_k}_-_extended.txt"
+        csv_outfile = f"results/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_temp_{temp}_-_top_p_{top_p}_-_top_k_{top_k}_-_extended.csv"
 
         added_nodes = pDIAMOnD2(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters, temperature=temp, top_p=top_p, top_k=top_k)
         predicted_genes = [item[0] for item in added_nodes]
@@ -66,8 +66,8 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
     elif algorithm == "heat_diffusion":
         diffusion_time = hyperparams["heat_diffusion_time"]
 
-        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}.{string_to_filename(disease_name)}.diff_time_{diffusion_time}.extended.txt"
-        csv_outfile = f"results/extended/{algorithm}/{algorithm}.{string_to_filename(disease_name)}.diff_time_{diffusion_time}.extended.csv"
+        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_diff_time_{diffusion_time}_-_extended.txt"
+        csv_outfile = f"results/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_diff_time_{diffusion_time}_-_extended.csv"
 
         predicted_genes = run_heat_diffusion(network, seed_genes, n_positions=num_genes_to_predict, diffusion_time=diffusion_time)
 
