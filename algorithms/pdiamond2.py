@@ -259,9 +259,6 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
     if top_p > 0.0:
         sorted_logits, sorted_indices = torch.sort(logits, descending=True)
         cumulative_probs = torch.cumsum(F.softmax(sorted_logits, dim=-1), dim=-1)
-        print("sorted_logits: ", sorted_logits)
-        print("sorted_logits_softmax: ", F.softmax(sorted_logits, dim=-1))
-        print("CDS: ", cumulative_probs)
 
         # Remove tokens with cumulative probability above the threshold
         sorted_indices_to_remove = cumulative_probs > top_p
