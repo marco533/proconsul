@@ -1,10 +1,10 @@
 #
 # Best diseases for pDIAMOnD
 #
-#Colorectal Carcinoma
-#Lymphatic Metastasis
-#Condition, Preneoplastic
-#Alzheimer's Disease
+Colorectal Carcinoma
+Lymphatic Metastasis
+Condition, Preneoplastic
+Alzheimer's Disease
 #
 # Draw diseases
 #
@@ -15,7 +15,7 @@ Hearing Loss, Extreme
 #
 # Best diseases for DIAMONnD
 #
-#Stomach Neoplasms
-#Pneumonitis
-#Malignant neoplasm of prostate
-#Neuroblastoma
+Stomach Neoplasms
+Pneumonitis
+Malignant neoplasm of prostate
+Neuroblastoma

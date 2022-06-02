@@ -4,6 +4,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from algorithms.diamond import DIAMOnD
+from algorithms.diamond2 import DIAMOnD2
 from algorithms.pdiamond import pDIAMOnD
 from algorithms.pdiamond2 import pDIAMOnD2
 from algorithms.heat_diffusion import run_heat_diffusion
@@ -42,6 +43,13 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
         added_nodes = DIAMOnD(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile)
         predicted_genes = [item[0] for item in added_nodes]
 
+    elif algorithm == "diamond2":
+        predicted_genes_outfile = f"predicted_genes/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_extended.txt"
+        csv_outfile = f"results/extended/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_extended.csv"
+
+        added_nodes = DIAMOnD2(network, seed_genes, 25, 1, outfile=predicted_genes_outfile)
+        predicted_genes = [item[0] for item in added_nodes]
+
     elif algorithm == "pdiamond":
         n_iters = hyperparams["pdiamond_n_iters"]
 
@@ -75,6 +83,7 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
         print("  ERROR: No valid algorithm.    ")
         print("  Choose one of the following:  ")
         print("    - diamond                   ")
+        print("    - diamond2                  ")
         print("    - pdiamond                  ")
         print("    - pdiamond2                 ")
         print("    - heat_diffusion            ")
