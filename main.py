@@ -145,9 +145,7 @@ def read_terminal_input(args):
         database_path = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
 
     if database == "stringdb":
-        print("StringDB not implemented yet")
-        sys.exit(0)
-        database_path = ""
+        database_path = "data/9606.protein.links.full.v11.5.txt"
 
 
     # 5. Check diffusion time
@@ -236,14 +234,27 @@ def build_network_from_biogrid(biogrid_database, hhi_only=False, physical_only=F
     return G
 
 
-def build_network_from_stringdb(stringdb_database, hhi_only=False, physical_only=False, remove_self_loops=True):
+def build_network_from_stringdb(stringdb_database, remove_self_loops=True):
     """
     Given the path for a StringDB protein-protein interaction database,
     build the graph.
     """
 
-    print("build_network_from_stringdb() not implemented yet!")
-    return
+    # Read the database and build the currespondent DataFrame
+    df = pd.read_csv(stringdb_database, sep="\s+", header=0)
+
+    # Build the graph
+    G = nx.from_pandas_edgelist(df,
+                                source = "protein1",
+                                target = "protein2",
+                                create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+
+    # Remove self loops
+    if remove_self_loops == True:
+        self_loop_edges = list(nx.selfloop_edges(G))
+        G.remove_edges_from(self_loop_edges)
+
+    return G
 
 
 def LCC(G):
@@ -291,9 +302,7 @@ if __name__ == "__main__":
                                         remove_self_loops=True)
     if database_name == "stringdb":
         hhi = build_network_from_stringdb(database_path,
-                                        hhi_only=True,
-                                        physical_only=True,
-                                        remove_self_loops=True)
+                                          remove_self_loops=True)
 
     # Isolate the Largest Connected Component
     hhi_lcc = LCC(hhi)
