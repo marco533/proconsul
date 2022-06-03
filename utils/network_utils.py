@@ -418,6 +418,8 @@ def get_longest_path_for_a_disease_LCC(disease, predicted_genes = []):
 
 def translate_from_stringdb(stringdb_file, stringdb_aliases_file):
     '''
+    --> IT WORKS ONLY WITH THESE TWO STRINGDB TXT FILES AS INPUT- MODIFY THE FUNCTION TO USE FOR OTHER PURPOSES.
+    
     Given stringdb associations file and aliases file, it translates each gene in the original
     file to the gene symbol and return the dataframe with the associations among genes expressed
     as gene symbols
