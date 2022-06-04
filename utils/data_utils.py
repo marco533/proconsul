@@ -1,4 +1,7 @@
+
 import enum
+from fnmatch import translate
+from ossaudiodev import control_names
 import sys
 import csv
 import random
@@ -9,11 +12,32 @@ import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
 from matplotlib.colors import BoundaryNorm, LogNorm, Normalize
+from pytest import skip
 from sklearn.utils import shuffle
 
 #################
 #   UTILITIES   #
 #################
+
+def translate_gene_names(genes=None, database=None):
+    if database == "biogrid":
+        return genes
+
+    if database == "stringdb":
+        # Read the alisases from StringDB
+        stringdb_aliases = pd.read_csv("data/9606.protein.aliases.v11.5.txt", sep="\t", header=0)
+
+        # Select only the rows that have
+        # 1. the alias name in our genes list
+        # 2. the source equals to Ensembl_HGNC
+        stringdb_aliases = stringdb_aliases.loc[(stringdb_aliases["alias"].isin(genes)) &
+                                                (stringdb_aliases["source"] == "Ensembl_HGNC")]
+        translated_genes = stringdb_aliases["string_protein_id"].to_list()
+
+        # Remove duplicates
+        translated_genes = list(set(translated_genes))
+
+        return translated_genes
 
 def get_num_genes_per_disease(disease_list):
     '''
@@ -28,7 +52,7 @@ def get_num_genes_per_disease(disease_list):
 
     return num_genes_per_disaese
 
-def get_disease_genes_from_gda(filename, disease, training_mode=True):
+def get_disease_genes_from_gda(filename, disease, training_mode=True, translate_in="biogrid"):
     '''
     Find all genes associated to a given disease in the GDA
     and return them as a list.
@@ -41,6 +65,9 @@ def get_disease_genes_from_gda(filename, disease, training_mode=True):
 
     # get all the genes associated to the disease
     disease_genes = disease_df['geneSymbol'].to_list()
+
+    # translate disease gene names wrt the database we are using
+    disease_genes = translate_gene_names(genes=disease_genes, database=translate_in)
 
     # shuffling
     if training_mode == True:   # fixed seed for results reliability

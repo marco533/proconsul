@@ -52,7 +52,7 @@ def parse_args():
     Parse the terminal arguments.
     '''
     parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
-    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "diamond2", "pdiamond", "pdiamond_log", "pdiamond3", "heat_diffusion"],
+    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "pdiamond_log", "heat_diffusion"],
                     help='List of algorithms to run (default: all)')
     parser.add_argument('--validation', type=str, default='all',
                     help='Type of validation. (default: all')
@@ -145,10 +145,7 @@ def read_terminal_input(args):
         database_path = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
 
     if database == "stringdb":
-        print("StringDB not implemented yet")
-        sys.exit(0)
-        database_path = ""
-
+        database_path = "data/9606.protein.links.full.v11.5.txt"
 
     # 5. Check diffusion time
     if heat_diffusion_time < 0:
@@ -308,8 +305,6 @@ if __name__ == "__main__":
     # Isolate the Largest Connected Component
     hhi_lcc = LCC(hhi)
 
-
-
     # -------------------------------
     #     K-FOLD CROSS VALIDATION
     # -------------------------------
@@ -320,7 +315,12 @@ if __name__ == "__main__":
         for alg in algs:
             for disease in diseases:
 
-                disease_genes = get_disease_genes_from_gda(gda_curated, disease)
+                disease_genes = get_disease_genes_from_gda(gda_curated, disease, translate_in=database_name)
+
+                # check that the list of disease genes is not empty
+                if len(disease_genes) == 0:
+                    print(f"WARNING: {disease} has no disease genes. Skip this disease")
+                    continue
 
                 k_fold_cross_validation(hhi_lcc,
                                         alg,
@@ -342,11 +342,24 @@ if __name__ == "__main__":
             for disease in diseases:
 
                 # get disease genes from curated and all GDA
-                curated_disease_genes = get_disease_genes_from_gda(gda_curated, disease)
-                all_disease_genes = get_disease_genes_from_gda(gda_all, disease)
+                curated_disease_genes = get_disease_genes_from_gda(gda_curated, disease, translate_in=database_name)
+                all_disease_genes = get_disease_genes_from_gda(gda_all, disease, translate_in=database_name)
 
                 # remove from all the genes that are already in curated
                 extended_genes = list(set(all_disease_genes) - set(curated_disease_genes))
+
+                # check if the disease genes lists are not empty
+                if len(curated_disease_genes) == 0:
+                    print(f"WARNING: {disease} has no curated disease genes. Skip this disease")
+                    continue
+
+                if len(all_disease_genes) == 0:
+                    print(f"WARNING: {disease} has no all disease genes. Skip this disease")
+                    continue
+
+                if len(extended_genes) == 0:
+                    print(f"WARNING: {disease} has no extended disease genes. Skip this disease")
+                    continue
 
                 # run the extended validation on {algorithm}
                 extended_validation(hhi_lcc,

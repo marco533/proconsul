@@ -63,7 +63,7 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
         top_p = hyperparams["pdiamond_top_p"]
         top_k = hyperparams["pdiamond_top_k"]
 
-        predicted_genes_outfile = f"predicted_genes/{database_name}/extended/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-temp_{temp}-top_p_{top_p}-top_k{top_k}-extended.txt"
+        predicted_genes_outfile = f"predicted_genes/{database_name}/extended/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-temp_{temp}-top_p_{top_p}-top_k_{top_k}-extended.txt"
         csv_outfile = f"results/{database_name}/extended/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-temp_{temp}-top_p_{top_p}-top_k_{top_k}-extended.csv"
 
         added_nodes = pDIAMOnD_log(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters, temperature=temp, top_p=top_p, top_k=top_k)
