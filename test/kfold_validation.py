@@ -5,9 +5,10 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from algorithms.diamond import DIAMOnD
-from algorithms.diamond2 import DIAMOnD2
+# from algorithms.diamond2 import DIAMOnD2
 from algorithms.pdiamond import pDIAMOnD
-from algorithms.pdiamond2 import pDIAMOnD2
+from algorithms.pdiamond_log import pDIAMOnD_log
+# from algorithms.pdiamond3 import pDIAMOnD3
 from algorithms.heat_diffusion import run_heat_diffusion
 from utils.network_utils import *
 from utils.metrics_utils import *
@@ -15,7 +16,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, hyperparams=None):
+def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, database_name=None, hyperparams=None):
     '''
     K-Fold Cross Validation.
 
@@ -26,6 +27,7 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, h
         - disease_name
         - seed_genes
         - K
+        - database_name
         - hyperparams
 
     Return
@@ -67,46 +69,58 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, h
 
         # Run algorithm
         if algorithm == "diamond":
-            predicted_genes_outfile = f"predicted_genes/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{K}-fold.csv"
+            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-kfold_{k+1}_{K}.txt"
+            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{K}_fold.csv"
 
             added_nodes = DIAMOnD(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile)
             predicted_genes = [item[0] for item in added_nodes]
 
-        elif algorithm == "diamond2":
-            predicted_genes_outfile = f"predicted_genes/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{K}-fold.csv"
+        # elif algorithm == "diamond2":
+        #     predicted_genes_outfile = f"predicted_genes/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-kfold_{k+1}_{K}.txt"
+        #     csv_outfile = f"results/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{K}_fold.csv"
 
-            added_nodes = DIAMOnD2(network, training_genes, 25, 1, outfile=predicted_genes_outfile)
-            predicted_genes = [item[0] for item in added_nodes]
+        #     added_nodes = DIAMOnD2(network, training_genes, 25, 1, outfile=predicted_genes_outfile)
+        #     predicted_genes = [item[0] for item in added_nodes]
 
         elif algorithm == "pdiamond":
             n_iters = hyperparams["pdiamond_n_iters"]
 
-            predicted_genes_outfile = f"predicted_genes/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_{K}-fold.csv"
+            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-kfold_{k+1}_{K}.txt"
+            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-{K}_fold.csv"
 
             added_nodes = pDIAMOnD(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters)
             predicted_genes = [item[0] for item in added_nodes]
 
-        elif algorithm == "pdiamond2":
+        elif algorithm == "pdiamond_log":
             n_iters = hyperparams["pdiamond_n_iters"]
             temp = hyperparams["pdiamond_temp"]
             top_p = hyperparams["pdiamond_top_p"]
             top_k = hyperparams["pdiamond_top_k"]
 
-            predicted_genes_outfile = f"predicted_genes/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_temp_{temp}_-_top_p_{top_p}_-_top_k_{top_k}_-_kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_{n_iters}_iters_-_temp_{temp}_-_top_p_{top_p}_-_top_k_{top_k}_-_{K}-fold.csv"
+            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-temp_{temp}-top_p_{top_p}-top_k_{top_k}-kfold_{k+1}_{K}.txt"
+            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-temp_{temp}-top_p_{top_p}-top_k_{top_k}-{K}_fold.csv"
 
-            added_nodes = pDIAMOnD2(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters, temperature=temp, top_p=top_p, top_k=top_k)
+            added_nodes = pDIAMOnD_log(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters, temperature=temp, top_p=top_p, top_k=top_k)
             predicted_genes = [item[0] for item in added_nodes]
+
+        # elif algorithm == "pdiamond3":
+        #     n_iters = hyperparams["pdiamond_n_iters"]
+        #     temp = hyperparams["pdiamond_temp"]
+        #     top_p = hyperparams["pdiamond_top_p"]
+        #     top_k = hyperparams["pdiamond_top_k"]
+
+        #     predicted_genes_outfile = f"predicted_genes/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-temp_{temp}-top_p_{top_p}-top_k_{top_k}-kfold_{k+1}_{K}.txt"
+        #     csv_outfile = f"results/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-{n_iters}_iters-temp_{temp}-top_p_{top_p}-top_k_{top_k}-{K}_fold.csv"
+
+        #     added_nodes = pDIAMOnD3(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters, temperature=temp, top_p=top_p, top_k=top_k)
+        #     predicted_genes = [item[0] for item in added_nodes]
 
 
         elif algorithm == "heat_diffusion":
             diffusion_time = hyperparams["heat_diffusion_time"]
 
-            predicted_genes_outfile = f"predicted_genes/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_diff_time_{diffusion_time}_-_kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/kfold/{algorithm}/{algorithm}_-_{string_to_filename(disease_name)}_-_diff_time_{diffusion_time}_-_{K}-fold.csv"
+            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-diff_time_{diffusion_time}-kfold_{k+1}_{K}.txt"
+            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-diff_time_{diffusion_time}-{K}_fold.csv"
 
             predicted_genes = run_heat_diffusion(network, training_genes, n_positions=num_genes_to_predict, diffusion_time=diffusion_time)
 
@@ -114,9 +128,10 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, h
             print("  ERROR: No valid algorithm.     ")
             print("  Choose one of the following:   ")
             print("    - diamond                    ")
-            print("    - diamond2                   ")
+            # print("    - diamond2                   ")
             print("    - pdiamond                   ")
-            print("    - pdiamond2                  ")
+            print("    - pdiamond_log               ")
+            # print("    - pdiamond3                  ")
             print("    - heat_diffusion             ")
             sys.exit(1)
 

@@ -24,22 +24,22 @@ def read_disease_file(disease_file):
 def get_score(algorithm=None, disease=None, validation=None, K=None, diffusion_time=None, n_iters=None, temp=None, top_p=None, top_k=None):
 
     # Get the relative path to the algorithm score
-    score_path = f"results/{validation}/{algorithm}/{algorithm}_-_{string_to_filename(disease)}"
+    score_path = f"results/{validation}/{algorithm}/{algorithm}-{string_to_filename(disease)}"
 
     if diffusion_time is not None:
         return
     if n_iters is not None:
-        score_path += f"_-_{n_iters}_iters"
+        score_path += f"-{n_iters}_iters"
     if temp is not None:
-        score_path += f"_-_temp_{temp}"
+        score_path += f"-temp_{temp}"
     if top_p is not None:
-        score_path += f"_-_top_p_{top_p}"
+        score_path += f"-top_p_{top_p}"
     if top_k is not None:
-        score_path += f"_-_top_k_{top_k}"
+        score_path += f"-top_k_{top_k}"
     if validation == "extended":
-        score_path += f"_-_{validation}.csv"
+        score_path += f"-{validation}.csv"
     if validation == "kfold":
-        score_path += f"_-_{K}-fold.csv"
+        score_path += f"-{K}_fold.csv"
 
     # Read the CSV score file as a DataFrame
     scores_df = pd.read_csv(score_path, index_col=0)
@@ -111,7 +111,7 @@ if __name__ == '__main__':
 
                 for disease in diseases:
                     try:
-                        scores, scores_std = get_score( algorithm="pdiamond2",
+                        scores, scores_std = get_score( algorithm="pdiamond_log",
                                                         disease=disease,
                                                         validation="kfold",
                                                         K=5,
@@ -168,7 +168,7 @@ if __name__ == '__main__':
 
                 for disease in diseases:
                     try:
-                        scores = get_score( algorithm="pdiamond2",
+                        scores = get_score( algorithm="pdiamond_log",
                                             disease=disease,
                                             validation="extended",
                                             n_iters=10,
