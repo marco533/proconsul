@@ -3,15 +3,15 @@
 #
 #Colorectal Carcinoma
 #Lymphatic Metastasis
-Condition, Preneoplastic
+#Condition, Preneoplastic
 #Alzheimer's Disease
 #
 # Draw diseases
 #
-#Ovarian Mucinous Adenocarcinoma
-#Female infertility
-#Single Seizure
-#Hearing Loss, Extreme
+Ovarian Mucinous Adenocarcinoma
+Female infertility
+Single Seizure
+Hearing Loss, Extreme
 #
 # Best diseases for DIAMONnD
 #
