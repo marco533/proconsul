@@ -1,10 +1,11 @@
+
 import sys
 
 import numpy as np
 import pandas as pd
-import networkx as nx
 
 from utils.data_utils import string_to_filename
+
 
 def read_disease_file(disease_file):
     '''
@@ -21,10 +22,10 @@ def read_disease_file(disease_file):
 
     return disease_list
 
-def get_score(algorithm=None, disease=None, validation=None, K=None, diffusion_time=None, n_iters=None, temp=None, top_p=None, top_k=None):
+def get_score(algorithm=None, disease=None, database=None, validation=None, K=None, diffusion_time=None, n_iters=None, temp=None, top_p=None, top_k=None):
 
     # Get the relative path to the algorithm score
-    score_path = f"results/{validation}/{algorithm}/{algorithm}-{string_to_filename(disease)}"
+    score_path = f"results/{database}/{validation}/{algorithm}/{algorithm}-{string_to_filename(disease)}"
 
     if diffusion_time is not None:
         return
@@ -67,120 +68,114 @@ def get_score(algorithm=None, disease=None, validation=None, K=None, diffusion_t
 
         return scores, scores_std
 
+
+def average_score(algorithm=None, database=None, disease_list=None, validation=None, K=5, heat_diffusion_time=None, pdiamond_n_iters=None, pdiamond_temp=None, pdiamond_top_p=None, pdiamond_top_k=None):
+
+    # K-Fold Validation
+    if validation == "kfold":
+        avg_scores = np.zeros((4,4), dtype=np.float)
+        avg_scores_std = np.zeros((4,4), dtype=np.float)
+
+        for disease in disease_list:
+            try:
+                scores, scores_std = get_score( algorithm=algorithm,
+                                                disease=disease,
+                                                database=database,
+                                                validation="kfold",
+                                                K=K,
+                                                diffusion_time=heat_diffusion_time,
+                                                n_iters=pdiamond_n_iters,
+                                                temp=pdiamond_temp,
+                                                top_p=pdiamond_top_p,
+                                                top_k=pdiamond_top_k)
+
+                avg_scores += (scores / len(disease_list))
+                avg_scores_std += (scores_std / len(disease_list))
+            except:
+                continue
+
+        # Round array values at the third decimal
+        avg_scores = np.around(avg_scores, decimals=3)
+        avg_scores_std = np.around(avg_scores_std, decimals=3)
+
+        # Combine score and std
+        global_scores = np.zeros((4,4), dtype=object)
+        for i in range(4):
+            for j in range(4):
+                global_scores[i][j] = f"{avg_scores[i][j]} +/- {avg_scores_std[i][j]}"
+
+
+        # Save global scores in a CSV file
+        metrics = ["precision", "recall", "f1", "ndcg"]
+        predicted_sizes = ["Top 25", "Top 50", "Top 100", "Top 200"]
+        df = pd.DataFrame(data=global_scores, index=metrics, columns=predicted_sizes)
+
+    # Extended Validation
+    if validation == "extended":
+        avg_scores = np.zeros((4,4), dtype=np.float)
+
+        for disease in disease_list:
+            try:
+                scores = get_score( algorithm=algorithm,
+                                    disease=disease,
+                                    database=database,
+                                    validation="extended",
+                                    diffusion_time=heat_diffusion_time,
+                                    n_iters=pdiamond_n_iters,
+                                    temp=pdiamond_temp,
+                                    top_p=pdiamond_top_p,
+                                    top_k=pdiamond_top_k)
+
+                avg_scores += (scores / len(disease_list))
+            except:
+                continue
+
+        # Round array values at the third decimal
+        avg_scores = np.around(avg_scores, decimals=3)
+
+        # Save global scores in a CSV file
+        metrics = ["precision", "recall", "f1", "ndcg"]
+        predicted_sizes = ["Top 25", "Top 50", "Top 100", "Top 200"]
+        df = pd.DataFrame(data=avg_scores, index=metrics, columns=predicted_sizes)
+
+    return df
+
 if __name__ == '__main__':
 
+    databases = ["biogrid", "stringdb"]
+    validations = ["kfold", "extended"]
+    algorithms = ["diamond", "pdiamond_log"]
     diseases = read_disease_file("data/disease_file.txt")
-    temp_values = [1.0, 10.0, 100.0]
+    hyperparams = {}
+    temp_values = [1.0]
     top_p_values = [0.0]
     top_k_values = [0]
 
-    # 5-Fold Cross Validation
-    print("5-Fold\n")
+    for database in databases:
+        for validation in validations:
+            for alg in algorithms:
+                if alg == "diamond":
+                    avg_df = average_score(algorithm=alg, database=database, disease_list=diseases, validation=validation, K=5)
 
-    # DIAMOnD
-    print("DIAMOnD\n")
+                    outfile = f"average_results/{database}/{validation}/{alg}.csv"
+                    avg_df.to_csv(outfile)
 
-    avg_scores = np.zeros((4,4), dtype=np.float)
-    avg_scores_std = np.zeros((4,4), dtype=np.float)
 
-    for disease in diseases:
-        try:
-            scores, scores_std = get_score( algorithm="diamond",
-                                            disease=disease,
-                                            validation="kfold",
-                                            K=5)
-
-            avg_scores += (scores / len(diseases))
-            avg_scores_std += (scores_std / len(diseases))
-        except:
-            continue
-
-    print(avg_scores)
-    print(avg_scores_std)
-    print("")
-
-    # pDIAMOnD 2
-    print("pDIAMOnD 2\n")
-
-    for T in temp_values:
-        for p in top_p_values:
-            for k in top_k_values:
-
-                avg_scores = np.zeros((4,4), dtype=np.float)
-                avg_scores_std = np.zeros((4,4), dtype=np.float)
-
-                for disease in diseases:
-                    try:
-                        scores, scores_std = get_score( algorithm="pdiamond_log",
-                                                        disease=disease,
-                                                        validation="kfold",
+                if alg == "pdiamond_log":
+                    for t in temp_values:
+                        for p in top_p_values:
+                            for k in top_k_values:
+                                avg_df = average_score( algorithm=alg,
+                                                        database=database,
+                                                        disease_list=diseases,
+                                                        validation=validation,
                                                         K=5,
-                                                        n_iters=10,
-                                                        temp=T,
-                                                        top_p=p,
-                                                        top_k=k)
+                                                        pdiamond_n_iters=10,
+                                                        pdiamond_temp=t,
+                                                        pdiamond_top_p=p,
+                                                        pdiamond_top_k=k)
 
-                        avg_scores += (scores / len(diseases))
-                        avg_scores_std += (scores_std / len(diseases))
-                    except:
-                        continue
-
-                print("Temp: ", T)
-                print(avg_scores)
-                print(avg_scores_std)
-                print("")
+                                outfile = f"average_results/{database}/{validation}/{alg}-{10}_iters-temp_{t}-top_p_{p}-top_k_{k}.csv"
+                                avg_df.to_csv(outfile)
 
 
-
-
-
-
-    # Extended
-    print("Extended\n")
-
-    # DIAMOnD
-    print("DIAMOnD\n")
-
-    avg_scores = np.zeros((4,4), dtype=np.float)
-
-    for disease in diseases:
-        try:
-            scores = get_score( algorithm="diamond",
-                                disease=disease,
-                                validation="extended")
-
-            avg_scores += (scores / len(diseases))
-
-        except:
-            continue
-
-    print(avg_scores)
-    print("")
-
-    # pDIAMOnD 2
-    print("pDIAMOnD 2\n")
-
-    for T in temp_values:
-        for p in top_p_values:
-            for k in top_k_values:
-
-                avg_scores = np.zeros((4,4), dtype=np.float)
-
-                for disease in diseases:
-                    try:
-                        scores = get_score( algorithm="pdiamond_log",
-                                            disease=disease,
-                                            validation="extended",
-                                            n_iters=10,
-                                            temp=T,
-                                            top_p=p,
-                                            top_k=k)
-
-                        avg_scores += (scores / len(diseases))
-
-                    except:
-                        continue
-
-                print("Temp: ", T)
-                print(avg_scores)
-                print("")
