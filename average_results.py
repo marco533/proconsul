@@ -144,10 +144,10 @@ if __name__ == '__main__':
 
     databases = ["biogrid", "stringdb"]
     validations = ["kfold", "extended"]
-    algorithms = ["diamond", "pdiamond_log"]
+    algorithms = ["diamond", "pdiamond_log", "pdiamond_entropy"]
     diseases = read_disease_file("data/disease_file.txt")
     hyperparams = {}
-    temp_values = [1.0]
+    temp_values = [1.0, 10.0]
     top_p_values = [0.0]
     top_k_values = [0]
 
@@ -161,7 +161,7 @@ if __name__ == '__main__':
                     avg_df.to_csv(outfile)
 
 
-                if alg == "pdiamond_log":
+                if alg == "pdiamond_log" or alg == "pdiamond_entropy":
                     for t in temp_values:
                         for p in top_p_values:
                             for k in top_k_values:
