@@ -1,0 +1,13 @@
+,Top 25,Top 50,Top 100,Top 200
+Colorectal Carcinoma,0.56,0.74,0.8,0.75
+Lymphatic Metastasis,0.12,0.18,0.17,0.12
+"Condition, Preneoplastic",0.0,0.0,0.01,0.005
+Alzheimer's Disease,0.48,0.6,0.59,0.545
+Ovarian Mucinous Adenocarcinoma,0.0,0.0,0.0,0.005
+Female infertility,0.0,0.0,0.01,0.005
+Single Seizure,0.0,0.0,0.0,0.0
+"Hearing Loss, Extreme",0.0,0.0,0.0,0.0
+Stomach Neoplasms,0.4,0.24,0.16,0.095
+Pneumonitis,0.44,0.42,0.27,0.155
+Malignant neoplasm of prostate,0.96,0.88,0.8,0.625
+Neuroblastoma,0.72,0.68,0.64,0.495
