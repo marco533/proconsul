@@ -33,7 +33,7 @@ def print_usage():
     print('                                    If all, perform both the validations. (default: all')
     print('        disease_file             : Relative path to the file containing the disease names to use for the comparison')
     print('                                   (default: "data/disease_file.txt).')
-    print('        database                 : Database name from which take the PPIs. Choose from "biogrid" or "stringdb".')
+    print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb" or "diamond_dataset".')
     print('                                   (default: "biogrid)')
     print('        heat_diffusion_time      : Diffusion time for Heat Diffusion algorithm.')
     print('                                   (default: 0.005)')
@@ -52,7 +52,7 @@ def parse_args():
     Parse the terminal arguments.
     '''
     parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
-    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "pdiamond_log", "pdiamond_entropy" "heat_diffusion"],
+    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "pdiamond_log", "heat_diffusion"],
                     help='List of algorithms to run (default: all)')
     parser.add_argument('--validation', type=str, default='all',
                     help='Type of validation. (default: all')
@@ -136,16 +136,19 @@ def read_terminal_input(args):
         sys.exit(1)
 
     # 4. Check database
-    if database not in ["biogrid", "stringdb"]:
+    if database not in ["biogrid", "stringdb", "diamond_dataset"]:
         print("ERROR: no valid database name")
         print_usage()
-        sys.exit(0)
+        sys.exit(1)
 
     if database == "biogrid":
         database_path = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
 
     if database == "stringdb":
         database_path = "data/9606.protein.links.full.v11.5.txt"
+    
+    if database == "diamond_dataset":
+        database_path = "data/diamond_dataset/Interactome.tsv"
 
     # 5. Check diffusion time
     if heat_diffusion_time < 0:
@@ -254,6 +257,28 @@ def build_network_from_stringdb(stringdb_database, remove_self_loops=True):
 
     return G
 
+def build_network_from_diamond_dataset(diamond_interactome, remove_self_loops=True):
+    """
+    Given the path for the interactome used by DIAMOnD authors,
+    build the graph.
+    """
+
+    # Read the tsv file
+    df = pd.read_csv(diamond_interactome, delimiter="\t", header=0)
+
+    # Build the graph
+    G = nx.from_pandas_edgelist(df,
+                                source = "gene_ID_1",
+                                target = "gene_ID_2",
+                                create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+
+    # Remove self loops
+    if remove_self_loops == True:
+        self_loop_edges = list(nx.selfloop_edges(G))
+        G.remove_edges_from(self_loop_edges)
+
+    return G
+
 
 def LCC(G):
     '''
@@ -302,21 +327,35 @@ if __name__ == "__main__":
         hhi = build_network_from_stringdb(database_path,
                                           remove_self_loops=True)
 
+    if database_name == "diamond_dataset":
+        hhi = build_network_from_diamond_dataset(database_path,
+                                                remove_self_loops=True)
+
     # Isolate the Largest Connected Component
     hhi_lcc = LCC(hhi)
+
+    # Print information
+    # print(f"{database_name.upper()} HHI:")
+    # print(nx.info(hhi))
+    # print(f"{database_name.upper()} HHI LLC:")
+    # print(nx.info(hhi_lcc))
 
     # -------------------------------
     #     K-FOLD CROSS VALIDATION
     # -------------------------------
 
     gda_curated = "data/curated_gene_disease_associations.tsv"
+    seeds_file = "data/diamond_dataset/seeds.tsv"
 
     if 'kfold' in validations:
         for alg in algs:
             for disease in diseases:
 
-                disease_genes = get_disease_genes_from_gda(gda_curated, disease, translate_in=database_name)
-
+                if database_name in ["biogrid", "stringdb"]:
+                    disease_genes = get_disease_genes_from_gda(gda_curated, disease, translate_in=database_name)
+                if database_name in ["diamond_dataset"]:
+                    disease_genes = get_disease_genes_from_seeds_file(seeds_file, disease, fix_random=True)
+                    
                 # check that the list of disease genes is not empty
                 if len(disease_genes) == 0:
                     print(f"WARNING: {disease} has no disease genes. Skip this disease")

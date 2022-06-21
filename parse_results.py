@@ -298,20 +298,24 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
 
 if __name__ == '__main__':
 
-    databases = ["biogrid", "stringdb"]
-    validations = ["kfold", "extended"]
-    algorithms = ["diamond", "pdiamond_log"]
+    # databases = ["biogrid", "stringdb", "diamond_dataset"]
+    databases = ["diamond_dataset"]
+    # validations = ["kfold", "extended"]
+    validations = ["kfold"]
+    # algorithms = ["diamond", "pdiamond_log"]
+    algorithms = ["pdiamond_log"]
     metrics = ["precision", "recall", "f1", "ndcg"]
-    diseases = read_disease_file("data/disease_file.txt")
+    # diseases = read_disease_file("data/disease_file.txt")
+    diseases = read_disease_file("data/diamond_dataset/diseases.txt")
     hyperparams = {}
-    temp_values = [1.0]
+    temp_values = [0.5, 1.0, 10.0]
     top_p_values = [0.0]
     top_k_values = [0]
 
     average_results(databases=databases, validations=validations, algorithms=algorithms, diseases=diseases,
                     temp_values=temp_values, top_p_values=top_p_values, top_k_values=top_k_values)
 
-    # disease_scores_table(databases=databases, validations=validations, algorithms=algorithms, diseases=diseases,
-    #                 temp_values=temp_values, top_p_values=top_p_values, K=5, metrics=metrics, top_k_values=top_k_values)
+    disease_scores_table(databases=databases, validations=validations, algorithms=algorithms, diseases=diseases,
+                    temp_values=temp_values, top_p_values=top_p_values, K=5, metrics=metrics, top_k_values=top_k_values)
 
     print("Done!")

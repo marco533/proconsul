@@ -80,6 +80,30 @@ def get_disease_genes_from_gda(filename, disease, training_mode=True, translate_
 
     return shuffled_genes
 
+def get_disease_genes_from_seeds_file(seeds_file, disease, fix_random=False):
+    """
+    Given a file with the seeds and the name of a disease,
+    return the disease genes associated with that diseses.
+    """
+    # Load the seeds file
+    df = pd.read_csv(seeds_file, sep="\t", header=0)
+    
+    # Get the seed genes for the given disease
+    seeds_string = df.loc[df["Diseases"]==disease]["Genes"].item()
+    seeds = seeds_string.split("/")
+    seeds = [int(seed) for seed in seeds]
+
+    # shuffling
+    if fix_random == True:   # fixed seed for results reliability
+        shuffled_seeds = seeds.copy()
+        random.seed(42)
+        random.shuffle(shuffled_seeds)
+    else:
+        shuffled_seeds = seeds.copy()
+        random.shuffle(shuffled_seeds)   # modify the original list
+
+    return shuffled_seeds
+
 def split_list(list, n):
     ''' Split a list in n equals parts '''
     splitted_list = []
