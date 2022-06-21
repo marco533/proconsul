@@ -20,7 +20,11 @@ from sklearn.utils import shuffle
 #################
 
 def translate_gene_names(genes=None, database=None):
+    
     if database == "biogrid":
+        return genes
+
+    if database == "pnas":
         return genes
 
     if database == "stringdb":
@@ -64,7 +68,10 @@ def get_disease_genes_from_gda(filename, disease, training_mode=True, translate_
     disease_df = df.loc[df['diseaseName'] == disease]
 
     # get all the genes associated to the disease
-    disease_genes = disease_df['geneSymbol'].to_list()
+    if translate_in == "pnas":
+        disease_genes = disease_df['geneId'].to_list()
+    else:
+        disease_genes = disease_df['geneSymbol'].to_list()
 
     # translate disease gene names wrt the database we are using
     disease_genes = translate_gene_names(genes=disease_genes, database=translate_in)

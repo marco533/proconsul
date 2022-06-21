@@ -91,22 +91,20 @@ def average_score(algorithm=None, database=None, disease_list=None, validation=N
         avg_scores_std = np.zeros((4,4), dtype=np.float)
 
         for disease in disease_list:
-            try:
-                scores, scores_std = get_score( algorithm=algorithm,
-                                                disease=disease,
-                                                database=database,
-                                                validation="kfold",
-                                                K=K,
-                                                diffusion_time=heat_diffusion_time,
-                                                n_iters=pdiamond_n_iters,
-                                                temp=pdiamond_temp,
-                                                top_p=pdiamond_top_p,
-                                                top_k=pdiamond_top_k)
+            
+            scores, scores_std = get_score( algorithm=algorithm,
+                                            disease=disease,
+                                            database=database,
+                                            validation="kfold",
+                                            K=K,
+                                            diffusion_time=heat_diffusion_time,
+                                            n_iters=pdiamond_n_iters,
+                                            temp=pdiamond_temp,
+                                            top_p=pdiamond_top_p,
+                                            top_k=pdiamond_top_k)
 
-                avg_scores += (scores / len(disease_list))
-                avg_scores_std += (scores_std / len(disease_list))
-            except:
-                continue
+            avg_scores += (scores / len(disease_list))
+            avg_scores_std += (scores_std / len(disease_list))
 
         # Round array values at the third decimal
         avg_scores = np.around(avg_scores, decimals=3)
@@ -129,20 +127,18 @@ def average_score(algorithm=None, database=None, disease_list=None, validation=N
         avg_scores = np.zeros((4,4), dtype=np.float)
 
         for disease in disease_list:
-            try:
-                scores = get_score( algorithm=algorithm,
-                                    disease=disease,
-                                    database=database,
-                                    validation="extended",
-                                    diffusion_time=heat_diffusion_time,
-                                    n_iters=pdiamond_n_iters,
-                                    temp=pdiamond_temp,
-                                    top_p=pdiamond_top_p,
-                                    top_k=pdiamond_top_k)
+            
+            scores = get_score( algorithm=algorithm,
+                                disease=disease,
+                                database=database,
+                                validation="extended",
+                                diffusion_time=heat_diffusion_time,
+                                n_iters=pdiamond_n_iters,
+                                temp=pdiamond_temp,
+                                top_p=pdiamond_top_p,
+                                top_k=pdiamond_top_k)
 
-                avg_scores += (scores / len(disease_list))
-            except:
-                continue
+            avg_scores += (scores / len(disease_list))
 
         # Round array values at the third decimal
         avg_scores = np.around(avg_scores, decimals=3)
@@ -216,8 +212,8 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                     score, std = get_score(algorithm=alg, disease=disease, database=database,
                                                             validation=validation, K=K, metric=metric)
                                 except:
-                                    score = np.zeros((1,4))
-                                    std = np.zeros((1,4))
+                                    score = np.ones((1,4)) * -1
+                                    std = np.ones((1,4)) * -1
 
                                 # Combine score and std
                                 global_score = np.zeros((1,4), dtype=object)
@@ -232,7 +228,7 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                     score = get_score(algorithm=alg, disease=disease, database=database,
                                                     validation=validation, metric=metric)
                                 except:
-                                    score = np.zeros((1,4))
+                                    score = np.ones((1,4)) * -1
 
                                 # Save into data
                                 data[idx] = score
@@ -303,7 +299,7 @@ if __name__ == '__main__':
     # validations = ["kfold", "extended"]
     validations = ["kfold"]
     # algorithms = ["diamond", "pdiamond_log"]
-    algorithms = ["pdiamond_log"]
+    algorithms = ["pdiamond_log", "diamond"]
     metrics = ["precision", "recall", "f1", "ndcg"]
     # diseases = read_disease_file("data/disease_file.txt")
     diseases = read_disease_file("data/diamond_dataset/diseases.txt")

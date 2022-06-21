@@ -33,7 +33,7 @@ def print_usage():
     print('                                    If all, perform both the validations. (default: all')
     print('        disease_file             : Relative path to the file containing the disease names to use for the comparison')
     print('                                   (default: "data/disease_file.txt).')
-    print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb" or "diamond_dataset".')
+    print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset".')
     print('                                   (default: "biogrid)')
     print('        heat_diffusion_time      : Diffusion time for Heat Diffusion algorithm.')
     print('                                   (default: 0.005)')
@@ -136,7 +136,7 @@ def read_terminal_input(args):
         sys.exit(1)
 
     # 4. Check database
-    if database not in ["biogrid", "stringdb", "diamond_dataset"]:
+    if database not in ["biogrid", "stringdb", "pnas", "diamond_dataset"]:
         print("ERROR: no valid database name")
         print_usage()
         sys.exit(1)
@@ -146,6 +146,9 @@ def read_terminal_input(args):
 
     if database == "stringdb":
         database_path = "data/9606.protein.links.full.v11.5.txt"
+
+    if database == "pnas":
+        database_path = "data/pnas.2025581118.sd02.csv"
     
     if database == "diamond_dataset":
         database_path = "data/diamond_dataset/Interactome.tsv"
@@ -257,6 +260,28 @@ def build_network_from_stringdb(stringdb_database, remove_self_loops=True):
 
     return G
 
+def build_network_from_pnas(stringdb_database, remove_self_loops=True):
+    """
+    Given the path for the PNAS protein-protein interaction database,
+    build the graph.
+    """
+
+    # Read the database and build the currespondent DataFrame
+    df = pd.read_csv(stringdb_database, header=0)
+
+    # Build the graph
+    G = nx.from_pandas_edgelist(df,
+                                source = "proteinA_entrezid",
+                                target = "proteinB_entrezid",
+                                create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+
+    # Remove self loops
+    if remove_self_loops == True:
+        self_loop_edges = list(nx.selfloop_edges(G))
+        G.remove_edges_from(self_loop_edges)
+
+    return G
+
 def build_network_from_diamond_dataset(diamond_interactome, remove_self_loops=True):
     """
     Given the path for the interactome used by DIAMOnD authors,
@@ -327,6 +352,10 @@ if __name__ == "__main__":
         hhi = build_network_from_stringdb(database_path,
                                           remove_self_loops=True)
 
+    if database_name == "pnas":
+        hhi = build_network_from_pnas(database_path,
+                                      remove_self_loops=True)
+
     if database_name == "diamond_dataset":
         hhi = build_network_from_diamond_dataset(database_path,
                                                 remove_self_loops=True)
@@ -337,8 +366,10 @@ if __name__ == "__main__":
     # Print information
     # print(f"{database_name.upper()} HHI:")
     # print(nx.info(hhi))
+    # print(" ")
     # print(f"{database_name.upper()} HHI LLC:")
     # print(nx.info(hhi_lcc))
+    # print(" ")
 
     # -------------------------------
     #     K-FOLD CROSS VALIDATION
@@ -351,11 +382,11 @@ if __name__ == "__main__":
         for alg in algs:
             for disease in diseases:
 
-                if database_name in ["biogrid", "stringdb"]:
-                    disease_genes = get_disease_genes_from_gda(gda_curated, disease, translate_in=database_name)
                 if database_name in ["diamond_dataset"]:
                     disease_genes = get_disease_genes_from_seeds_file(seeds_file, disease, fix_random=True)
-                    
+                else:
+                    disease_genes = get_disease_genes_from_gda(gda_curated, disease, translate_in=database_name)
+                
                 # check that the list of disease genes is not empty
                 if len(disease_genes) == 0:
                     print(f"WARNING: {disease} has no disease genes. Skip this disease")
