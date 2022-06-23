@@ -27,22 +27,22 @@ def read_disease_file(disease_file):
 def get_score(algorithm=None, disease=None, database=None, validation=None, K=None, metric=None, diffusion_time=None, n_iters=None, temp=None, top_p=None, top_k=None):
 
     # Get the relative path to the algorithm score
-    score_path = f"results/{database}/{validation}/{algorithm}/{algorithm}-{string_to_filename(disease)}"
+    score_path = f"results/{database}/{validation}/{algorithm}/{algorithm}__{string_to_filename(disease)}"
 
     if diffusion_time is not None:
         return
     if n_iters is not None:
-        score_path += f"-{n_iters}_iters"
+        score_path += f"__{n_iters}_iters"
     if temp is not None:
-        score_path += f"-temp_{temp}"
+        score_path += f"__temp_{temp}"
     if top_p is not None:
-        score_path += f"-top_p_{top_p}"
+        score_path += f"__top_p_{top_p}"
     if top_k is not None:
-        score_path += f"-top_k_{top_k}"
+        score_path += f"__top_k_{top_k}"
     if validation == "extended":
-        score_path += f"-{validation}.csv"
+        score_path += f"__{validation}.csv"
     if validation == "kfold":
-        score_path += f"-{K}_fold.csv"
+        score_path += f"__{K}_fold.csv"
 
     # Read the CSV score file as a DataFrame
     scores_df = pd.read_csv(score_path, index_col=0)
@@ -170,7 +170,7 @@ def average_results(databases=None, validations=None, algorithms=None, diseases=
                     avg_df.to_csv(outfile)
 
 
-                if alg == "pdiamond_log" or alg == "pdiamond_entropy":
+                if alg == "pdiamond_log":
                     for t in temp_values:
                         for p in top_p_values:
                             for k in top_k_values:
@@ -184,7 +184,7 @@ def average_results(databases=None, validations=None, algorithms=None, diseases=
                                                         pdiamond_top_p=p,
                                                         pdiamond_top_k=k)
 
-                                outfile = f"parsed_results/average_results/{database}/{validation}/{alg}-{10}_iters-temp_{t}-top_p_{p}-top_k_{k}.csv"
+                                outfile = f"parsed_results/average_results/{database}/{validation}/{alg}__{10}_iters__temp_{t}__top_p_{p}__top_k_{k}.csv"
                                 avg_df.to_csv(outfile)
 
 
@@ -238,7 +238,7 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                         df.to_csv(outfile)
 
                 
-                if alg == "pdiamond_log" or alg == "pdiamond_entropy":
+                if alg == "pdiamond_log":
                     for t in temp_values:
                         for p in top_p_values:
                             for k in top_k_values:
