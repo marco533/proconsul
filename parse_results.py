@@ -294,15 +294,14 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
 
 if __name__ == '__main__':
 
-    # databases = ["biogrid", "stringdb", "diamond_dataset"]
-    databases = ["diamond_dataset"]
-    # validations = ["kfold", "extended"]
-    validations = ["kfold"]
-    # algorithms = ["diamond", "pdiamond_log"]
+    databases = ["pnas"]
+    validations = ["extended"] # , "kfold"]
     algorithms = ["pdiamond_log", "diamond"]
     metrics = ["precision", "recall", "f1", "ndcg"]
-    # diseases = read_disease_file("data/disease_file.txt")
-    diseases = read_disease_file("data/diamond_dataset/diseases.txt")
+    diseases = read_disease_file("data/disease_file.txt")
+
+    # diseases = read_disease_file("data/diamond_dataset/diseases.txt")
+
     hyperparams = {}
     temp_values = [0.5, 1.0, 10.0]
     top_p_values = [0.0]

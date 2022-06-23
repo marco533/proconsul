@@ -11,7 +11,7 @@ Alzheimer's Disease
 Ovarian Mucinous Adenocarcinoma
 Female infertility
 Single Seizure
-Hearing Loss, Extreme
+#Hearing Loss, Extreme
 #
 # Best diseases for DIAMONnD
 #
