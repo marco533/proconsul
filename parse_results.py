@@ -214,6 +214,10 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                 except:
                                     score = np.ones((1,4)) * -1
                                     std = np.ones((1,4)) * -1
+                                
+                                # Round array values at the third decimal
+                                score = np.around(score, decimals=3)
+                                std = np.around(std, decimals=3)
 
                                 # Combine score and std
                                 global_score = np.zeros((1,4), dtype=object)
@@ -229,6 +233,9 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                                     validation=validation, metric=metric)
                                 except:
                                     score = np.ones((1,4)) * -1
+                                
+                                # Round array values at the third decimal
+                                score = np.around(score, decimals=3)
 
                                 # Save into data
                                 data[idx] = score
@@ -263,6 +270,10 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                                 score = np.zeros((1,4))
                                                 std = np.zeros((1,4))
 
+                                            # Round array values at the third decimal
+                                            score = np.around(score, decimals=3)
+                                            std = np.around(std, decimals=3)
+
                                             # Combine score and std
                                             global_score = np.zeros((1,4), dtype=object)
                                             for j in range(4):
@@ -279,6 +290,9 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                             except:
                                                 score = np.zeros((1,4))
                                             
+                                            # Round array values at the third decimal
+                                            score = np.around(score, decimals=3)
+                                            
                                             # Save into data
                                             data[idx] = score
                                     
@@ -294,13 +308,12 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
 
 if __name__ == '__main__':
 
-    databases = ["pnas"]
-    validations = ["extended"] # , "kfold"]
+    databases = ["diamond_dataset"]
+    validations = ["kfold"]
     algorithms = ["pdiamond_log", "diamond"]
     metrics = ["precision", "recall", "f1", "ndcg"]
-    diseases = read_disease_file("data/disease_file.txt")
-
-    # diseases = read_disease_file("data/diamond_dataset/diseases.txt")
+    # diseases = read_disease_file("data/disease_file.txt")
+    diseases = read_disease_file("data/diamond_dataset/diseases.txt")
 
     hyperparams = {}
     temp_values = [0.5, 1.0, 10.0]

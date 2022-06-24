@@ -1,13 +1,12 @@
 ,Top 25,Top 50,Top 100,Top 200
-Colorectal Carcinoma,0.0,0.0,0.0,0.0
-Lymphatic Metastasis,0.0,0.0,0.0,0.0
-"Condition, Preneoplastic",0.0,0.0,0.0,0.0
-Alzheimer's Disease,0.0,0.0,0.0,0.0
-Ovarian Mucinous Adenocarcinoma,0.0,0.0,0.0,0.0
-Female infertility,0.0,0.0,0.0,0.0
-Single Seizure,0.0,0.0,0.0,0.0
-"Hearing Loss, Extreme",0.0,0.0,0.0,0.0
-Stomach Neoplasms,0.0,0.0,0.0,0.0
-Pneumonitis,0.0,0.0,0.0,0.0
-Malignant neoplasm of prostate,0.0,0.0,0.0,0.0
-Neuroblastoma,0.0,0.0,0.0,0.0
+Colorectal Carcinoma,0.02 +/- 0.013,0.03 +/- 0.016,0.034 +/- 0.019,0.044 +/- 0.012
+Lymphatic Metastasis,0.0 +/- 0.0,0.015 +/- 0.029,0.008 +/- 0.015,0.004 +/- 0.008
+"Condition, Preneoplastic",0.009 +/- 0.019,0.006 +/- 0.012,0.017 +/- 0.011,0.015 +/- 0.011
+Alzheimer's Disease,0.065 +/- 0.067,0.041 +/- 0.043,0.024 +/- 0.025,0.013 +/- 0.014
+Ovarian Mucinous Adenocarcinoma,0.013 +/- 0.026,0.014 +/- 0.017,0.008 +/- 0.009,0.008 +/- 0.007
+Female infertility,0.013 +/- 0.027,0.036 +/- 0.04,0.027 +/- 0.026,0.016 +/- 0.013
+Single Seizure,0.0 +/- 0.0,0.0 +/- 0.0,0.0 +/- 0.0,0.0 +/- 0.0
+Stomach Neoplasms,0.019 +/- 0.01,0.015 +/- 0.007,0.025 +/- 0.018,0.033 +/- 0.018
+Pneumonitis,0.1 +/- 0.041,0.085 +/- 0.016,0.069 +/- 0.014,0.038 +/- 0.006
+Malignant neoplasm of prostate,0.052 +/- 0.013,0.063 +/- 0.019,0.069 +/- 0.014,0.066 +/- 0.003
+Neuroblastoma,0.023 +/- 0.028,0.02 +/- 0.027,0.011 +/- 0.015,0.011 +/- 0.009
