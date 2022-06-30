@@ -493,3 +493,129 @@ def translate_from_stringdb(stringdb_file, stringdb_aliases_file):
             j+=1
 
     return df_translated
+
+
+# =================================
+#     B U I L D  N E T W O R K S
+# =================================
+
+def build_network_from_biogrid(biogrid_database, hhi_only=False, physical_only=False, remove_self_loops=True):
+    """
+    Given the path for a BIOGRID protein-protein interaction database,
+    build the graph.
+    """
+
+    # Read the database and build the currespondent DataFrame
+    df = pd.read_csv(biogrid_database, sep="\t", header=0)
+
+    # Select only human-human interactions
+    if hhi_only == True:
+        df = df.loc[(df["Organism ID Interactor A"] == 9606) &
+                    (df["Organism ID Interactor B"] == 9606)]
+
+    # Select only physical interactions
+    if physical_only == True:
+        df = df.loc[df["Experimental System Type"] == "physical"]
+
+    # Build the graph
+    G = nx.from_pandas_edgelist(df,
+                                source = "Official Symbol Interactor A",
+                                target = "Official Symbol Interactor B",
+                                create_using=nx.Graph())  #nx.Graph doesn't allow duplicated edges
+
+    # Remove self loops
+    if remove_self_loops == True:
+        self_loop_edges = list(nx.selfloop_edges(G))
+        G.remove_edges_from(self_loop_edges)
+
+    return G
+
+
+def build_network_from_stringdb(stringdb_database, remove_self_loops=True):
+    """
+    Given the path for a StringDB protein-protein interaction database,
+    build the graph.
+    """
+
+    # Read the database and build the currespondent DataFrame
+    df = pd.read_csv(stringdb_database, sep="\s+", header=0)
+
+    # Build the graph
+    G = nx.from_pandas_edgelist(df,
+                                source = "protein1",
+                                target = "protein2",
+                                create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+
+    # Remove self loops
+    if remove_self_loops == True:
+        self_loop_edges = list(nx.selfloop_edges(G))
+        G.remove_edges_from(self_loop_edges)
+
+    return G
+
+def build_network_from_pnas(stringdb_database, remove_self_loops=True):
+    """
+    Given the path for the PNAS protein-protein interaction database,
+    build the graph.
+    """
+
+    # Read the database and build the currespondent DataFrame
+    df = pd.read_csv(stringdb_database, header=0)
+
+    # Build the graph
+    G = nx.from_pandas_edgelist(df,
+                                source = "proteinA_entrezid",
+                                target = "proteinB_entrezid",
+                                create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+
+    # Remove self loops
+    if remove_self_loops == True:
+        self_loop_edges = list(nx.selfloop_edges(G))
+        G.remove_edges_from(self_loop_edges)
+
+    return G
+
+def build_network_from_diamond_dataset(diamond_interactome, remove_self_loops=True):
+    """
+    Given the path for the interactome used by DIAMOnD authors,
+    build the graph.
+    """
+
+    # Read the tsv file
+    df = pd.read_csv(diamond_interactome, delimiter="\t", header=0)
+
+    # Build the graph
+    G = nx.from_pandas_edgelist(df,
+                                source = "gene_ID_1",
+                                target = "gene_ID_2",
+                                create_using=nx.Graph())  #x.Graph doesn't allow duplicated edges
+
+    # Remove self loops
+    if remove_self_loops == True:
+        self_loop_edges = list(nx.selfloop_edges(G))
+        G.remove_edges_from(self_loop_edges)
+
+    return G
+
+
+def LCC(G):
+    '''
+    Given a graph G, find and return its Largest Connected Component.
+    '''
+
+    # Find the connected components
+    conn_comp = list(nx.connected_components(G))
+    print(f"# of connected components: {len(conn_comp)}")
+
+    # Sort the connected components by descending size
+    conn_comp_len = [len(c) for c in sorted(conn_comp, key=len,
+                                        reverse=True)]
+    print(f"Lengths of connected components: {conn_comp_len}")
+
+    # isolate the LCC
+    LCC = max(conn_comp, key=len)
+    print(f"LCC len: {len(LCC)}")
+
+    LCC_hhi = G.subgraph(LCC).copy()
+
+    return LCC_hhi
