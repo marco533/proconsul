@@ -308,15 +308,15 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
 
 if __name__ == '__main__':
 
-    databases = ["diamond_dataset"]
+    databases = ["biogrid"]
     validations = ["kfold"]
     algorithms = ["pdiamond_log", "diamond"]
     metrics = ["precision", "recall", "f1", "ndcg"]
-    # diseases = read_disease_file("data/disease_file.txt")
-    diseases = read_disease_file("data/diamond_dataset/diseases.txt")
+    diseases = read_disease_file("data/disease_file_all.txt")
+    # diseases = read_disease_file("data/diamond_dataset/diseases.txt")
 
     hyperparams = {}
-    temp_values = [0.5, 1.0, 10.0]
+    temp_values = [1.0]
     top_p_values = [0.0]
     top_k_values = [0]
 
