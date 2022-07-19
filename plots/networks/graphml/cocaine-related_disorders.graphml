@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="GABRA2"/>
+<node id="MAPK1"/>
+<node id="GRM5"/>
+<node id="CRHR2"/>
+<node id="GRIA2"/>
+<node id="CAMK4"/>
+<node id="CES2"/>
+<node id="NTRK2"/>
+<node id="FGF2"/>
+<node id="RPS6KA5"/>
+<node id="BCHE"/>
+<node id="SLC6A3"/>
+<node id="HOMER2"/>
+<node id="BDNF"/>
+<node id="POMC"/>
+<node id="COMT"/>
+<node id="CARTPT"/>
+<node id="SYT13"/>
+<node id="CALM1"/>
+<node id="CHRM5"/>
+<node id="GAD1"/>
+<node id="GCC1"/>
+<node id="ESR2"/>
+<node id="FOS"/>
+<node id="JUND"/>
+<node id="GABRG2"/>
+<node id="TENM3"/>
+<node id="COL21A1"/>
+<node id="CALM2"/>
+<node id="ILK"/>
+<node id="GHRL"/>
+<node id="NR3C1"/>
+<node id="SNCA"/>
+<node id="GPSM1"/>
+<node id="CREB1"/>
+<node id="TACR3"/>
+<node id="SRCIN1"/>
+<node id="FDFT1"/>
+<node id="RUNX2"/>
+<node id="AGO2"/>
+<node id="PRL"/>
+<node id="HTR1A"/>
+<node id="SLC6A4"/>
+<node id="PRMT6"/>
+<node id="GPHN"/>
+<node id="SMAD5"/>
+<node id="CRHR1"/>
+<node id="NGF"/>
+<node id="DRD1"/>
+<node id="SMARCA4"/>
+<node id="EGR1"/>
+<node id="SMAD3"/>
+<node id="NPY"/>
+<node id="DRD2"/>
+<node id="MECP2"/>
+<node id="DRD3"/>
+<node id="SMAD1"/>
+<node id="CNR1"/>
+<node id="MIR138-1"/>
+<node id="SMURF1"/>
+<node id="KLHL5"/>
+<node id="CRH"/>
+<node id="MAPK3"/>
+<node id="SLC1A2"/>
+<node id="OPRM1"/>
+<node id="SIGMAR1"/>
+<node id="CES1"/>
+<node id="HDAC4"/>
+<node id="HCRT"/>
+<node id="HCRTR1"/>
+<node id="GRIN1"/>
+<node id="LRRC7"/>
+<node id="HOMER1"/>
+<node id="PDYN"/>
+<node id="DNAH8"/>
+<node id="HDAC5"/>
+<node id="GABBR1"/>
+<node id="TYK2"/>
+<node id="GDNF"/>
+<node id="CCKBR"/>
+<node id="ARC"/>
+<node id="GAD2"/>
+<node id="MIR324"/>
+<node id="APOL2"/>
+<node id="SCARB1"/>
+<node id="OPRK1"/>
+<node id="NPY2R"/>
+<node id="EHMT2"/>
+<node id="FOSB"/>
+<node id="GRIA1"/>
+<node id="HTR1B"/>
+<node id="HTR2A"/>
+<node id="ICE2"/>
+<node id="CAMK2B"/>
+<node id="CCSER1"/>
+<node id="CRHBP"/>
+<node id="ATP9B"/>
+<node id="CAMK2A"/>
+<node id="RHOA"/>
+<node id="MANEA"/>
+<edge source="GABRA2" target="GABRG2"/>
+<edge source="MAPK1" target="SMAD3"/>
+<edge source="MAPK1" target="SNCA"/>
+<edge source="MAPK1" target="FOS"/>
+<edge source="MAPK1" target="HDAC4"/>
+<edge source="MAPK1" target="JUND"/>
+<edge source="MAPK1" target="ESR2"/>
+<edge source="MAPK1" target="SMAD1"/>
+<edge source="MAPK1" target="MAPK3"/>
+<edge source="MAPK1" target="ILK"/>
+<edge source="GRM5" target="HOMER1"/>
+<edge source="GRM5" target="CALM1"/>
+<edge source="GRM5" target="GRIN1"/>
+<edge source="CRHR2" target="CRH"/>
+<edge source="GRIA2" target="GRIA1"/>
+<edge source="CAMK4" target="HDAC4"/>
+<edge source="NTRK2" target="SNCA"/>
+<edge source="NTRK2" target="GRIN1"/>
+<edge source="NTRK2" target="BDNF"/>
+<edge source="FGF2" target="COMT"/>
+<edge source="RPS6KA5" target="SMARCA4"/>
+<edge source="RPS6KA5" target="NR3C1"/>
+<edge source="RPS6KA5" target="CREB1"/>
+<edge source="SLC6A3" target="SNCA"/>
+<edge source="SLC6A3" target="CAMK2A"/>
+<edge source="HOMER2" target="HOMER1"/>
+<edge source="HOMER2" target="SMURF1"/>
+<edge source="CALM1" target="SNCA"/>
+<edge source="CALM1" target="ESR2"/>
+<edge source="CALM1" target="GAD1"/>
+<edge source="CALM1" target="HDAC4"/>
+<edge source="CALM1" target="CAMK2B"/>
+<edge source="CALM1" target="OPRM1"/>
+<edge source="CALM1" target="DRD2"/>
+<edge source="CALM1" target="GAD2"/>
+<edge source="CHRM5" target="SNCA"/>
+<edge source="GAD1" target="GAD2"/>
+<edge source="ESR2" target="SMARCA4"/>
+<edge source="ESR2" target="AGO2"/>
+<edge source="ESR2" target="EHMT2"/>
+<edge source="ESR2" target="CREB1"/>
+<edge source="ESR2" target="FDFT1"/>
+<edge source="ESR2" target="MAPK3"/>
+<edge source="ESR2" target="SRCIN1"/>
+<edge source="FOS" target="SMAD3"/>
+<edge source="FOS" target="RUNX2"/>
+<edge source="FOS" target="JUND"/>
+<edge source="FOS" target="FOSB"/>
+<edge source="FOS" target="MAPK3"/>
+<edge source="FOS" target="AGO2"/>
+<edge source="JUND" target="SMAD3"/>
+<edge source="JUND" target="EGR1"/>
+<edge source="JUND" target="CREB1"/>
+<edge source="JUND" target="FOSB"/>
+<edge source="ILK" target="MAPK3"/>
+<edge source="NR3C1" target="SMAD3"/>
+<edge source="NR3C1" target="SMARCA4"/>
+<edge source="NR3C1" target="CREB1"/>
+<edge source="NR3C1" target="FDFT1"/>
+<edge source="NR3C1" target="RHOA"/>
+<edge source="NR3C1" target="CAMK2B"/>
+<edge source="SNCA" target="MAPK3"/>
+<edge source="SNCA" target="SLC6A4"/>
+<edge source="SNCA" target="RHOA"/>
+<edge source="CREB1" target="SMARCA4"/>
+<edge source="CREB1" target="CAMK2A"/>
+<edge source="CREB1" target="MECP2"/>
+<edge source="CREB1" target="ICE2"/>
+<edge source="FDFT1" target="RHOA"/>
+<edge source="RUNX2" target="SMAD3"/>
+<edge source="RUNX2" target="HDAC4"/>
+<edge source="RUNX2" target="HDAC5"/>
+<edge source="RUNX2" target="SMAD1"/>
+<edge source="RUNX2" target="SMAD5"/>
+<edge source="RUNX2" target="SMURF1"/>
+<edge source="AGO2" target="GDNF"/>
+<edge source="AGO2" target="MIR324"/>
+<edge source="HTR1A" target="RHOA"/>
+<edge source="SMAD5" target="SMAD3"/>
+<edge source="SMAD5" target="SMURF1"/>
+<edge source="SMAD5" target="SMAD1"/>
+<edge source="CRHR1" target="CRH"/>
+<edge source="DRD1" target="DRD3"/>
+<edge source="SMARCA4" target="SMAD3"/>
+<edge source="SMAD3" target="SMURF1"/>
+<edge source="SMAD3" target="HDAC5"/>
+<edge source="SMAD3" target="HDAC4"/>
+<edge source="SMAD3" target="SMAD1"/>
+<edge source="DRD2" target="CCKBR"/>
+<edge source="DRD2" target="GABBR1"/>
+<edge source="DRD2" target="OPRM1"/>
+<edge source="SMAD1" target="SMURF1"/>
+<edge source="SMURF1" target="RHOA"/>
+<edge source="MAPK3" target="HDAC4"/>
+<edge source="MAPK3" target="APOL2"/>
+<edge source="OPRM1" target="SIGMAR1"/>
+<edge source="SIGMAR1" target="HTR1B"/>
+<edge source="HDAC4" target="HDAC5"/>
+<edge source="GRIN1" target="CAMK2A"/>
+<edge source="GRIN1" target="MANEA"/>
+<edge source="HDAC5" target="CAMK2A"/>
+<edge source="GRIA1" target="CAMK2A"/>
+<edge source="CAMK2B" target="CAMK2A"/>
+</graph></graphml>

@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="IL6"/>
+<node id="HDAC9"/>
+<node id="ZFHX3"/>
+<node id="EDNRA"/>
+<node id="IRF1"/>
+<node id="ALB"/>
+<node id="PTGS2"/>
+<node id="ABO"/>
+<node id="PLAT"/>
+<node id="VKORC1"/>
+<node id="KCNK3"/>
+<node id="EDN1"/>
+<node id="ICAM1"/>
+<node id="APOA1"/>
+<node id="CXCR3"/>
+<node id="RGS7"/>
+<node id="WNT2B"/>
+<node id="ITGA2B"/>
+<node id="SMOX"/>
+<node id="F5"/>
+<node id="MTHFR"/>
+<node id="LRCH1"/>
+<node id="SH3PXD2A"/>
+<node id="IL1B"/>
+<node id="ACE"/>
+<node id="ZCCHC14"/>
+<node id="F2"/>
+<node id="FGA"/>
+<node id="MMP12"/>
+<node id="ITGB3"/>
+<node id="PLAU"/>
+<node id="CASZ1"/>
+<node id="PDE3A"/>
+<node id="ANK2"/>
+<node id="TNF"/>
+<node id="PITX2"/>
+<node id="FOXF2"/>
+<node id="TBX3"/>
+<node id="NKX2-5"/>
+<node id="UCP2"/>
+<node id="NOS2"/>
+<node id="PLA2G7"/>
+<node id="CDK6"/>
+<node id="ITGAV"/>
+<node id="SH2B3"/>
+<node id="HTR4"/>
+<node id="PAOX"/>
+<node id="PRKAA2"/>
+<node id="IL1RN"/>
+<node id="PRPF8"/>
+<node id="TGFB1"/>
+<node id="TSPAN2"/>
+<node id="SOD1"/>
+<node id="LPA"/>
+<edge source="HDAC9" target="ALB"/>
+<edge source="EDNRA" target="EDN1"/>
+<edge source="ALB" target="FGA"/>
+<edge source="ALB" target="APOA1"/>
+<edge source="ALB" target="SOD1"/>
+<edge source="ALB" target="F2"/>
+<edge source="PLAT" target="FGA"/>
+<edge source="PLAT" target="PLAU"/>
+<edge source="PLAT" target="F2"/>
+<edge source="VKORC1" target="APOA1"/>
+<edge source="ICAM1" target="PRPF8"/>
+<edge source="ICAM1" target="NOS2"/>
+<edge source="APOA1" target="FGA"/>
+<edge source="WNT2B" target="PITX2"/>
+<edge source="ITGA2B" target="FGA"/>
+<edge source="ITGA2B" target="F2"/>
+<edge source="ITGA2B" target="ITGB3"/>
+<edge source="F5" target="F2"/>
+<edge source="SH3PXD2A" target="PRKAA2"/>
+<edge source="F2" target="FGA"/>
+<edge source="FGA" target="ITGB3"/>
+<edge source="ITGB3" target="ITGAV"/>
+<edge source="NOS2" target="SOD1"/>
+</graph></graphml>

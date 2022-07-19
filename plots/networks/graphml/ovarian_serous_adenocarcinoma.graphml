@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="MYO3A"/>
+<node id="ERN1"/>
+<node id="SLK"/>
+<node id="TTN"/>
+<node id="JAK2"/>
+<node id="MAP2K4"/>
+<node id="ALK"/>
+<node id="CAMKV"/>
+<node id="STK36"/>
+<node id="NTRK1"/>
+<node id="RAF1"/>
+<node id="LRRK2"/>
+<node id="CDKL5"/>
+<node id="TRIM24"/>
+<node id="MARK1"/>
+<node id="SNRK"/>
+<node id="TRPM7"/>
+<node id="MAST1"/>
+<node id="FGFR2"/>
+<node id="NEK7"/>
+<node id="TEK"/>
+<node id="MAP3K4"/>
+<node id="TRRAP"/>
+<edge source="SLK" target="NTRK1"/>
+<edge source="TTN" target="NTRK1"/>
+<edge source="JAK2" target="RAF1"/>
+<edge source="JAK2" target="ALK"/>
+<edge source="MAP2K4" target="MAP3K4"/>
+<edge source="MAP2K4" target="LRRK2"/>
+<edge source="ALK" target="MAP3K4"/>
+<edge source="NTRK1" target="TRIM24"/>
+<edge source="LRRK2" target="MARK1"/>
+</graph></graphml>

@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="USO1"/>
+<node id="ZFAND6"/>
+<node id="PELI1"/>
+<node id="PDE4B"/>
+<node id="KRT10"/>
+<node id="SFPQ"/>
+<node id="TNFAIP6"/>
+<node id="ZNF267"/>
+<node id="TNIK"/>
+<node id="RGS1"/>
+<node id="IL1A"/>
+<node id="CCL4"/>
+<node id="ERCC3"/>
+<node id="SOX18"/>
+<node id="ATXN7"/>
+<node id="RUFY3"/>
+<node id="HSPA1B"/>
+<node id="ID2"/>
+<node id="GOLGA4"/>
+<node id="CCL3L3"/>
+<node id="PNP"/>
+<node id="CD83"/>
+<node id="PIAS1"/>
+<node id="USP13"/>
+<node id="AQP9"/>
+<node id="NDUFB8"/>
+<node id="IER3"/>
+<node id="MTHFR"/>
+<node id="MIR145"/>
+<node id="ERCC4"/>
+<node id="IL1B"/>
+<node id="ZNF331"/>
+<node id="TAF1D"/>
+<node id="PTX3"/>
+<node id="SRP68"/>
+<node id="NR4A2"/>
+<node id="TNF"/>
+<node id="ERCC1"/>
+<node id="TP53"/>
+<node id="CD44"/>
+<node id="MT1A"/>
+<node id="MINPP1"/>
+<node id="INPP5A"/>
+<node id="UBE2E1"/>
+<node id="CRP"/>
+<node id="TRAPPC10"/>
+<node id="CXCL2"/>
+<node id="PFKFB3"/>
+<node id="IL1RN"/>
+<node id="RFX3"/>
+<node id="TRA2A"/>
+<node id="AKAP9"/>
+<node id="GADD45B"/>
+<node id="CCL20"/>
+<node id="SSBP1"/>
+<node id="CXCL3"/>
+<node id="KCNJ2"/>
+<node id="N4BP2L2"/>
+<node id="AS3MT"/>
+<node id="CCRL2"/>
+<node id="SKIL"/>
+<node id="SOD2"/>
+<edge source="USO1" target="TP53"/>
+<edge source="USO1" target="AKAP9"/>
+<edge source="PELI1" target="TP53"/>
+<edge source="KRT10" target="TNF"/>
+<edge source="SFPQ" target="TP53"/>
+<edge source="SFPQ" target="NR4A2"/>
+<edge source="SFPQ" target="TNF"/>
+<edge source="SFPQ" target="MIR145"/>
+<edge source="ZNF267" target="TP53"/>
+<edge source="TNIK" target="AKAP9"/>
+<edge source="TNIK" target="GOLGA4"/>
+<edge source="ERCC3" target="TP53"/>
+<edge source="ATXN7" target="PIAS1"/>
+<edge source="HSPA1B" target="TP53"/>
+<edge source="ID2" target="UBE2E1"/>
+<edge source="PNP" target="TP53"/>
+<edge source="PIAS1" target="TP53"/>
+<edge source="PIAS1" target="SKIL"/>
+<edge source="MIR145" target="TRA2A"/>
+<edge source="ERCC4" target="ERCC1"/>
+<edge source="TNF" target="SSBP1"/>
+<edge source="TP53" target="TRA2A"/>
+<edge source="CXCL2" target="CXCL3"/>
+</graph></graphml>

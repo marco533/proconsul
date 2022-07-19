@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="EPHB6"/>
+<node id="NEK10"/>
+<node id="MYO3A"/>
+<node id="TTN"/>
+<node id="MYLK"/>
+<node id="RPS6KB2"/>
+<node id="ERBB3"/>
+<node id="SPEG"/>
+<node id="SBK1"/>
+<node id="DAPK3"/>
+<node id="RPS6KC1"/>
+<node id="CDKL2"/>
+<node id="AATK"/>
+<node id="MAST2"/>
+<node id="MAP3K14"/>
+<node id="LRRK2"/>
+<node id="CDK14"/>
+<node id="ALPK1"/>
+<node id="SNRK"/>
+<node id="MELK"/>
+<node id="ROR1"/>
+<node id="NRBP1"/>
+<node id="ULK1"/>
+<node id="RYK"/>
+<node id="MTOR"/>
+<node id="MATK"/>
+<node id="TNK2"/>
+<node id="HCK"/>
+<node id="WNK4"/>
+<node id="TRRAP"/>
+<edge source="TTN" target="MAST2"/>
+<edge source="RPS6KB2" target="LRRK2"/>
+<edge source="ERBB3" target="MATK"/>
+<edge source="ERBB3" target="HCK"/>
+<edge source="DAPK3" target="ULK1"/>
+<edge source="CDKL2" target="CDK14"/>
+<edge source="LRRK2" target="MATK"/>
+<edge source="ROR1" target="RYK"/>
+<edge source="ULK1" target="MTOR"/>
+<edge source="TNK2" target="HCK"/>
+</graph></graphml>

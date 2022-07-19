@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="MAPK10"/>
+<node id="ADSL"/>
+<node id="GABBR2"/>
+<node id="GABRA1"/>
+<node id="CACNA1A"/>
+<node id="DENND5A"/>
+<node id="SYNGAP1"/>
+<node id="KCNA2"/>
+<node id="ALG13"/>
+<node id="DNM1"/>
+<node id="ACTL6B"/>
+<node id="RYR3"/>
+<node id="SLC2A1"/>
+<node id="NEDD4L"/>
+<node id="SLC1A2"/>
+<node id="AIMP2"/>
+<node id="KCTD3"/>
+<node id="GNAO1"/>
+<node id="FGF12"/>
+<node id="NUP214"/>
+<node id="CHD2"/>
+<node id="MAGI2"/>
+<node id="FLNA"/>
+<node id="HNRNPU"/>
+<node id="MTOR"/>
+<node id="GRIN1"/>
+<node id="GPHN"/>
+<node id="GRIN2B"/>
+<node id="PLAA"/>
+<node id="SMC1A"/>
+<edge source="DNM1" target="SMC1A"/>
+<edge source="NEDD4L" target="FGF12"/>
+<edge source="AIMP2" target="FLNA"/>
+<edge source="CHD2" target="FLNA"/>
+<edge source="CHD2" target="SMC1A"/>
+<edge source="HNRNPU" target="SMC1A"/>
+<edge source="MTOR" target="GPHN"/>
+<edge source="GRIN1" target="GRIN2B"/>
+</graph></graphml>

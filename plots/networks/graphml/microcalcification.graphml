@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="LSP1"/>
+<node id="ALPL"/>
+<node id="NOTCH1"/>
+<node id="KL"/>
+<node id="SPN"/>
+<node id="DMD"/>
+<node id="JAK2"/>
+<node id="LY86"/>
+<node id="PDGFRB"/>
+<node id="SPP1"/>
+<node id="C6"/>
+<node id="LCN2"/>
+<node id="TIMP1"/>
+<node id="PYCARD"/>
+<node id="CTC1"/>
+<node id="XPR1"/>
+<node id="FCGR1A"/>
+<node id="CCL2"/>
+<node id="TIMP2"/>
+<node id="SLC20A2"/>
+<node id="IL1B"/>
+<node id="SNAI2"/>
+<node id="GALNT3"/>
+<node id="MMP9"/>
+<node id="FGF23"/>
+<node id="PTPN6"/>
+<node id="POMC"/>
+<node id="SLC22A6"/>
+<node id="TP53"/>
+<node id="BGLAP"/>
+<node id="AHSG"/>
+<node id="COL1A1"/>
+<node id="CASP3"/>
+<node id="IL18"/>
+<node id="COL18A1"/>
+<node id="EPO"/>
+<node id="RIPK3"/>
+<node id="MMP2"/>
+<node id="PDGFB"/>
+<node id="TGFB1"/>
+<node id="ITGB1"/>
+<node id="ITGB2"/>
+<edge source="KL" target="FGF23"/>
+<edge source="JAK2" target="PTPN6"/>
+<edge source="LY86" target="TGFB1"/>
+<edge source="LY86" target="TIMP2"/>
+<edge source="LY86" target="TIMP1"/>
+<edge source="PDGFRB" target="PDGFB"/>
+<edge source="PDGFRB" target="PTPN6"/>
+<edge source="SPP1" target="ITGB1"/>
+<edge source="LCN2" target="MMP2"/>
+<edge source="TIMP1" target="MMP9"/>
+<edge source="TIMP2" target="ITGB1"/>
+<edge source="TIMP2" target="MMP2"/>
+<edge source="SLC20A2" target="SLC22A6"/>
+<edge source="IL1B" target="IL18"/>
+<edge source="SNAI2" target="TP53"/>
+<edge source="MMP9" target="TGFB1"/>
+<edge source="MMP9" target="COL18A1"/>
+<edge source="TP53" target="CASP3"/>
+<edge source="COL1A1" target="ITGB1"/>
+<edge source="COL1A1" target="MMP2"/>
+<edge source="COL1A1" target="PDGFB"/>
+<edge source="COL1A1" target="COL18A1"/>
+<edge source="COL18A1" target="ITGB1"/>
+<edge source="COL18A1" target="MMP2"/>
+<edge source="MMP2" target="TGFB1"/>
+<edge source="MMP2" target="ITGB1"/>
+</graph></graphml>

@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="MIR17"/>
+<node id="CLDN7"/>
+<node id="FOS"/>
+<node id="USP32"/>
+<node id="ABO"/>
+<node id="MTMR14"/>
+<node id="ERBB2"/>
+<node id="MIR98"/>
+<node id="SOCS7"/>
+<node id="RSPO1"/>
+<node id="ATAD5"/>
+<node id="SYNPO2"/>
+<node id="PPP3CA"/>
+<node id="AGER"/>
+<node id="MIR145"/>
+<node id="EHMT2"/>
+<node id="RAF1"/>
+<node id="KPNB1"/>
+<node id="STK11"/>
+<node id="GLRA3"/>
+<node id="TP53"/>
+<node id="CDH1"/>
+<node id="PHF21A"/>
+<node id="METTL7B"/>
+<node id="WNT4"/>
+<node id="RRAS2"/>
+<node id="MDH2"/>
+<edge source="FOS" target="TP53"/>
+<edge source="ERBB2" target="TP53"/>
+<edge source="ERBB2" target="CDH1"/>
+<edge source="ERBB2" target="STK11"/>
+<edge source="ERBB2" target="KPNB1"/>
+<edge source="ERBB2" target="RAF1"/>
+<edge source="PPP3CA" target="TP53"/>
+<edge source="EHMT2" target="TP53"/>
+<edge source="RAF1" target="RRAS2"/>
+<edge source="KPNB1" target="TP53"/>
+<edge source="STK11" target="TP53"/>
+</graph></graphml>

@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="TUBA1B"/>
+<node id="P4HB"/>
+<node id="GORAB"/>
+<node id="IL6"/>
+<node id="TPM4"/>
+<node id="KL"/>
+<node id="PTH"/>
+<node id="TPI1"/>
+<node id="DAAM2"/>
+<node id="PLEK"/>
+<node id="PRDX3"/>
+<node id="PDLIM4"/>
+<node id="PSMA2"/>
+<node id="ANXA2"/>
+<node id="ADCY5"/>
+<node id="CAP1"/>
+<node id="ZDHHC13"/>
+<node id="IL6R"/>
+<node id="COL1A2"/>
+<node id="ENO1"/>
+<node id="CCT2"/>
+<node id="LRP5"/>
+<node id="PNP"/>
+<node id="TNFSF11"/>
+<node id="FGB"/>
+<node id="PGLS"/>
+<node id="GPC6"/>
+<node id="CLEC11A"/>
+<node id="GAPDH"/>
+<node id="REN"/>
+<node id="WNT1"/>
+<node id="PARK7"/>
+<node id="CYP19A1"/>
+<node id="VCL"/>
+<node id="U2AF1"/>
+<node id="FGA"/>
+<node id="ATIC"/>
+<node id="ANTXR2"/>
+<node id="GPD2"/>
+<node id="LTF"/>
+<node id="CALCR"/>
+<node id="POMC"/>
+<node id="RSU1"/>
+<node id="GPX1"/>
+<node id="TNFRSF11B"/>
+<node id="COL1A1"/>
+<node id="ACTG1"/>
+<node id="VDR"/>
+<node id="MGLL"/>
+<node id="PKM"/>
+<node id="IDH2"/>
+<node id="GSN"/>
+<node id="WDR1"/>
+<node id="OXCT1"/>
+<node id="RAB7B"/>
+<node id="TLN1"/>
+<node id="TGFB1"/>
+<node id="PSMA5"/>
+<node id="CYP24A1"/>
+<node id="CA2"/>
+<node id="SOD2"/>
+<edge source="TUBA1B" target="U2AF1"/>
+<edge source="TUBA1B" target="CCT2"/>
+<edge source="P4HB" target="TGFB1"/>
+<edge source="P4HB" target="ENO1"/>
+<edge source="IL6" target="IL6R"/>
+<edge source="TPM4" target="CAP1"/>
+<edge source="TPI1" target="VCL"/>
+<edge source="TPI1" target="GAPDH"/>
+<edge source="TPI1" target="SOD2"/>
+<edge source="TPI1" target="ENO1"/>
+<edge source="TPI1" target="PARK7"/>
+<edge source="TPI1" target="OXCT1"/>
+<edge source="TPI1" target="IDH2"/>
+<edge source="PRDX3" target="PARK7"/>
+<edge source="PSMA2" target="PSMA5"/>
+<edge source="CAP1" target="ACTG1"/>
+<edge source="COL1A2" target="COL1A1"/>
+<edge source="ENO1" target="GAPDH"/>
+<edge source="ENO1" target="PNP"/>
+<edge source="ENO1" target="PARK7"/>
+<edge source="ENO1" target="WDR1"/>
+<edge source="ENO1" target="IDH2"/>
+<edge source="CCT2" target="TGFB1"/>
+<edge source="TNFSF11" target="TNFRSF11B"/>
+<edge source="FGB" target="FGA"/>
+<edge source="FGB" target="TLN1"/>
+<edge source="PGLS" target="PARK7"/>
+<edge source="GAPDH" target="PKM"/>
+<edge source="PARK7" target="PKM"/>
+<edge source="PARK7" target="IDH2"/>
+<edge source="VCL" target="ACTG1"/>
+<edge source="VCL" target="GSN"/>
+<edge source="VCL" target="TLN1"/>
+<edge source="ATIC" target="OXCT1"/>
+<edge source="ACTG1" target="TGFB1"/>
+<edge source="PKM" target="SOD2"/>
+<edge source="PKM" target="IDH2"/>
+<edge source="IDH2" target="SOD2"/>
+<edge source="WDR1" target="OXCT1"/>
+</graph></graphml>

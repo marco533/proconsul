@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="PTGIS"/>
+<node id="COPS5"/>
+<node id="PTGER3"/>
+<node id="ALB"/>
+<node id="NEDD4"/>
+<node id="HLA-B"/>
+<node id="VCP"/>
+<node id="CUL4A"/>
+<node id="HLA-A"/>
+<node id="RBX1"/>
+<node id="PML"/>
+<node id="CUL1"/>
+<node id="CSF3"/>
+<node id="MIF"/>
+<node id="EP300"/>
+<node id="CAV1"/>
+<node id="IFNA2"/>
+<node id="HLA-C"/>
+<node id="PSMC5"/>
+<node id="DERL1"/>
+<node id="FBXO6"/>
+<node id="NOS2"/>
+<node id="IFNG"/>
+<node id="NUCB1"/>
+<node id="PARP1"/>
+<node id="CELF2"/>
+<node id="RB1"/>
+<node id="CTNNB1"/>
+<node id="ELMO1"/>
+<edge source="PTGIS" target="CAV1"/>
+<edge source="COPS5" target="EP300"/>
+<edge source="COPS5" target="CTNNB1"/>
+<edge source="COPS5" target="PSMC5"/>
+<edge source="COPS5" target="CUL1"/>
+<edge source="COPS5" target="MIF"/>
+<edge source="COPS5" target="CUL4A"/>
+<edge source="COPS5" target="VCP"/>
+<edge source="COPS5" target="PARP1"/>
+<edge source="COPS5" target="RBX1"/>
+<edge source="COPS5" target="FBXO6"/>
+<edge source="ALB" target="DERL1"/>
+<edge source="ALB" target="FBXO6"/>
+<edge source="NEDD4" target="CUL1"/>
+<edge source="NEDD4" target="RBX1"/>
+<edge source="NEDD4" target="MIF"/>
+<edge source="NEDD4" target="IFNG"/>
+<edge source="NEDD4" target="CAV1"/>
+<edge source="HLA-B" target="VCP"/>
+<edge source="HLA-B" target="HLA-C"/>
+<edge source="HLA-B" target="HLA-A"/>
+<edge source="VCP" target="EP300"/>
+<edge source="VCP" target="CTNNB1"/>
+<edge source="VCP" target="PSMC5"/>
+<edge source="VCP" target="CUL1"/>
+<edge source="VCP" target="CUL4A"/>
+<edge source="VCP" target="DERL1"/>
+<edge source="VCP" target="FBXO6"/>
+<edge source="VCP" target="CAV1"/>
+<edge source="VCP" target="NOS2"/>
+<edge source="VCP" target="HLA-A"/>
+<edge source="CUL4A" target="CTNNB1"/>
+<edge source="CUL4A" target="CUL1"/>
+<edge source="CUL4A" target="RBX1"/>
+<edge source="CUL4A" target="PARP1"/>
+<edge source="HLA-A" target="EP300"/>
+<edge source="HLA-A" target="DERL1"/>
+<edge source="HLA-A" target="HLA-C"/>
+<edge source="HLA-A" target="CAV1"/>
+<edge source="RBX1" target="PML"/>
+<edge source="RBX1" target="CUL1"/>
+<edge source="RBX1" target="PARP1"/>
+<edge source="RBX1" target="FBXO6"/>
+<edge source="PML" target="RB1"/>
+<edge source="PML" target="CTNNB1"/>
+<edge source="PML" target="CUL1"/>
+<edge source="CUL1" target="EP300"/>
+<edge source="CUL1" target="CTNNB1"/>
+<edge source="CUL1" target="FBXO6"/>
+<edge source="EP300" target="PARP1"/>
+<edge source="EP300" target="CTNNB1"/>
+<edge source="EP300" target="RB1"/>
+<edge source="CAV1" target="CTNNB1"/>
+<edge source="CAV1" target="NOS2"/>
+<edge source="CAV1" target="DERL1"/>
+<edge source="CAV1" target="HLA-C"/>
+<edge source="HLA-C" target="DERL1"/>
+<edge source="HLA-C" target="FBXO6"/>
+<edge source="PSMC5" target="CTNNB1"/>
+<edge source="PSMC5" target="NOS2"/>
+<edge source="PSMC5" target="FBXO6"/>
+<edge source="DERL1" target="PARP1"/>
+<edge source="PARP1" target="CTNNB1"/>
+<edge source="PARP1" target="RB1"/>
+</graph></graphml>

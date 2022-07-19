@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="IL6"/>
+<node id="PBRM1"/>
+<node id="MET"/>
+<node id="PIK3CA"/>
+<node id="CRADD"/>
+<node id="PTGS2"/>
+<node id="EEF2"/>
+<node id="PEBP1"/>
+<node id="NDRG1"/>
+<node id="BCHE"/>
+<node id="RNF139"/>
+<node id="CARD11"/>
+<node id="CTSB"/>
+<node id="RPL14"/>
+<node id="LRRK2"/>
+<node id="VHL"/>
+<node id="POMC"/>
+<node id="YIPF3"/>
+<node id="PNKD"/>
+<node id="ALDH1A1"/>
+<node id="KRT7"/>
+<node id="APRT"/>
+<node id="MUC4"/>
+<node id="NAV3"/>
+<node id="ALOX12B"/>
+<node id="SPTBN4"/>
+<node id="MITF"/>
+<node id="OGG1"/>
+<node id="AP5M1"/>
+<node id="ALAD"/>
+<node id="RELA"/>
+<node id="CPQ"/>
+<node id="KRT32"/>
+<node id="ADIPOQ"/>
+<node id="NF2"/>
+<node id="SYNE2"/>
+<node id="IL6R"/>
+<node id="PDHB"/>
+<node id="APAF1"/>
+<node id="GJB1"/>
+<node id="KDM5C"/>
+<node id="BIRC5"/>
+<node id="PIDD1"/>
+<node id="BTG3"/>
+<node id="SETD2"/>
+<node id="NLRP12"/>
+<node id="TFE3"/>
+<node id="SFRP2"/>
+<node id="KCNMA1"/>
+<node id="GSTP1"/>
+<node id="BAP1"/>
+<node id="ZNF765"/>
+<node id="ASB15"/>
+<node id="DNHD1"/>
+<node id="FAM111B"/>
+<node id="HNF1A"/>
+<node id="EPAS1"/>
+<node id="TSC1"/>
+<node id="INPP4B"/>
+<node id="KEAP1"/>
+<node id="FAAH2"/>
+<node id="IL4R"/>
+<node id="HSPA9"/>
+<node id="KRT8"/>
+<node id="ERBB2"/>
+<node id="FLT1"/>
+<node id="ALOX5"/>
+<node id="PRCC"/>
+<node id="SLC5A3"/>
+<node id="HSPD1"/>
+<node id="ZNF804A"/>
+<node id="IL13"/>
+<node id="M6PR"/>
+<node id="LRP1B"/>
+<node id="FMN2"/>
+<node id="CRABP1"/>
+<node id="TP53"/>
+<node id="PAK1"/>
+<node id="CNN2"/>
+<node id="CUL7"/>
+<node id="CASP2"/>
+<node id="MTOR"/>
+<node id="ZNF536"/>
+<node id="TET2"/>
+<node id="GSTT1"/>
+<node id="UNC5C"/>
+<node id="CRYAB"/>
+<node id="SOD2"/>
+<node id="PTEN"/>
+<node id="PVALB"/>
+<node id="CAPG"/>
+<node id="MLLT10"/>
+<node id="PRAME"/>
+<node id="SHANK1"/>
+<node id="HSPB1"/>
+<node id="CTSD"/>
+<node id="FLCN"/>
+<node id="BIRC7"/>
+<node id="AHNAK"/>
+<node id="ALK"/>
+<node id="SCARB1"/>
+<node id="PDXDC1"/>
+<node id="RYR1"/>
+<node id="ACHE"/>
+<node id="SLC2A1"/>
+<node id="LDHB"/>
+<node id="GRB7"/>
+<node id="HNF1B"/>
+<node id="TAGLN2"/>
+<node id="AKAP13"/>
+<node id="IFNA2"/>
+<node id="ANXA4"/>
+<node id="TNFSF10"/>
+<node id="DAPK1"/>
+<node id="MSGN1"/>
+<node id="GSTM1"/>
+<node id="CSMD3"/>
+<node id="FPGT"/>
+<node id="TGM2"/>
+<node id="L1CAM"/>
+<node id="ACY1"/>
+<node id="LMAN2L"/>
+<node id="PGK1"/>
+<edge source="IL6" target="IL6R"/>
+<edge source="PBRM1" target="PTEN"/>
+<edge source="PBRM1" target="KDM5C"/>
+<edge source="MET" target="ERBB2"/>
+<edge source="MET" target="NF2"/>
+<edge source="MET" target="TP53"/>
+<edge source="MET" target="GRB7"/>
+<edge source="PIK3CA" target="RELA"/>
+<edge source="CRADD" target="PIDD1"/>
+<edge source="CRADD" target="CRYAB"/>
+<edge source="CRADD" target="CASP2"/>
+<edge source="PTGS2" target="TP53"/>
+<edge source="PTGS2" target="LMAN2L"/>
+<edge source="EEF2" target="TP53"/>
+<edge source="EEF2" target="KEAP1"/>
+<edge source="EEF2" target="TAGLN2"/>
+<edge source="EEF2" target="PTEN"/>
+<edge source="EEF2" target="PGK1"/>
+<edge source="EEF2" target="PDHB"/>
+<edge source="EEF2" target="AHNAK"/>
+<edge source="EEF2" target="NDRG1"/>
+<edge source="EEF2" target="RPL14"/>
+<edge source="EEF2" target="HSPD1"/>
+<edge source="EEF2" target="DAPK1"/>
+<edge source="PEBP1" target="HSPB1"/>
+<edge source="PEBP1" target="ERBB2"/>
+<edge source="PEBP1" target="HNF1A"/>
+<edge source="PEBP1" target="SOD2"/>
+<edge source="PEBP1" target="PGK1"/>
+<edge source="PEBP1" target="LRRK2"/>
+<edge source="RNF139" target="CTSB"/>
+<edge source="CTSB" target="TP53"/>
+<edge source="CTSB" target="SOD2"/>
+<edge source="CTSB" target="GSTP1"/>
+<edge source="RPL14" target="TP53"/>
+<edge source="RPL14" target="VHL"/>
+<edge source="RPL14" target="NF2"/>
+<edge source="RPL14" target="GRB7"/>
+<edge source="RPL14" target="PTEN"/>
+<edge source="RPL14" target="AHNAK"/>
+<edge source="RPL14" target="CUL7"/>
+<edge source="LRRK2" target="TP53"/>
+<edge source="LRRK2" target="HSPB1"/>
+<edge source="LRRK2" target="APRT"/>
+<edge source="LRRK2" target="TAGLN2"/>
+<edge source="LRRK2" target="GSTP1"/>
+<edge source="LRRK2" target="AHNAK"/>
+<edge source="LRRK2" target="HSPA9"/>
+<edge source="LRRK2" target="HSPD1"/>
+<edge source="LRRK2" target="DAPK1"/>
+<edge source="VHL" target="TP53"/>
+<edge source="VHL" target="APRT"/>
+<edge source="VHL" target="TAGLN2"/>
+<edge source="VHL" target="EPAS1"/>
+<edge source="VHL" target="TGM2"/>
+<edge source="VHL" target="SLC2A1"/>
+<edge source="VHL" target="TET2"/>
+<edge source="VHL" target="ADIPOQ"/>
+<edge source="APRT" target="CUL7"/>
+<edge source="APRT" target="LDHB"/>
+<edge source="MUC4" target="ERBB2"/>
+<edge source="MITF" target="TFE3"/>
+<edge source="MITF" target="EPAS1"/>
+<edge source="ALAD" target="CNN2"/>
+<edge source="RELA" target="ALOX5"/>
+<edge source="RELA" target="KEAP1"/>
+<edge source="RELA" target="TP53"/>
+<edge source="RELA" target="PAK1"/>
+<edge source="RELA" target="TGM2"/>
+<edge source="NF2" target="TP53"/>
+<edge source="NF2" target="TSC1"/>
+<edge source="NF2" target="HSPA9"/>
+<edge source="NF2" target="ERBB2"/>
+<edge source="NF2" target="CUL7"/>
+<edge source="SYNE2" target="TP53"/>
+<edge source="SYNE2" target="CUL7"/>
+<edge source="PDHB" target="GRB7"/>
+<edge source="APAF1" target="TP53"/>
+<edge source="PIDD1" target="CASP2"/>
+<edge source="PIDD1" target="KEAP1"/>
+<edge source="PIDD1" target="CRYAB"/>
+<edge source="SETD2" target="TP53"/>
+<edge source="SETD2" target="CUL7"/>
+<edge source="GSTP1" target="ACY1"/>
+<edge source="GSTP1" target="TGM2"/>
+<edge source="GSTP1" target="CUL7"/>
+<edge source="BAP1" target="PTEN"/>
+<edge source="BAP1" target="HSPA9"/>
+<edge source="ZNF765" target="TSC1"/>
+<edge source="HNF1A" target="HNF1B"/>
+<edge source="TSC1" target="DAPK1"/>
+<edge source="TSC1" target="SHANK1"/>
+<edge source="KEAP1" target="TET2"/>
+<edge source="IL4R" target="ERBB2"/>
+<edge source="IL4R" target="IL13"/>
+<edge source="HSPA9" target="TP53"/>
+<edge source="HSPA9" target="HSPB1"/>
+<edge source="HSPA9" target="ERBB2"/>
+<edge source="HSPA9" target="AHNAK"/>
+<edge source="HSPA9" target="HSPD1"/>
+<edge source="HSPA9" target="CUL7"/>
+<edge source="HSPA9" target="LDHB"/>
+<edge source="HSPA9" target="PRCC"/>
+<edge source="HSPA9" target="TET2"/>
+<edge source="HSPA9" target="TGM2"/>
+<edge source="KRT8" target="TP53"/>
+<edge source="ERBB2" target="TP53"/>
+<edge source="ERBB2" target="PAK1"/>
+<edge source="ERBB2" target="GRB7"/>
+<edge source="ERBB2" target="L1CAM"/>
+<edge source="ERBB2" target="ALK"/>
+<edge source="ERBB2" target="HSPD1"/>
+<edge source="HSPD1" target="PTEN"/>
+<edge source="HSPD1" target="ALK"/>
+<edge source="HSPD1" target="CUL7"/>
+<edge source="HSPD1" target="TET2"/>
+<edge source="HSPD1" target="FLCN"/>
+<edge source="TP53" target="PTEN"/>
+<edge source="TP53" target="HSPB1"/>
+<edge source="TP53" target="DAPK1"/>
+<edge source="TP53" target="CUL7"/>
+<edge source="TP53" target="CRYAB"/>
+<edge source="TP53" target="MTOR"/>
+<edge source="TP53" target="CAPG"/>
+<edge source="TP53" target="TGM2"/>
+<edge source="TP53" target="AHNAK"/>
+<edge source="TP53" target="LDHB"/>
+<edge source="TP53" target="SLC2A1"/>
+<edge source="TP53" target="PRAME"/>
+<edge source="TP53" target="TET2"/>
+<edge source="PAK1" target="HSPB1"/>
+<edge source="PAK1" target="TGM2"/>
+<edge source="CUL7" target="TAGLN2"/>
+<edge source="CUL7" target="PGK1"/>
+<edge source="CUL7" target="AHNAK"/>
+<edge source="CASP2" target="CRYAB"/>
+<edge source="UNC5C" target="DAPK1"/>
+<edge source="CRYAB" target="HSPB1"/>
+<edge source="PTEN" target="LDHB"/>
+<edge source="PTEN" target="PGK1"/>
+<edge source="MLLT10" target="HNF1B"/>
+<edge source="HSPB1" target="AHNAK"/>
+<edge source="CTSD" target="LDHB"/>
+<edge source="FLCN" target="AHNAK"/>
+<edge source="PDXDC1" target="SLC2A1"/>
+<edge source="LDHB" target="PGK1"/>
+<edge source="LDHB" target="TGM2"/>
+<edge source="TAGLN2" target="PGK1"/>
+</graph></graphml>

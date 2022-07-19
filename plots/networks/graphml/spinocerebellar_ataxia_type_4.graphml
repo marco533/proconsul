@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="CCDC88C"/>
+<node id="TTBK2"/>
+<node id="RBM17"/>
+<node id="ATXN7"/>
+<node id="CACNA1A"/>
+<node id="SPTBN2"/>
+<node id="UBA5"/>
+<node id="TRPC3"/>
+<node id="GFI1"/>
+<node id="PPP2R2B"/>
+<node id="AFG3L2"/>
+<node id="SCYL1"/>
+<node id="ELOVL5"/>
+<node id="VWA3B"/>
+<node id="ATXN1"/>
+<node id="MME"/>
+<node id="PLEKHG4"/>
+<node id="PRKCG"/>
+<node id="ANO10"/>
+<node id="TDP2"/>
+<node id="ATXN1L"/>
+<node id="STUB1"/>
+<node id="FOXC1"/>
+<node id="WWOX"/>
+<node id="ATXN2"/>
+<node id="GRID2"/>
+<node id="CWF19L1"/>
+<node id="CACNA1G"/>
+<node id="SYT14"/>
+<node id="NOP56"/>
+<node id="SNX14"/>
+<node id="TGM6"/>
+<node id="GRM1"/>
+<node id="CIC"/>
+<edge source="CCDC88C" target="CIC"/>
+<edge source="RBM17" target="CIC"/>
+<edge source="AFG3L2" target="WWOX"/>
+<edge source="ELOVL5" target="WWOX"/>
+<edge source="ELOVL5" target="ANO10"/>
+<edge source="ATXN1" target="STUB1"/>
+<edge source="ATXN1" target="ATXN1L"/>
+<edge source="ATXN1" target="CIC"/>
+<edge source="ATXN1" target="ATXN2"/>
+<edge source="ATXN1" target="TDP2"/>
+<edge source="ATXN1L" target="CIC"/>
+<edge source="STUB1" target="WWOX"/>
+<edge source="STUB1" target="CIC"/>
+<edge source="FOXC1" target="CIC"/>
+<edge source="WWOX" target="ATXN2"/>
+<edge source="WWOX" target="NOP56"/>
+</graph></graphml>

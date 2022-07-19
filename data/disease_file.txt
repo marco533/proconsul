@@ -1,21 +1,34 @@
-#
-# Best diseases for pDIAMOnD
-#
-Colorectal Carcinoma
-Lymphatic Metastasis
-Condition, Preneoplastic
-Alzheimer's Disease
-#
-# Draw diseases
-#
-Ovarian Mucinous Adenocarcinoma
-Female infertility
-Single Seizure
-#Hearing Loss, Extreme
-#
-# Best diseases for DIAMONnD
-#
+Psoriasis
+Liver carcinoma
+Liver Cirrhosis, Experimental
+Diabetes Mellitus, Non-Insulin-Dependent
+Papillary Renal Cell Carcinoma
+Malignant neoplasm of ovary
+Steatohepatitis
+Disproportionate short stature
 Stomach Neoplasms
 Pneumonitis
+Heart Failure, Right-Sided
+Alcoholic Intoxication, Chronic
+Osteoporosis, Senile
+Parkinson Disease
+Hepatoma, Novikoff
 Malignant neoplasm of prostate
-Neuroblastoma
+Pneumonia
+Carcinomatosis
+Dermatitis, Allergic Contact
+Atrial Fibrillation
+Craniofacial Abnormalities
+Skin Neoplasms
+Malignant mesothelioma
+Tonic - clonic seizures
+Adenocarcinoma, Basal Cell
+Seizures, Auditory
+Alzheimer's Disease
+Epilepsy, Cryptogenic
+Peripheral Nervous System Diseases
+Allodynia
+Insulin Sensitivity
+Chromophobe Renal Cell Carcinoma
+Anaplastic carcinoma
+Spontaneous abortion

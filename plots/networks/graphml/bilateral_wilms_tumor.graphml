@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="MAX"/>
+<node id="ASXL1"/>
+<node id="IGF2"/>
+<node id="MYCN"/>
+<node id="MLLT1"/>
+<node id="BRCA2"/>
+<node id="DROSHA"/>
+<node id="GLIPR1"/>
+<node id="GPC4"/>
+<node id="SIX2"/>
+<node id="GPC3"/>
+<node id="NONO"/>
+<node id="COL6A3"/>
+<node id="REST"/>
+<node id="DICER1"/>
+<node id="VHL"/>
+<node id="BCOR"/>
+<node id="BCORL1"/>
+<node id="TP53"/>
+<node id="DGCR8"/>
+<node id="WT1"/>
+<node id="ARID1A"/>
+<node id="SIX1"/>
+<node id="H19"/>
+<node id="XPO5"/>
+<node id="AMER1"/>
+<node id="CTNNB1"/>
+<node id="MAP3K4"/>
+<node id="TRIP13"/>
+<edge source="MAX" target="MYCN"/>
+<edge source="ASXL1" target="BRCA2"/>
+<edge source="ASXL1" target="TRIP13"/>
+<edge source="ASXL1" target="XPO5"/>
+<edge source="MYCN" target="NONO"/>
+<edge source="MLLT1" target="BCOR"/>
+<edge source="BRCA2" target="TP53"/>
+<edge source="DROSHA" target="DGCR8"/>
+<edge source="NONO" target="CTNNB1"/>
+<edge source="NONO" target="REST"/>
+<edge source="REST" target="TP53"/>
+<edge source="VHL" target="TP53"/>
+<edge source="BCOR" target="BCORL1"/>
+<edge source="TP53" target="WT1"/>
+<edge source="TP53" target="ARID1A"/>
+<edge source="AMER1" target="CTNNB1"/>
+</graph></graphml>

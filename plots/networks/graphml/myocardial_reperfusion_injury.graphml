@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="MIR183"/>
+<node id="XIAP"/>
+<node id="MIR451A"/>
+<node id="MIR23B"/>
+<node id="PLN"/>
+<node id="ALB"/>
+<node id="SORD"/>
+<node id="GJA1"/>
+<node id="ADIPOQ"/>
+<node id="CASP9"/>
+<node id="MIR142"/>
+<node id="EDN1"/>
+<node id="ICAM1"/>
+<node id="AGT"/>
+<node id="MIR20B"/>
+<node id="PPARA"/>
+<node id="MIR15A"/>
+<node id="CCL2"/>
+<node id="VDAC1"/>
+<node id="HIF1A"/>
+<node id="DIABLO"/>
+<node id="SLC8A1"/>
+<node id="SELP"/>
+<node id="MIR331"/>
+<node id="EPHX2"/>
+<node id="MIR429"/>
+<node id="SIRT1"/>
+<node id="MIR34C"/>
+<node id="KNG1"/>
+<node id="MIR21"/>
+<node id="CASP12"/>
+<node id="TFRC"/>
+<node id="MIR188"/>
+<node id="CASP1"/>
+<node id="MIR10B"/>
+<node id="MIR27B"/>
+<node id="VEGFA"/>
+<node id="NOS2"/>
+<node id="CASP3"/>
+<node id="HMGB1"/>
+<node id="CAT"/>
+<node id="MIR27A"/>
+<node id="MIR375"/>
+<node id="MIR206"/>
+<node id="MIRLET7I"/>
+<node id="ATP2A2"/>
+<node id="NOS3"/>
+<node id="ATP1A1"/>
+<node id="CYBB"/>
+<node id="CASP8"/>
+<node id="ADRB1"/>
+<node id="BAX"/>
+<node id="CASP7"/>
+<node id="PTEN"/>
+<edge source="XIAP" target="BAX"/>
+<edge source="XIAP" target="CASP9"/>
+<edge source="XIAP" target="DIABLO"/>
+<edge source="XIAP" target="CASP3"/>
+<edge source="XIAP" target="CASP7"/>
+<edge source="XIAP" target="PTEN"/>
+<edge source="XIAP" target="CASP8"/>
+<edge source="XIAP" target="CASP12"/>
+<edge source="PLN" target="ATP2A2"/>
+<edge source="SORD" target="CAT"/>
+<edge source="GJA1" target="ATP1A1"/>
+<edge source="GJA1" target="TFRC"/>
+<edge source="CASP9" target="BAX"/>
+<edge source="CASP9" target="CASP8"/>
+<edge source="CASP9" target="CASP3"/>
+<edge source="CASP9" target="CASP7"/>
+<edge source="CASP9" target="CASP12"/>
+<edge source="CASP9" target="HMGB1"/>
+<edge source="ICAM1" target="HIF1A"/>
+<edge source="ICAM1" target="VDAC1"/>
+<edge source="ICAM1" target="NOS2"/>
+<edge source="PPARA" target="SIRT1"/>
+<edge source="VDAC1" target="BAX"/>
+<edge source="VDAC1" target="ATP2A2"/>
+<edge source="VDAC1" target="ATP1A1"/>
+<edge source="HIF1A" target="SIRT1"/>
+<edge source="HIF1A" target="VEGFA"/>
+<edge source="EPHX2" target="CAT"/>
+<edge source="SIRT1" target="ATP2A2"/>
+<edge source="SIRT1" target="NOS3"/>
+<edge source="CASP1" target="CASP8"/>
+<edge source="NOS2" target="ATP2A2"/>
+<edge source="CASP3" target="BAX"/>
+<edge source="CASP3" target="CASP8"/>
+<edge source="CASP3" target="CASP7"/>
+<edge source="CAT" target="PTEN"/>
+<edge source="CASP8" target="BAX"/>
+<edge source="CASP8" target="CASP7"/>
+<edge source="CASP8" target="PTEN"/>
+<edge source="BAX" target="CASP7"/>
+</graph></graphml>

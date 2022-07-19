@@ -1,0 +1,231 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="BCS1L"/>
+<node id="NDUFA10"/>
+<node id="FARS2"/>
+<node id="COX15"/>
+<node id="NDUFA1"/>
+<node id="NDUFS3"/>
+<node id="GFM1"/>
+<node id="GFM2"/>
+<node id="SCO2"/>
+<node id="NDUFS7"/>
+<node id="NARS2"/>
+<node id="SDHA"/>
+<node id="TTC19"/>
+<node id="ETHE1"/>
+<node id="SURF1"/>
+<node id="PTCD3"/>
+<node id="NDUFV2"/>
+<node id="SUCLG1"/>
+<node id="NDUFS1"/>
+<node id="NDUFV1"/>
+<node id="LRPPRC"/>
+<node id="UQCRQ"/>
+<node id="NDUFA2"/>
+<node id="NDUFA9"/>
+<node id="SUCLA2"/>
+<node id="NDUFS8"/>
+<node id="FOXRED1"/>
+<node id="COX10"/>
+<node id="IARS2"/>
+<node id="SLC19A3"/>
+<node id="NDUFS4"/>
+<node id="TACO1"/>
+<node id="PDHA1"/>
+<node id="NDUFA12"/>
+<edge source="BCS1L" target="LRPPRC"/>
+<edge source="BCS1L" target="TACO1"/>
+<edge source="BCS1L" target="PDHA1"/>
+<edge source="BCS1L" target="NDUFS7"/>
+<edge source="BCS1L" target="GFM1"/>
+<edge source="BCS1L" target="GFM2"/>
+<edge source="NDUFA10" target="NDUFV1"/>
+<edge source="NDUFA10" target="NDUFA9"/>
+<edge source="NDUFA10" target="PDHA1"/>
+<edge source="NDUFA10" target="NDUFS7"/>
+<edge source="NDUFA10" target="UQCRQ"/>
+<edge source="NDUFA10" target="NDUFV2"/>
+<edge source="NDUFA10" target="NDUFA12"/>
+<edge source="NDUFA10" target="NDUFS3"/>
+<edge source="NDUFA10" target="FOXRED1"/>
+<edge source="NDUFA10" target="NDUFA1"/>
+<edge source="COX15" target="LRPPRC"/>
+<edge source="COX15" target="TACO1"/>
+<edge source="COX15" target="NDUFV1"/>
+<edge source="COX15" target="PTCD3"/>
+<edge source="COX15" target="NDUFA9"/>
+<edge source="COX15" target="NDUFS7"/>
+<edge source="COX15" target="NDUFV2"/>
+<edge source="COX15" target="NDUFS1"/>
+<edge source="COX15" target="SURF1"/>
+<edge source="COX15" target="NDUFS8"/>
+<edge source="COX15" target="NDUFS4"/>
+<edge source="COX15" target="NDUFA12"/>
+<edge source="COX15" target="NDUFS3"/>
+<edge source="COX15" target="IARS2"/>
+<edge source="COX15" target="NDUFA2"/>
+<edge source="NDUFA1" target="NDUFV1"/>
+<edge source="NDUFA1" target="NDUFA9"/>
+<edge source="NDUFA1" target="NDUFS7"/>
+<edge source="NDUFA1" target="NDUFV2"/>
+<edge source="NDUFA1" target="NDUFS1"/>
+<edge source="NDUFA1" target="NDUFS3"/>
+<edge source="NDUFA1" target="NDUFS8"/>
+<edge source="NDUFA1" target="NDUFA12"/>
+<edge source="NDUFA1" target="NDUFA2"/>
+<edge source="NDUFA1" target="NDUFS4"/>
+<edge source="NDUFS3" target="LRPPRC"/>
+<edge source="NDUFS3" target="TACO1"/>
+<edge source="NDUFS3" target="NDUFV1"/>
+<edge source="NDUFS3" target="NDUFA9"/>
+<edge source="NDUFS3" target="PDHA1"/>
+<edge source="NDUFS3" target="NDUFS7"/>
+<edge source="NDUFS3" target="UQCRQ"/>
+<edge source="NDUFS3" target="NDUFV2"/>
+<edge source="NDUFS3" target="NDUFS1"/>
+<edge source="NDUFS3" target="NDUFS8"/>
+<edge source="NDUFS3" target="SURF1"/>
+<edge source="NDUFS3" target="SDHA"/>
+<edge source="NDUFS3" target="NDUFA2"/>
+<edge source="NDUFS3" target="NDUFS4"/>
+<edge source="NDUFS3" target="NDUFA12"/>
+<edge source="NDUFS3" target="GFM1"/>
+<edge source="NDUFS3" target="FOXRED1"/>
+<edge source="NDUFS3" target="GFM2"/>
+<edge source="GFM1" target="LRPPRC"/>
+<edge source="GFM1" target="TACO1"/>
+<edge source="GFM1" target="NDUFV1"/>
+<edge source="GFM1" target="PTCD3"/>
+<edge source="GFM1" target="NDUFA9"/>
+<edge source="GFM1" target="PDHA1"/>
+<edge source="GFM1" target="NDUFS7"/>
+<edge source="GFM1" target="NDUFV2"/>
+<edge source="GFM1" target="SUCLA2"/>
+<edge source="GFM1" target="NDUFS1"/>
+<edge source="GFM1" target="NDUFS8"/>
+<edge source="GFM1" target="NDUFA12"/>
+<edge source="GFM1" target="NDUFA2"/>
+<edge source="GFM1" target="IARS2"/>
+<edge source="GFM1" target="NDUFS4"/>
+<edge source="GFM2" target="LRPPRC"/>
+<edge source="GFM2" target="TACO1"/>
+<edge source="GFM2" target="NDUFV1"/>
+<edge source="GFM2" target="PTCD3"/>
+<edge source="GFM2" target="NDUFA9"/>
+<edge source="GFM2" target="PDHA1"/>
+<edge source="GFM2" target="NDUFS7"/>
+<edge source="GFM2" target="NDUFV2"/>
+<edge source="GFM2" target="NDUFS1"/>
+<edge source="GFM2" target="NDUFS8"/>
+<edge source="GFM2" target="NDUFA12"/>
+<edge source="GFM2" target="NDUFA2"/>
+<edge source="GFM2" target="IARS2"/>
+<edge source="GFM2" target="NDUFS4"/>
+<edge source="NDUFS7" target="LRPPRC"/>
+<edge source="NDUFS7" target="TACO1"/>
+<edge source="NDUFS7" target="NDUFV1"/>
+<edge source="NDUFS7" target="NDUFA9"/>
+<edge source="NDUFS7" target="PDHA1"/>
+<edge source="NDUFS7" target="NDUFS8"/>
+<edge source="NDUFS7" target="NDUFV2"/>
+<edge source="NDUFS7" target="NDUFS1"/>
+<edge source="NDUFS7" target="NDUFS4"/>
+<edge source="NDUFS7" target="NDUFA12"/>
+<edge source="NDUFS7" target="ETHE1"/>
+<edge source="NDUFS7" target="NARS2"/>
+<edge source="NDUFS7" target="IARS2"/>
+<edge source="NDUFS7" target="UQCRQ"/>
+<edge source="NDUFS7" target="SURF1"/>
+<edge source="NDUFS7" target="NDUFA2"/>
+<edge source="NARS2" target="PDHA1"/>
+<edge source="NARS2" target="FOXRED1"/>
+<edge source="SDHA" target="NDUFV1"/>
+<edge source="SDHA" target="PDHA1"/>
+<edge source="SDHA" target="UQCRQ"/>
+<edge source="SDHA" target="NDUFV2"/>
+<edge source="SDHA" target="SUCLA2"/>
+<edge source="SDHA" target="SUCLG1"/>
+<edge source="SDHA" target="NDUFS8"/>
+<edge source="SDHA" target="NDUFA2"/>
+<edge source="SDHA" target="SURF1"/>
+<edge source="ETHE1" target="SUCLG1"/>
+<edge source="SURF1" target="LRPPRC"/>
+<edge source="SURF1" target="TACO1"/>
+<edge source="SURF1" target="NDUFV1"/>
+<edge source="SURF1" target="PTCD3"/>
+<edge source="SURF1" target="NDUFA9"/>
+<edge source="SURF1" target="NDUFV2"/>
+<edge source="SURF1" target="NDUFS1"/>
+<edge source="SURF1" target="NDUFS8"/>
+<edge source="SURF1" target="NDUFA12"/>
+<edge source="SURF1" target="NDUFA2"/>
+<edge source="SURF1" target="IARS2"/>
+<edge source="SURF1" target="NDUFS4"/>
+<edge source="PTCD3" target="LRPPRC"/>
+<edge source="PTCD3" target="TACO1"/>
+<edge source="PTCD3" target="PDHA1"/>
+<edge source="NDUFV2" target="LRPPRC"/>
+<edge source="NDUFV2" target="TACO1"/>
+<edge source="NDUFV2" target="NDUFV1"/>
+<edge source="NDUFV2" target="NDUFA9"/>
+<edge source="NDUFV2" target="NDUFS8"/>
+<edge source="NDUFV2" target="NDUFS1"/>
+<edge source="NDUFV2" target="NDUFA2"/>
+<edge source="NDUFV2" target="NDUFA12"/>
+<edge source="NDUFV2" target="NDUFS4"/>
+<edge source="SUCLG1" target="SUCLA2"/>
+<edge source="NDUFS1" target="LRPPRC"/>
+<edge source="NDUFS1" target="TACO1"/>
+<edge source="NDUFS1" target="NDUFV1"/>
+<edge source="NDUFS1" target="NDUFA9"/>
+<edge source="NDUFS1" target="PDHA1"/>
+<edge source="NDUFS1" target="UQCRQ"/>
+<edge source="NDUFS1" target="NDUFS8"/>
+<edge source="NDUFS1" target="NDUFA12"/>
+<edge source="NDUFS1" target="NDUFS4"/>
+<edge source="NDUFV1" target="LRPPRC"/>
+<edge source="NDUFV1" target="TACO1"/>
+<edge source="NDUFV1" target="NDUFS8"/>
+<edge source="NDUFV1" target="NDUFA9"/>
+<edge source="NDUFV1" target="NDUFA2"/>
+<edge source="NDUFV1" target="NDUFS4"/>
+<edge source="NDUFV1" target="PDHA1"/>
+<edge source="NDUFV1" target="NDUFA12"/>
+<edge source="NDUFV1" target="UQCRQ"/>
+<edge source="LRPPRC" target="PDHA1"/>
+<edge source="LRPPRC" target="NDUFA9"/>
+<edge source="LRPPRC" target="NDUFS8"/>
+<edge source="LRPPRC" target="IARS2"/>
+<edge source="LRPPRC" target="NDUFA12"/>
+<edge source="LRPPRC" target="NDUFA2"/>
+<edge source="LRPPRC" target="NDUFS4"/>
+<edge source="LRPPRC" target="SUCLA2"/>
+<edge source="LRPPRC" target="TACO1"/>
+<edge source="UQCRQ" target="NDUFA9"/>
+<edge source="UQCRQ" target="PDHA1"/>
+<edge source="UQCRQ" target="NDUFA2"/>
+<edge source="UQCRQ" target="NDUFS8"/>
+<edge source="NDUFA2" target="TACO1"/>
+<edge source="NDUFA2" target="NDUFA9"/>
+<edge source="NDUFA2" target="NDUFA12"/>
+<edge source="NDUFA2" target="NDUFS4"/>
+<edge source="NDUFA9" target="TACO1"/>
+<edge source="NDUFA9" target="NDUFA12"/>
+<edge source="NDUFA9" target="NDUFS4"/>
+<edge source="NDUFA9" target="NDUFS8"/>
+<edge source="NDUFA9" target="PDHA1"/>
+<edge source="SUCLA2" target="TACO1"/>
+<edge source="SUCLA2" target="PDHA1"/>
+<edge source="NDUFS8" target="TACO1"/>
+<edge source="NDUFS8" target="PDHA1"/>
+<edge source="NDUFS8" target="NDUFA12"/>
+<edge source="NDUFS8" target="NDUFS4"/>
+<edge source="FOXRED1" target="PDHA1"/>
+<edge source="IARS2" target="TACO1"/>
+<edge source="IARS2" target="PDHA1"/>
+<edge source="NDUFS4" target="TACO1"/>
+<edge source="NDUFS4" target="NDUFA12"/>
+<edge source="TACO1" target="NDUFA12"/>
+<edge source="TACO1" target="PDHA1"/>
+<edge source="PDHA1" target="NDUFA12"/>
+</graph></graphml>

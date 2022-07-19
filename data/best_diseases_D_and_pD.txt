@@ -1,0 +1,17 @@
+#
+# pDIAMOnD
+#
+anemia aplastic
+blood coagulation disorders
+charcot-marie-tooth disease
+myeloproliferative disorders
+metabolic syndrome x
+spondylarthropathies
+#
+# DIAMOnD
+#
+anemia hemolytic
+cardiomyopathies
+coronary artery disease
+macular degeneration
+cardiomyopathy hypertrophic

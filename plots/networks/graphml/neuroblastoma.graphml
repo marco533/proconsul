@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="ARID1B"/>
+<node id="YAP1"/>
+<node id="NNAT"/>
+<node id="PHOX2B"/>
+<node id="ESR1"/>
+<node id="MET"/>
+<node id="MYC"/>
+<node id="MYCN"/>
+<node id="NRAS"/>
+<node id="CHEK2"/>
+<node id="CDKN2A"/>
+<node id="ABCB1"/>
+<node id="HAND2"/>
+<node id="PINK1"/>
+<node id="AURKA"/>
+<node id="PTPN14"/>
+<node id="CHD5"/>
+<node id="RASSF5"/>
+<node id="DBH"/>
+<node id="ALK"/>
+<node id="DOCK8"/>
+<node id="NTRK2"/>
+<node id="TERT"/>
+<node id="COX2"/>
+<node id="GATA3"/>
+<node id="BCHE"/>
+<node id="LMO1"/>
+<node id="ATRX"/>
+<node id="GNAS"/>
+<node id="NTRK1"/>
+<node id="TBX2"/>
+<node id="KIF1B"/>
+<node id="PTPN11"/>
+<node id="IFNB1"/>
+<node id="TOP2A"/>
+<node id="TNFSF10"/>
+<node id="HGF"/>
+<node id="CHD6"/>
+<node id="HRAS"/>
+<node id="SEMA3B"/>
+<node id="BARD1"/>
+<node id="TH"/>
+<node id="ARID1A"/>
+<node id="HACE1"/>
+<node id="LIN28B"/>
+<node id="ISL1"/>
+<node id="KRAS"/>
+<edge source="ARID1B" target="YAP1"/>
+<edge source="ARID1B" target="ARID1A"/>
+<edge source="ARID1B" target="MYC"/>
+<edge source="YAP1" target="KRAS"/>
+<edge source="YAP1" target="PTPN14"/>
+<edge source="YAP1" target="ARID1A"/>
+<edge source="YAP1" target="PINK1"/>
+<edge source="YAP1" target="GNAS"/>
+<edge source="ESR1" target="BARD1"/>
+<edge source="ESR1" target="ISL1"/>
+<edge source="ESR1" target="MYC"/>
+<edge source="ESR1" target="TOP2A"/>
+<edge source="ESR1" target="ARID1A"/>
+<edge source="ESR1" target="CHD6"/>
+<edge source="ESR1" target="AURKA"/>
+<edge source="ESR1" target="GATA3"/>
+<edge source="ESR1" target="COX2"/>
+<edge source="ESR1" target="NRAS"/>
+<edge source="ESR1" target="ATRX"/>
+<edge source="ESR1" target="TBX2"/>
+<edge source="ESR1" target="SEMA3B"/>
+<edge source="MET" target="HGF"/>
+<edge source="MET" target="HRAS"/>
+<edge source="MET" target="TERT"/>
+<edge source="MET" target="MYC"/>
+<edge source="MET" target="PTPN11"/>
+<edge source="MET" target="KRAS"/>
+<edge source="MYC" target="CDKN2A"/>
+<edge source="MYC" target="TOP2A"/>
+<edge source="MYC" target="PTPN14"/>
+<edge source="MYC" target="MYCN"/>
+<edge source="MYC" target="ARID1A"/>
+<edge source="MYC" target="COX2"/>
+<edge source="MYC" target="HGF"/>
+<edge source="MYC" target="AURKA"/>
+<edge source="MYC" target="TERT"/>
+<edge source="MYCN" target="CDKN2A"/>
+<edge source="MYCN" target="AURKA"/>
+<edge source="NRAS" target="DOCK8"/>
+<edge source="NRAS" target="KRAS"/>
+<edge source="NRAS" target="HRAS"/>
+<edge source="NRAS" target="GNAS"/>
+<edge source="CHEK2" target="GNAS"/>
+<edge source="CHEK2" target="LMO1"/>
+<edge source="CDKN2A" target="HRAS"/>
+<edge source="CDKN2A" target="AURKA"/>
+<edge source="CDKN2A" target="TERT"/>
+<edge source="CDKN2A" target="HGF"/>
+<edge source="ABCB1" target="NTRK1"/>
+<edge source="ABCB1" target="KRAS"/>
+<edge source="HAND2" target="PINK1"/>
+<edge source="AURKA" target="BARD1"/>
+<edge source="AURKA" target="ATRX"/>
+<edge source="PTPN14" target="KRAS"/>
+<edge source="RASSF5" target="HRAS"/>
+<edge source="RASSF5" target="KRAS"/>
+<edge source="DBH" target="NTRK1"/>
+<edge source="DOCK8" target="HRAS"/>
+<edge source="DOCK8" target="KRAS"/>
+<edge source="GATA3" target="LMO1"/>
+<edge source="GNAS" target="NTRK1"/>
+<edge source="GNAS" target="KRAS"/>
+<edge source="NTRK1" target="PTPN11"/>
+<edge source="HRAS" target="KRAS"/>
+</graph></graphml>

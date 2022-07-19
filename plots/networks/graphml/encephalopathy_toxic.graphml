@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="PRKCD"/>
+<node id="TGM1"/>
+<node id="FOS"/>
+<node id="ADD3"/>
+<node id="CYP3A5"/>
+<node id="CD3D"/>
+<node id="PLAT"/>
+<node id="SRSF5"/>
+<node id="ABCB1"/>
+<node id="CRISPLD2"/>
+<node id="EGLN1"/>
+<node id="TIMP3"/>
+<node id="BCHE"/>
+<node id="ALOX5AP"/>
+<node id="NQO1"/>
+<node id="PTGES3"/>
+<node id="P2RX1"/>
+<node id="ST8SIA1"/>
+<node id="CCK"/>
+<node id="ADRA1B"/>
+<node id="BCL2L1"/>
+<node id="CASP3"/>
+<node id="RNASE6"/>
+<node id="ADCYAP1"/>
+<node id="LAT"/>
+<node id="MTOR"/>
+<node id="NFE2L2"/>
+<node id="PON1"/>
+<edge source="PRKCD" target="MTOR"/>
+<edge source="PRKCD" target="PTGES3"/>
+<edge source="TGM1" target="ST8SIA1"/>
+<edge source="FOS" target="NQO1"/>
+<edge source="EGLN1" target="PTGES3"/>
+<edge source="NQO1" target="NFE2L2"/>
+<edge source="PTGES3" target="CASP3"/>
+<edge source="BCL2L1" target="MTOR"/>
+</graph></graphml>

@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="ITGB2"/>
+<node id="IL6"/>
+<node id="CCL19"/>
+<node id="TLR4"/>
+<node id="EGR1"/>
+<node id="MYLK"/>
+<node id="CCR2"/>
+<node id="CXCL5"/>
+<node id="CX3CL1"/>
+<node id="CCL4"/>
+<node id="CCL11"/>
+<node id="CSF2"/>
+<node id="IL4"/>
+<node id="ABCF1"/>
+<node id="IL17A"/>
+<node id="SPP1"/>
+<node id="TNFRSF1B"/>
+<node id="CCR6"/>
+<node id="AHR"/>
+<node id="IL1R2"/>
+<node id="AGT"/>
+<node id="CXCR3"/>
+<node id="IL1R1"/>
+<node id="CCL8"/>
+<node id="CCL2"/>
+<node id="HMOX1"/>
+<node id="IL13"/>
+<node id="IL1B"/>
+<node id="SIRT1"/>
+<node id="CD40LG"/>
+<node id="CXCL9"/>
+<node id="CCL7"/>
+<node id="POMC"/>
+<node id="CASP1"/>
+<node id="TNF"/>
+<node id="TNFRSF1A"/>
+<node id="CCL24"/>
+<node id="IFNG"/>
+<node id="IL18"/>
+<node id="CCL17"/>
+<node id="CCR1"/>
+<node id="PARP1"/>
+<node id="IL2RB"/>
+<node id="IL33"/>
+<node id="CCR9"/>
+<node id="PF4"/>
+<node id="MYD88"/>
+<node id="TGFB1"/>
+<node id="CCL20"/>
+<node id="IKBKB"/>
+<node id="IL5RA"/>
+<node id="IL6ST"/>
+<node id="CXCR2"/>
+<node id="CXCL1"/>
+<edge source="TLR4" target="MYD88"/>
+<edge source="EGR1" target="IL1B"/>
+<edge source="CXCL5" target="CXCL1"/>
+<edge source="CXCL5" target="CCL20"/>
+<edge source="CXCL5" target="CCL11"/>
+<edge source="CCL11" target="CXCL1"/>
+<edge source="CCL11" target="CCL2"/>
+<edge source="CCL11" target="PF4"/>
+<edge source="CCL11" target="CXCL9"/>
+<edge source="CCL11" target="CCL8"/>
+<edge source="SPP1" target="PARP1"/>
+<edge source="TNFRSF1B" target="TNFRSF1A"/>
+<edge source="TNFRSF1B" target="TNF"/>
+<edge source="CCR6" target="CCL20"/>
+<edge source="CXCR3" target="PF4"/>
+<edge source="CXCR3" target="CXCL9"/>
+<edge source="IL1R1" target="MYD88"/>
+<edge source="IL1R1" target="IL1B"/>
+<edge source="CCL8" target="CCL2"/>
+<edge source="CCL2" target="PF4"/>
+<edge source="CCL2" target="CXCL9"/>
+<edge source="HMOX1" target="CCR1"/>
+<edge source="IL1B" target="CASP1"/>
+<edge source="IL1B" target="IL18"/>
+<edge source="SIRT1" target="PARP1"/>
+<edge source="CXCL9" target="PF4"/>
+<edge source="CCL7" target="CCR1"/>
+<edge source="CASP1" target="PARP1"/>
+<edge source="CASP1" target="IL18"/>
+<edge source="CASP1" target="IL33"/>
+<edge source="TNF" target="TNFRSF1A"/>
+<edge source="TNF" target="IKBKB"/>
+<edge source="TNFRSF1A" target="IKBKB"/>
+<edge source="PF4" target="CCL20"/>
+<edge source="TGFB1" target="IL5RA"/>
+</graph></graphml>

@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="MYO3A"/>
+<node id="TMTC2"/>
+<node id="PCDH15"/>
+<node id="LHFPL5"/>
+<node id="TGFB3"/>
+<node id="USH1G"/>
+<node id="OTOA"/>
+<node id="ILDR1"/>
+<node id="KITLG"/>
+<node id="COL11A2"/>
+<node id="SYNE4"/>
+<node id="MET"/>
+<node id="CLDN14"/>
+<node id="MYO6"/>
+<node id="OTOG"/>
+<node id="COCH"/>
+<node id="TMIE"/>
+<node id="POU4F3"/>
+<node id="MYH14"/>
+<node id="CIB2"/>
+<node id="MYO7A"/>
+<node id="GJA1"/>
+<node id="GRHL2"/>
+<node id="SLC26A5"/>
+<node id="P2RX2"/>
+<node id="MYO15A"/>
+<node id="NARS2"/>
+<node id="TSPEAR"/>
+<node id="TJP2"/>
+<node id="TPRN"/>
+<node id="TECTA"/>
+<node id="TGFA"/>
+<node id="GRXCR1"/>
+<node id="GIPC3"/>
+<node id="BDP1"/>
+<node id="LOXHD1"/>
+<node id="SMPX"/>
+<node id="MSX1"/>
+<node id="DIABLO"/>
+<node id="CEACAM16"/>
+<node id="CDC14A"/>
+<node id="EPS8L2"/>
+<node id="HOMER2"/>
+<node id="TMC1"/>
+<node id="GJB3"/>
+<node id="MSRB3"/>
+<node id="DCDC2"/>
+<node id="USH1C"/>
+<node id="MYO1F"/>
+<node id="SLC17A8"/>
+<node id="TBC1D24"/>
+<node id="ESPN"/>
+<node id="EYA4"/>
+<node id="CEMIP"/>
+<node id="ROR1"/>
+<node id="HGF"/>
+<node id="ELMOD3"/>
+<node id="STRC"/>
+<node id="CDH23"/>
+<node id="ACTG1"/>
+<node id="ESRRB"/>
+<node id="OSBPL2"/>
+<node id="KCNQ4"/>
+<node id="MARVELD2"/>
+<node id="TMPRSS3"/>
+<node id="SERPINB6"/>
+<node id="SLC44A4"/>
+<node id="CABP2"/>
+<node id="RDX"/>
+<node id="CCDC50"/>
+<node id="CD164"/>
+<node id="TMEM132E"/>
+<node id="TNC"/>
+<edge source="LHFPL5" target="GJB3"/>
+<edge source="USH1G" target="USH1C"/>
+<edge source="MET" target="HGF"/>
+<edge source="MET" target="GJA1"/>
+<edge source="MYO6" target="DIABLO"/>
+<edge source="MYO6" target="GJA1"/>
+<edge source="COCH" target="CDH23"/>
+<edge source="CIB2" target="TMC1"/>
+<edge source="MYO7A" target="USH1C"/>
+<edge source="GJA1" target="TJP2"/>
+<edge source="GJA1" target="TMPRSS3"/>
+<edge source="GJA1" target="MARVELD2"/>
+<edge source="GJA1" target="ROR1"/>
+<edge source="EPS8L2" target="ACTG1"/>
+<edge source="USH1C" target="CDH23"/>
+</graph></graphml>

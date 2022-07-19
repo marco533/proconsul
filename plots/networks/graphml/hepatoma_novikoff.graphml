@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="ATP7B"/>
+<node id="BBC3"/>
+<node id="NR1I3"/>
+<node id="MAPK1"/>
+<node id="IL6"/>
+<node id="MET"/>
+<node id="MYC"/>
+<node id="MIR671"/>
+<node id="PRDX1"/>
+<node id="TSC22D1"/>
+<node id="F12"/>
+<node id="CCND1"/>
+<node id="TGFA"/>
+<node id="PPAT"/>
+<node id="SLC31A1"/>
+<node id="TNFRSF10B"/>
+<node id="FOXM1"/>
+<node id="RGN"/>
+<node id="MIRLET7E"/>
+<node id="MIRLET7D"/>
+<node id="MIR221"/>
+<node id="APOA4"/>
+<node id="MPEG1"/>
+<node id="RRAS2"/>
+<node id="KDR"/>
+<node id="MIR200B"/>
+<node id="MIR183"/>
+<node id="ALAS2"/>
+<node id="BCL2"/>
+<node id="JAK2"/>
+<node id="CYP1A2"/>
+<node id="MIR18A"/>
+<node id="MIR98"/>
+<node id="PML"/>
+<node id="GJB1"/>
+<node id="MIR26B"/>
+<node id="APOC2"/>
+<node id="CXCL9"/>
+<node id="GSTP1"/>
+<node id="TNF"/>
+<node id="MIR34A"/>
+<node id="CDH1"/>
+<node id="BCL2L1"/>
+<node id="AFP"/>
+<node id="BAK1"/>
+<node id="CCL20"/>
+<node id="ATP7A"/>
+<node id="FAS"/>
+<node id="SPP1"/>
+<node id="GRP"/>
+<node id="IKBKG"/>
+<node id="MAPK3"/>
+<node id="MIR145"/>
+<node id="MIRLET7B"/>
+<node id="SQLE"/>
+<node id="MIR331"/>
+<node id="MIR340"/>
+<node id="TP53"/>
+<node id="MIR30B"/>
+<node id="CYP2E1"/>
+<node id="GLUL"/>
+<node id="CP"/>
+<node id="MMP2"/>
+<node id="RB1"/>
+<node id="TEK"/>
+<node id="MIR206"/>
+<node id="MIRLET7I"/>
+<node id="CTNNB1"/>
+<node id="H19"/>
+<node id="KRAS"/>
+<node id="STAT3"/>
+<node id="CD63"/>
+<node id="MIR30A"/>
+<node id="MIR324"/>
+<node id="MIR652"/>
+<node id="SOX4"/>
+<node id="TK1"/>
+<node id="MIR429"/>
+<node id="CCNDBP1"/>
+<node id="HGF"/>
+<node id="HRAS"/>
+<node id="ENO2"/>
+<node id="TGFB1"/>
+<node id="SOCS1"/>
+<node id="MFGE8"/>
+<edge source="BBC3" target="BCL2"/>
+<edge source="BBC3" target="TP53"/>
+<edge source="BBC3" target="BCL2L1"/>
+<edge source="NR1I3" target="PML"/>
+<edge source="MAPK1" target="PML"/>
+<edge source="MAPK1" target="STAT3"/>
+<edge source="MAPK1" target="KDR"/>
+<edge source="MAPK1" target="BCL2"/>
+<edge source="MAPK1" target="MYC"/>
+<edge source="MAPK1" target="TP53"/>
+<edge source="MAPK1" target="CCND1"/>
+<edge source="MAPK1" target="GSTP1"/>
+<edge source="MAPK1" target="KRAS"/>
+<edge source="MAPK1" target="MAPK3"/>
+<edge source="MET" target="STAT3"/>
+<edge source="MET" target="CTNNB1"/>
+<edge source="MET" target="SOCS1"/>
+<edge source="MET" target="CDH1"/>
+<edge source="MET" target="HGF"/>
+<edge source="MET" target="HRAS"/>
+<edge source="MET" target="MYC"/>
+<edge source="MET" target="TP53"/>
+<edge source="MET" target="KRAS"/>
+<edge source="MYC" target="PML"/>
+<edge source="MYC" target="CTNNB1"/>
+<edge source="MYC" target="RB1"/>
+<edge source="MYC" target="BCL2"/>
+<edge source="MYC" target="TP53"/>
+<edge source="MYC" target="PRDX1"/>
+<edge source="MYC" target="MAPK3"/>
+<edge source="MYC" target="IKBKG"/>
+<edge source="MYC" target="RRAS2"/>
+<edge source="MYC" target="TK1"/>
+<edge source="MYC" target="GSTP1"/>
+<edge source="MYC" target="FOXM1"/>
+<edge source="MYC" target="HGF"/>
+<edge source="MYC" target="SOX4"/>
+<edge source="PRDX1" target="TP53"/>
+<edge source="PRDX1" target="CDH1"/>
+<edge source="PRDX1" target="TNF"/>
+<edge source="TSC22D1" target="TP53"/>
+<edge source="CCND1" target="STAT3"/>
+<edge source="CCND1" target="RB1"/>
+<edge source="CCND1" target="TP53"/>
+<edge source="CCND1" target="CCNDBP1"/>
+<edge source="CCND1" target="TK1"/>
+<edge source="SLC31A1" target="FOXM1"/>
+<edge source="TNFRSF10B" target="FAS"/>
+<edge source="TNFRSF10B" target="KRAS"/>
+<edge source="FOXM1" target="CTNNB1"/>
+<edge source="FOXM1" target="RB1"/>
+<edge source="MPEG1" target="TP53"/>
+<edge source="RRAS2" target="STAT3"/>
+<edge source="RRAS2" target="KRAS"/>
+<edge source="BCL2" target="PML"/>
+<edge source="BCL2" target="BCL2L1"/>
+<edge source="BCL2" target="BAK1"/>
+<edge source="BCL2" target="TP53"/>
+<edge source="BCL2" target="IKBKG"/>
+<edge source="BCL2" target="KRAS"/>
+<edge source="JAK2" target="STAT3"/>
+<edge source="JAK2" target="SOCS1"/>
+<edge source="JAK2" target="IKBKG"/>
+<edge source="PML" target="TP53"/>
+<edge source="PML" target="RB1"/>
+<edge source="PML" target="STAT3"/>
+<edge source="PML" target="CTNNB1"/>
+<edge source="PML" target="MAPK3"/>
+<edge source="PML" target="FAS"/>
+<edge source="PML" target="KRAS"/>
+<edge source="GJB1" target="CXCL9"/>
+<edge source="GSTP1" target="BCL2L1"/>
+<edge source="TNF" target="FAS"/>
+<edge source="TNF" target="IKBKG"/>
+<edge source="CDH1" target="CTNNB1"/>
+<edge source="CDH1" target="TGFB1"/>
+<edge source="CDH1" target="HRAS"/>
+<edge source="CDH1" target="KRAS"/>
+<edge source="CDH1" target="MAPK3"/>
+<edge source="BCL2L1" target="CTNNB1"/>
+<edge source="BCL2L1" target="KRAS"/>
+<edge source="BCL2L1" target="TP53"/>
+<edge source="BCL2L1" target="BAK1"/>
+<edge source="BAK1" target="TP53"/>
+<edge source="ATP7A" target="HRAS"/>
+<edge source="ATP7A" target="KRAS"/>
+<edge source="FAS" target="CTNNB1"/>
+<edge source="FAS" target="RB1"/>
+<edge source="IKBKG" target="TEK"/>
+<edge source="MAPK3" target="RB1"/>
+<edge source="MAPK3" target="TP53"/>
+<edge source="MAPK3" target="TEK"/>
+<edge source="TP53" target="STAT3"/>
+<edge source="TP53" target="RB1"/>
+<edge source="TP53" target="SOCS1"/>
+<edge source="TP53" target="HRAS"/>
+<edge source="TP53" target="TK1"/>
+<edge source="TP53" target="SOX4"/>
+<edge source="MMP2" target="STAT3"/>
+<edge source="MMP2" target="TGFB1"/>
+<edge source="RB1" target="STAT3"/>
+<edge source="TEK" target="SOCS1"/>
+<edge source="CTNNB1" target="KRAS"/>
+<edge source="CTNNB1" target="HRAS"/>
+<edge source="CTNNB1" target="SOCS1"/>
+<edge source="KRAS" target="HRAS"/>
+<edge source="KRAS" target="SOX4"/>
+</graph></graphml>

@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="RGS17"/>
+<node id="PICK1"/>
+<node id="ACSL6"/>
+<node id="DCSTAMP"/>
+<node id="AOAH"/>
+<node id="DRD1"/>
+<node id="COL28A1"/>
+<node id="FOS"/>
+<node id="FKBP15"/>
+<node id="PDE4B"/>
+<node id="GDNF"/>
+<node id="GABRG2"/>
+<node id="HTR3A"/>
+<node id="PDE6C"/>
+<node id="DRD2"/>
+<node id="DRD3"/>
+<node id="RELA"/>
+<node id="ZNF423"/>
+<node id="PLAT"/>
+<node id="ZNF385D"/>
+<node id="PCOLCE2"/>
+<node id="ASTN2"/>
+<node id="HTR6"/>
+<node id="ARRB2"/>
+<node id="CCHCR1"/>
+<node id="NOS1"/>
+<node id="SNCA"/>
+<node id="HS3ST4"/>
+<node id="MAP2K5"/>
+<node id="RAPGEF5"/>
+<node id="CD55"/>
+<node id="NRG1"/>
+<node id="RALY"/>
+<node id="PRKG1"/>
+<node id="AK5"/>
+<node id="CUBN"/>
+<node id="ACHE"/>
+<node id="PROKR2"/>
+<node id="SMYD3"/>
+<node id="SLC6A3"/>
+<node id="TRPM3"/>
+<node id="PDE4D"/>
+<node id="MYO5B"/>
+<node id="CDH13"/>
+<node id="OPRM1"/>
+<node id="USP48"/>
+<node id="SGCZ"/>
+<node id="SERPINA5"/>
+<node id="GSTP1"/>
+<node id="HTR1B"/>
+<node id="BDNF"/>
+<node id="SLC6A9"/>
+<node id="AKT1"/>
+<node id="PSD3"/>
+<node id="SH3RF3"/>
+<node id="DRD4"/>
+<node id="COMT"/>
+<node id="CSMD1"/>
+<node id="GSTM1"/>
+<node id="ADORA2A"/>
+<node id="FHIT"/>
+<node id="SLC6A4"/>
+<node id="EPHX1"/>
+<node id="NPY1R"/>
+<node id="GRM2"/>
+<node id="CYP2D6"/>
+<node id="LINGO2"/>
+<node id="GSTT1"/>
+<node id="PDYN"/>
+<node id="PRDM2"/>
+<node id="POU5F1"/>
+<edge source="PICK1" target="SLC6A3"/>
+<edge source="PICK1" target="AKT1"/>
+<edge source="DRD1" target="DRD3"/>
+<edge source="FOS" target="RELA"/>
+<edge source="PDE4B" target="PDE4D"/>
+<edge source="DRD2" target="ARRB2"/>
+<edge source="DRD2" target="ADORA2A"/>
+<edge source="DRD2" target="OPRM1"/>
+<edge source="DRD3" target="USP48"/>
+<edge source="RELA" target="USP48"/>
+<edge source="PLAT" target="SERPINA5"/>
+<edge source="ARRB2" target="DRD4"/>
+<edge source="ARRB2" target="AKT1"/>
+<edge source="ARRB2" target="PDE4D"/>
+<edge source="SNCA" target="SLC6A3"/>
+<edge source="SNCA" target="SLC6A4"/>
+<edge source="SNCA" target="AKT1"/>
+<edge source="MAP2K5" target="AKT1"/>
+</graph></graphml>

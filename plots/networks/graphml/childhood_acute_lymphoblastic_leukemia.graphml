@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="ABL1"/>
+<node id="CRLF2"/>
+<node id="IDH1"/>
+<node id="NOTCH1"/>
+<node id="GNB1"/>
+<node id="NT5C2"/>
+<node id="DUX4"/>
+<node id="NBN"/>
+<node id="VPREB1"/>
+<node id="SLC19A1"/>
+<node id="CDKN2A"/>
+<node id="CYP1A2"/>
+<node id="HLF"/>
+<node id="ABCB1"/>
+<node id="HOXD4"/>
+<node id="ETV6"/>
+<node id="BCR"/>
+<node id="IKZF3"/>
+<node id="FBXW7"/>
+<node id="ARID5B"/>
+<node id="TAL1"/>
+<node id="FLT3"/>
+<node id="FPGS"/>
+<node id="ARNT"/>
+<node id="CYP1B1"/>
+<node id="MTHFR"/>
+<node id="NQO1"/>
+<node id="PAX5"/>
+<node id="PRDM14"/>
+<node id="NAT2"/>
+<node id="ERG"/>
+<node id="IKZF2"/>
+<node id="IKZF1"/>
+<node id="CYP2C8"/>
+<node id="TAL2"/>
+<node id="TP53"/>
+<node id="CEBPE"/>
+<node id="NUP214"/>
+<node id="MTRR"/>
+<node id="PAG1"/>
+<node id="CDK6"/>
+<node id="RUNX1"/>
+<node id="CYP2E1"/>
+<node id="P2RY8"/>
+<node id="TCF3"/>
+<node id="RB1"/>
+<node id="EPHX1"/>
+<node id="HCK"/>
+<node id="CASP8"/>
+<node id="KMT2A"/>
+<node id="XRCC1"/>
+<edge source="ABL1" target="RB1"/>
+<edge source="ABL1" target="BCR"/>
+<edge source="ABL1" target="TP53"/>
+<edge source="ABL1" target="HCK"/>
+<edge source="ABL1" target="PAG1"/>
+<edge source="IDH1" target="PRDM14"/>
+<edge source="NOTCH1" target="RB1"/>
+<edge source="NOTCH1" target="IKZF1"/>
+<edge source="NOTCH1" target="IKZF3"/>
+<edge source="NOTCH1" target="FBXW7"/>
+<edge source="NOTCH1" target="IKZF2"/>
+<edge source="NOTCH1" target="RUNX1"/>
+<edge source="NBN" target="TP53"/>
+<edge source="NBN" target="NAT2"/>
+<edge source="CDKN2A" target="ARNT"/>
+<edge source="CDKN2A" target="TP53"/>
+<edge source="CDKN2A" target="CDK6"/>
+<edge source="CDKN2A" target="NAT2"/>
+<edge source="BCR" target="RB1"/>
+<edge source="BCR" target="HCK"/>
+<edge source="BCR" target="TP53"/>
+<edge source="IKZF3" target="IKZF1"/>
+<edge source="IKZF3" target="IKZF2"/>
+<edge source="IKZF3" target="RUNX1"/>
+<edge source="FBXW7" target="KMT2A"/>
+<edge source="FBXW7" target="TP53"/>
+<edge source="TAL1" target="RB1"/>
+<edge source="TAL1" target="TCF3"/>
+<edge source="TAL1" target="RUNX1"/>
+<edge source="FLT3" target="HCK"/>
+<edge source="ARNT" target="RB1"/>
+<edge source="ARNT" target="CYP1B1"/>
+<edge source="ARNT" target="CDK6"/>
+<edge source="ARNT" target="TP53"/>
+<edge source="NQO1" target="TP53"/>
+<edge source="PAX5" target="RB1"/>
+<edge source="PAX5" target="RUNX1"/>
+<edge source="PRDM14" target="CASP8"/>
+<edge source="IKZF2" target="IKZF1"/>
+<edge source="IKZF1" target="RUNX1"/>
+<edge source="TAL2" target="TCF3"/>
+<edge source="TP53" target="RB1"/>
+<edge source="TP53" target="KMT2A"/>
+<edge source="TP53" target="XRCC1"/>
+<edge source="TP53" target="CASP8"/>
+<edge source="TP53" target="CDK6"/>
+<edge source="CEBPE" target="RB1"/>
+<edge source="CDK6" target="RB1"/>
+<edge source="CDK6" target="RUNX1"/>
+<edge source="RUNX1" target="TCF3"/>
+<edge source="RUNX1" target="KMT2A"/>
+<edge source="TCF3" target="RB1"/>
+<edge source="RB1" target="CASP8"/>
+</graph></graphml>

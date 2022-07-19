@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="S100A10"/>
+<node id="APC"/>
+<node id="ESR2"/>
+<node id="HIC1"/>
+<node id="OTX2"/>
+<node id="SCG5"/>
+<node id="PTCH1"/>
+<node id="SMYD4"/>
+<node id="STAT3"/>
+<node id="MYC"/>
+<node id="PRAME"/>
+<node id="RASSF1"/>
+<node id="MYCN"/>
+<node id="BRD4"/>
+<node id="IRS2"/>
+<node id="SKP2"/>
+<node id="SCML2"/>
+<node id="SUFU"/>
+<node id="MPL"/>
+<node id="ATOH1"/>
+<node id="ERBB2"/>
+<node id="L3MBTL3"/>
+<node id="BRCA2"/>
+<node id="L3MBTL2"/>
+<node id="PIK3CG"/>
+<node id="FLI1"/>
+<node id="STRADA"/>
+<node id="BRD3"/>
+<node id="CCNE1"/>
+<node id="PTCH2"/>
+<node id="MYCL"/>
+<node id="DNMT1"/>
+<node id="KAT6A"/>
+<node id="S100A4"/>
+<node id="KDM4B"/>
+<node id="S100A6"/>
+<node id="CDK6"/>
+<node id="VAV1"/>
+<node id="PDGFRA"/>
+<node id="BRD2"/>
+<node id="KDM4C"/>
+<node id="CTNNB1"/>
+<node id="EHMT1"/>
+<edge source="APC" target="CTNNB1"/>
+<edge source="ESR2" target="STAT3"/>
+<edge source="ESR2" target="CTNNB1"/>
+<edge source="ESR2" target="KDM4B"/>
+<edge source="ESR2" target="BRD4"/>
+<edge source="HIC1" target="STAT3"/>
+<edge source="HIC1" target="DNMT1"/>
+<edge source="PTCH1" target="STAT3"/>
+<edge source="STAT3" target="ERBB2"/>
+<edge source="STAT3" target="DNMT1"/>
+<edge source="STAT3" target="BRD4"/>
+<edge source="STAT3" target="PDGFRA"/>
+<edge source="MYC" target="CTNNB1"/>
+<edge source="MYC" target="RASSF1"/>
+<edge source="MYC" target="CCNE1"/>
+<edge source="MYC" target="L3MBTL2"/>
+<edge source="MYC" target="SKP2"/>
+<edge source="MYC" target="CDK6"/>
+<edge source="MYC" target="BRD3"/>
+<edge source="MYC" target="MYCN"/>
+<edge source="MYC" target="DNMT1"/>
+<edge source="MYC" target="BRD2"/>
+<edge source="MYC" target="BRD4"/>
+<edge source="MYC" target="L3MBTL3"/>
+<edge source="MYC" target="PDGFRA"/>
+<edge source="MYC" target="ERBB2"/>
+<edge source="RASSF1" target="SKP2"/>
+<edge source="RASSF1" target="CDK6"/>
+<edge source="RASSF1" target="CCNE1"/>
+<edge source="RASSF1" target="ERBB2"/>
+<edge source="MYCN" target="DNMT1"/>
+<edge source="MYCN" target="SKP2"/>
+<edge source="BRD4" target="CTNNB1"/>
+<edge source="BRD4" target="S100A4"/>
+<edge source="BRD4" target="DNMT1"/>
+<edge source="BRD4" target="S100A6"/>
+<edge source="BRD4" target="BRD2"/>
+<edge source="BRD4" target="BRD3"/>
+<edge source="BRD4" target="EHMT1"/>
+<edge source="SKP2" target="CCNE1"/>
+<edge source="SUFU" target="L3MBTL3"/>
+<edge source="ERBB2" target="CTNNB1"/>
+<edge source="ERBB2" target="VAV1"/>
+<edge source="ERBB2" target="PDGFRA"/>
+<edge source="ERBB2" target="CDK6"/>
+<edge source="L3MBTL3" target="DNMT1"/>
+<edge source="BRD3" target="BRD2"/>
+<edge source="BRD3" target="EHMT1"/>
+<edge source="CCNE1" target="CTNNB1"/>
+<edge source="CCNE1" target="CDK6"/>
+<edge source="DNMT1" target="CTNNB1"/>
+<edge source="S100A4" target="S100A6"/>
+<edge source="CDK6" target="CTNNB1"/>
+<edge source="CDK6" target="PDGFRA"/>
+<edge source="BRD2" target="EHMT1"/>
+</graph></graphml>

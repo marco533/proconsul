@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="INS"/>
+<node id="TRH"/>
+<node id="IL6"/>
+<node id="LEP"/>
+<node id="PIGM"/>
+<node id="FOXG1"/>
+<node id="PTGS2"/>
+<node id="GRIA2"/>
+<node id="SLC17A7"/>
+<node id="CLU"/>
+<node id="GRIK1"/>
+<node id="FGF2"/>
+<node id="AGT"/>
+<node id="BCHE"/>
+<node id="OXT"/>
+<node id="SLC6A1"/>
+<node id="CNNM2"/>
+<node id="NGFR"/>
+<node id="CHRNA7"/>
+<node id="POMC"/>
+<node id="BDNF"/>
+<node id="NOS2"/>
+<node id="TCF4"/>
+<node id="GABRA5"/>
+<node id="ADORA2A"/>
+<node id="ABCC2"/>
+<node id="SLC1A1"/>
+<node id="CHRNA4"/>
+<node id="CHRM1"/>
+<node id="LETM1"/>
+<node id="PRKCD"/>
+<node id="KCNJ11"/>
+<node id="ALPL"/>
+<node id="FOS"/>
+<node id="ALAD"/>
+<node id="SSTR2"/>
+<node id="PAM"/>
+<node id="GHRL"/>
+<node id="SYN2"/>
+<node id="ABAT"/>
+<node id="FAAH"/>
+<node id="IMPA1"/>
+<node id="REST"/>
+<node id="MT3"/>
+<node id="NRP2"/>
+<node id="SLC30A1"/>
+<node id="GAMT"/>
+<node id="HTR1A"/>
+<node id="CAT"/>
+<node id="TSC1"/>
+<node id="CHAT"/>
+<node id="SLC8A3"/>
+<node id="HCN1"/>
+<node id="NGF"/>
+<node id="MIB1"/>
+<node id="DRD1"/>
+<node id="NPY"/>
+<node id="PNKP"/>
+<node id="DRD2"/>
+<node id="DRD3"/>
+<node id="CNR1"/>
+<node id="MECP2"/>
+<node id="ATP7A"/>
+<node id="KCNA2"/>
+<node id="SLC12A5"/>
+<node id="TBCD"/>
+<node id="MPDZ"/>
+<node id="CRH"/>
+<node id="MLC1"/>
+<node id="IL1B"/>
+<node id="SLC8A1"/>
+<node id="OPRM1"/>
+<node id="SIGMAR1"/>
+<node id="CDKL5"/>
+<node id="ADRA1B"/>
+<node id="ADCYAP1"/>
+<node id="PDYN"/>
+<node id="SOD2"/>
+<node id="PVALB"/>
+<node id="TSC2"/>
+<node id="SST"/>
+<node id="ACAT1"/>
+<node id="GAD2"/>
+<node id="NOS1"/>
+<node id="OPRK1"/>
+<node id="CHRNA3"/>
+<node id="ACHE"/>
+<node id="SLC2A1"/>
+<node id="RBFOX1"/>
+<node id="CHRNB4"/>
+<node id="GNB3"/>
+<node id="SLC6A2"/>
+<node id="HTR1B"/>
+<node id="CCK"/>
+<node id="IFNB1"/>
+<node id="KCNQ2"/>
+<node id="CHRNA5"/>
+<node id="IDH2"/>
+<node id="POLG"/>
+<node id="APOE"/>
+<node id="CYP11A1"/>
+<node id="APEX1"/>
+<node id="D2HGDH"/>
+<edge source="INS" target="CLU"/>
+<edge source="INS" target="TCF4"/>
+<edge source="INS" target="IDH2"/>
+<edge source="FOXG1" target="APOE"/>
+<edge source="GRIA2" target="REST"/>
+<edge source="CLU" target="FOS"/>
+<edge source="CLU" target="ATP7A"/>
+<edge source="SLC6A1" target="DRD2"/>
+<edge source="NGFR" target="NGF"/>
+<edge source="NOS2" target="NOS1"/>
+<edge source="ADORA2A" target="DRD2"/>
+<edge source="ADORA2A" target="CNR1"/>
+<edge source="LETM1" target="APOE"/>
+<edge source="LETM1" target="MLC1"/>
+<edge source="FOS" target="GAMT"/>
+<edge source="SSTR2" target="DRD2"/>
+<edge source="PAM" target="TSC2"/>
+<edge source="PAM" target="TSC1"/>
+<edge source="ABAT" target="SOD2"/>
+<edge source="REST" target="CAT"/>
+<edge source="REST" target="APEX1"/>
+<edge source="CAT" target="SOD2"/>
+<edge source="CAT" target="MECP2"/>
+<edge source="TSC1" target="TSC2"/>
+<edge source="MIB1" target="CHRNA3"/>
+<edge source="DRD1" target="DRD3"/>
+<edge source="DRD2" target="OPRM1"/>
+<edge source="DRD3" target="MPDZ"/>
+<edge source="MECP2" target="APEX1"/>
+<edge source="MECP2" target="CDKL5"/>
+<edge source="TBCD" target="D2HGDH"/>
+<edge source="IL1B" target="RBFOX1"/>
+<edge source="OPRM1" target="SIGMAR1"/>
+<edge source="SIGMAR1" target="HTR1B"/>
+<edge source="SIGMAR1" target="ACAT1"/>
+<edge source="SIGMAR1" target="SLC2A1"/>
+<edge source="SOD2" target="IDH2"/>
+<edge source="TSC2" target="APEX1"/>
+<edge source="ACAT1" target="IDH2"/>
+<edge source="CHRNB4" target="CHRNA5"/>
+<edge source="POLG" target="APEX1"/>
+</graph></graphml>

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="S100A5"/>
+<node id="NGF"/>
+<node id="IL6"/>
+<node id="FOS"/>
+<node id="STAT3"/>
+<node id="FGF21"/>
+<node id="GABRA6"/>
+<node id="TNFAIP6"/>
+<node id="IL11"/>
+<node id="PLAT"/>
+<node id="ALOX5"/>
+<node id="EDN1"/>
+<node id="ICAM1"/>
+<node id="PLD1"/>
+<node id="HSPD1"/>
+<node id="CCL2"/>
+<node id="SMOX"/>
+<node id="ADORA1"/>
+<node id="SERPINH1"/>
+<node id="IL1B"/>
+<node id="XDH"/>
+<node id="SPHK2"/>
+<node id="MMP9"/>
+<node id="PLAU"/>
+<node id="IGF1"/>
+<node id="CCL7"/>
+<node id="IL22"/>
+<node id="ATF3"/>
+<node id="CXCL2"/>
+<node id="JUNB"/>
+<node id="C3"/>
+<node id="IL6ST"/>
+<node id="CXCR2"/>
+<node id="SOD2"/>
+<edge source="FOS" target="ATF3"/>
+<edge source="FOS" target="JUNB"/>
+<edge source="FOS" target="IL11"/>
+<edge source="STAT3" target="IL6ST"/>
+<edge source="STAT3" target="ATF3"/>
+<edge source="PLAT" target="PLAU"/>
+<edge source="ATF3" target="JUNB"/>
+</graph></graphml>

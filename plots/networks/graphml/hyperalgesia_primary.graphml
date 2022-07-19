@@ -1,0 +1,123 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="MAPK1"/>
+<node id="IL6"/>
+<node id="PTGS2"/>
+<node id="MMP3"/>
+<node id="CACNA2D1"/>
+<node id="AGT"/>
+<node id="PRKCE"/>
+<node id="MFN2"/>
+<node id="MAPK8"/>
+<node id="PTGS1"/>
+<node id="TRPA1"/>
+<node id="CALCA"/>
+<node id="CXCL8"/>
+<node id="IGF1"/>
+<node id="TNFRSF11B"/>
+<node id="NOS2"/>
+<node id="COMT"/>
+<node id="CARTPT"/>
+<node id="BDKRB1"/>
+<node id="THBD"/>
+<node id="PTGER1"/>
+<node id="FOS"/>
+<node id="MPZ"/>
+<node id="BDKRB2"/>
+<node id="SYN2"/>
+<node id="AGER"/>
+<node id="PRKCZ"/>
+<node id="RAF1"/>
+<node id="TAC1"/>
+<node id="TNF"/>
+<node id="MAPK7"/>
+<node id="SCN10A"/>
+<node id="IL1RN"/>
+<node id="MAPK9"/>
+<node id="CRHR1"/>
+<node id="INSR"/>
+<node id="CACNA1H"/>
+<node id="NGF"/>
+<node id="PROKR1"/>
+<node id="DRD3"/>
+<node id="CNR1"/>
+<node id="ALOX5"/>
+<node id="GFAP"/>
+<node id="SLC12A5"/>
+<node id="GAL"/>
+<node id="ADM"/>
+<node id="AVP"/>
+<node id="CCL2"/>
+<node id="P2RX3"/>
+<node id="HOXD1"/>
+<node id="MAPK3"/>
+<node id="IL1B"/>
+<node id="OPRM1"/>
+<node id="MC1R"/>
+<node id="PRKCG"/>
+<node id="HMGB1"/>
+<node id="IL10"/>
+<node id="GRIN1"/>
+<node id="NTF3"/>
+<node id="PDYN"/>
+<node id="PROK2"/>
+<node id="GDNF"/>
+<node id="CCKBR"/>
+<node id="IL1A"/>
+<node id="TACR1"/>
+<node id="P2RX2"/>
+<node id="CSK"/>
+<node id="NOS1"/>
+<node id="CNR2"/>
+<node id="EDN1"/>
+<node id="TRPV1"/>
+<node id="PNOC"/>
+<node id="VIP"/>
+<node id="KNG1"/>
+<node id="AIF1"/>
+<node id="ITGA2"/>
+<node id="PTHLH"/>
+<node id="HTR2A"/>
+<node id="TRPV4"/>
+<node id="SPARC"/>
+<node id="CAMK2A"/>
+<node id="GRIN2B"/>
+<node id="ALOX12"/>
+<edge source="MAPK1" target="INSR"/>
+<edge source="MAPK1" target="FOS"/>
+<edge source="MAPK1" target="RAF1"/>
+<edge source="MAPK1" target="PRKCE"/>
+<edge source="MAPK1" target="MAPK3"/>
+<edge source="MAPK1" target="HMGB1"/>
+<edge source="MAPK1" target="MAPK7"/>
+<edge source="PTGS2" target="MAPK3"/>
+<edge source="PTGS2" target="PTGS1"/>
+<edge source="PTGS2" target="PTGER1"/>
+<edge source="CACNA2D1" target="GRIN1"/>
+<edge source="PRKCE" target="RAF1"/>
+<edge source="MFN2" target="MAPK9"/>
+<edge source="MAPK8" target="RAF1"/>
+<edge source="MAPK8" target="MAPK9"/>
+<edge source="CXCL8" target="CCL2"/>
+<edge source="NOS2" target="NOS1"/>
+<edge source="COMT" target="CNR2"/>
+<edge source="BDKRB1" target="GRIN1"/>
+<edge source="FOS" target="MAPK7"/>
+<edge source="FOS" target="MAPK9"/>
+<edge source="FOS" target="MAPK3"/>
+<edge source="FOS" target="HMGB1"/>
+<edge source="BDKRB2" target="NOS1"/>
+<edge source="AGER" target="HMGB1"/>
+<edge source="PRKCZ" target="RAF1"/>
+<edge source="PRKCZ" target="MAPK7"/>
+<edge source="RAF1" target="MAPK3"/>
+<edge source="RAF1" target="MAPK7"/>
+<edge source="TAC1" target="TACR1"/>
+<edge source="MAPK9" target="GFAP"/>
+<edge source="INSR" target="CSK"/>
+<edge source="INSR" target="MAPK3"/>
+<edge source="GFAP" target="PRKCG"/>
+<edge source="GFAP" target="HMGB1"/>
+<edge source="GRIN1" target="CAMK2A"/>
+<edge source="GRIN1" target="GRIN2B"/>
+<edge source="CAMK2A" target="GRIN2B"/>
+</graph></graphml>

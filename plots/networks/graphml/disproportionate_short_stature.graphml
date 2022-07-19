@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="IFT140"/>
+<node id="CDKN1C"/>
+<node id="ACAN"/>
+<node id="PCNT"/>
+<node id="SH3PXD2B"/>
+<node id="HSPG2"/>
+<node id="TRPS1"/>
+<node id="EVC"/>
+<node id="TCTN3"/>
+<node id="WDR35"/>
+<node id="NPR2"/>
+<node id="IFT80"/>
+<node id="COL11A2"/>
+<node id="BMPR1B"/>
+<node id="EXT2"/>
+<node id="COL9A3"/>
+<node id="OBSL1"/>
+<node id="SULF1"/>
+<node id="DDR2"/>
+<node id="LIFR"/>
+<node id="SMARCAL1"/>
+<node id="ANKH"/>
+<node id="SLC39A13"/>
+<node id="CHST3"/>
+<node id="EIF2AK3"/>
+<node id="PAPSS2"/>
+<node id="CHST14"/>
+<node id="COL9A1"/>
+<node id="PTH1R"/>
+<node id="B3GALT6"/>
+<node id="DHCR24"/>
+<node id="FGFR1"/>
+<node id="IFT122"/>
+<node id="SOX9"/>
+<node id="DYNC2H1"/>
+<node id="NEK1"/>
+<node id="FAM20C"/>
+<node id="EVC2"/>
+<node id="GPC6"/>
+<node id="KIF22"/>
+<node id="FLNB"/>
+<node id="IHH"/>
+<node id="MMP9"/>
+<node id="SHOX"/>
+<node id="ROR2"/>
+<node id="GDF5"/>
+<node id="ANO5"/>
+<node id="RUNX2"/>
+<node id="SLC26A2"/>
+<node id="COL10A1"/>
+<node id="SLC35D1"/>
+<node id="PTPN11"/>
+<node id="FGFR3"/>
+<node id="COL9A2"/>
+<node id="COL11A1"/>
+<node id="EXT1"/>
+<node id="TRIP11"/>
+<node id="CUL7"/>
+<node id="COL1A1"/>
+<node id="TRPV4"/>
+<node id="FBN1"/>
+<node id="FLNA"/>
+<node id="ACP5"/>
+<node id="TBCE"/>
+<node id="COMP"/>
+<node id="FGFR2"/>
+<node id="CTSK"/>
+<node id="PRKAR1A"/>
+<node id="WNT5A"/>
+<node id="COL2A1"/>
+<node id="NKX3-2"/>
+<node id="DYM"/>
+<node id="MATN3"/>
+<node id="GLI3"/>
+<node id="CANT1"/>
+<node id="MMP13"/>
+<edge source="IFT140" target="IFT122"/>
+<edge source="IFT140" target="WDR35"/>
+<edge source="PCNT" target="OBSL1"/>
+<edge source="PCNT" target="WDR35"/>
+<edge source="PCNT" target="TRIP11"/>
+<edge source="SH3PXD2B" target="PRKAR1A"/>
+<edge source="TRPS1" target="CUL7"/>
+<edge source="TCTN3" target="EIF2AK3"/>
+<edge source="WDR35" target="IFT122"/>
+<edge source="BMPR1B" target="GDF5"/>
+<edge source="EXT2" target="EXT1"/>
+<edge source="OBSL1" target="FLNA"/>
+<edge source="OBSL1" target="PRKAR1A"/>
+<edge source="OBSL1" target="KIF22"/>
+<edge source="OBSL1" target="FLNB"/>
+<edge source="OBSL1" target="CUL7"/>
+<edge source="COL9A1" target="COL2A1"/>
+<edge source="PTH1R" target="DYM"/>
+<edge source="FGFR1" target="FGFR2"/>
+<edge source="FGFR1" target="PTPN11"/>
+<edge source="SOX9" target="RUNX2"/>
+<edge source="FLNB" target="FLNA"/>
+<edge source="FLNB" target="CUL7"/>
+<edge source="MMP9" target="COL2A1"/>
+<edge source="ROR2" target="PTPN11"/>
+<edge source="PTPN11" target="FGFR2"/>
+<edge source="FGFR3" target="CTSK"/>
+<edge source="FGFR3" target="FGFR2"/>
+<edge source="CUL7" target="FLNA"/>
+<edge source="CUL7" target="PRKAR1A"/>
+</graph></graphml>

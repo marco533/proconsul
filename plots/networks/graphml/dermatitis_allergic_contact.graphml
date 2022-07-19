@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="HSD11B1"/>
+<node id="CISH"/>
+<node id="MRC1"/>
+<node id="NINJ1"/>
+<node id="CCL19"/>
+<node id="NAMPT"/>
+<node id="BCL2"/>
+<node id="FGL2"/>
+<node id="CCR2"/>
+<node id="TNFAIP6"/>
+<node id="ASRGL1"/>
+<node id="CD3D"/>
+<node id="IL1A"/>
+<node id="PLAT"/>
+<node id="RGS1"/>
+<node id="FCGR3B"/>
+<node id="IGSF6"/>
+<node id="F13A1"/>
+<node id="IL4"/>
+<node id="SPP1"/>
+<node id="STAC"/>
+<node id="ITGAM"/>
+<node id="CALCRL"/>
+<node id="PRDX4"/>
+<node id="BMP6"/>
+<node id="SLC2A3"/>
+<node id="ST6GAL1"/>
+<node id="RAB32"/>
+<node id="CIDEC"/>
+<node id="ETS2"/>
+<node id="IFI30"/>
+<node id="TLR7"/>
+<node id="SOCS2"/>
+<node id="TMSB10"/>
+<node id="QPCT"/>
+<node id="UPP1"/>
+<node id="IPCEF1"/>
+<node id="NUMA1"/>
+<node id="IL5"/>
+<node id="IL32"/>
+<node id="PIM1"/>
+<node id="TNF"/>
+<node id="CYP1A1"/>
+<node id="IL2"/>
+<node id="SELE"/>
+<node id="SAT1"/>
+<node id="CREM"/>
+<node id="IL2RA"/>
+<node id="IFNG"/>
+<node id="IL18"/>
+<node id="CD36"/>
+<node id="CASP8"/>
+<node id="SLC7A5"/>
+<node id="IL10"/>
+<node id="PHLDA1"/>
+<node id="MXD1"/>
+<node id="CTSC"/>
+<node id="CXCL2"/>
+<node id="NFE2L2"/>
+<node id="SOCS1"/>
+<node id="EMB"/>
+<node id="KMO"/>
+<node id="ABCA6"/>
+<node id="MEOX1"/>
+<edge source="HSD11B1" target="CD36"/>
+<edge source="BCL2" target="CASP8"/>
+<edge source="ETS2" target="NFE2L2"/>
+<edge source="SOCS2" target="SOCS1"/>
+<edge source="NUMA1" target="PIM1"/>
+<edge source="TNF" target="CASP8"/>
+</graph></graphml>

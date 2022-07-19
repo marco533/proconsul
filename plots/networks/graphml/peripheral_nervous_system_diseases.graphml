@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="NGF"/>
+<node id="CACNA1H"/>
+<node id="IL6"/>
+<node id="PNPLA6"/>
+<node id="NPY"/>
+<node id="ABCA1"/>
+<node id="SERPINB2"/>
+<node id="IGF1R"/>
+<node id="TNFRSF10A"/>
+<node id="ERCC3"/>
+<node id="CDKN2A"/>
+<node id="ABCB1"/>
+<node id="PPARD"/>
+<node id="AURKA"/>
+<node id="XK"/>
+<node id="CTLA4"/>
+<node id="GFAP"/>
+<node id="NEFH"/>
+<node id="CASP9"/>
+<node id="MMP3"/>
+<node id="ICAM1"/>
+<node id="MBL2"/>
+<node id="GLI1"/>
+<node id="MYO5A"/>
+<node id="PRKCE"/>
+<node id="GAN"/>
+<node id="SOX8"/>
+<node id="ALOX12"/>
+<node id="DPYD"/>
+<node id="CSF3"/>
+<node id="MKI67"/>
+<node id="PSMB1"/>
+<node id="ERCC4"/>
+<node id="ABCC1"/>
+<node id="LYST"/>
+<node id="CYP2C8"/>
+<node id="IGF1"/>
+<node id="GSTP1"/>
+<node id="DYNC1I1"/>
+<node id="GJB3"/>
+<node id="ERCC1"/>
+<node id="MYOT"/>
+<node id="DAPK1"/>
+<node id="JUN"/>
+<node id="TCF4"/>
+<node id="PMP22"/>
+<node id="CPT1C"/>
+<node id="ATF3"/>
+<node id="CACNA1B"/>
+<node id="RHOBTB2"/>
+<node id="SLC12A6"/>
+<node id="UCHL1"/>
+<node id="SOD2"/>
+<edge source="CACNA1H" target="GAN"/>
+<edge source="PNPLA6" target="CTLA4"/>
+<edge source="SERPINB2" target="PSMB1"/>
+<edge source="IGF1R" target="IGF1"/>
+<edge source="ERCC3" target="MKI67"/>
+<edge source="CDKN2A" target="AURKA"/>
+<edge source="CDKN2A" target="UCHL1"/>
+<edge source="AURKA" target="SOD2"/>
+<edge source="GFAP" target="GAN"/>
+<edge source="NEFH" target="GAN"/>
+<edge source="CASP9" target="JUN"/>
+<edge source="MBL2" target="PSMB1"/>
+<edge source="ERCC4" target="ERCC1"/>
+<edge source="GSTP1" target="UCHL1"/>
+<edge source="JUN" target="ATF3"/>
+</graph></graphml>

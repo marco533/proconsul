@@ -1,0 +1,125 @@
+<?xml version='1.0' encoding='utf-8'?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd"><graph edgedefault="undirected"><node id="ODC1"/>
+<node id="CEBPA"/>
+<node id="NPPA"/>
+<node id="PTCH1"/>
+<node id="TGFBR1"/>
+<node id="NOTCH1"/>
+<node id="AIRE"/>
+<node id="KRT10"/>
+<node id="POLE"/>
+<node id="IVL"/>
+<node id="PTGS2"/>
+<node id="RELA"/>
+<node id="IGF1R"/>
+<node id="ERBB3"/>
+<node id="IL1A"/>
+<node id="GLI2"/>
+<node id="GJA1"/>
+<node id="CSNK2A2"/>
+<node id="PPARD"/>
+<node id="FLT1"/>
+<node id="TYR"/>
+<node id="KRT17"/>
+<node id="PTK2B"/>
+<node id="AQP3"/>
+<node id="KIT"/>
+<node id="ERCC2"/>
+<node id="CSNK2B"/>
+<node id="CSF3"/>
+<node id="CSNK2A1"/>
+<node id="SP1"/>
+<node id="HIF1A"/>
+<node id="GSTT1"/>
+<node id="GJB5"/>
+<node id="MMP9"/>
+<node id="GJB2"/>
+<node id="IGF1"/>
+<node id="NOTCH3"/>
+<node id="AKT1"/>
+<node id="NOTCH2"/>
+<node id="GYPA"/>
+<node id="TP53"/>
+<node id="KRT1"/>
+<node id="POT1"/>
+<node id="SMO"/>
+<node id="HRAS"/>
+<node id="XPA"/>
+<node id="NOTCH4"/>
+<node id="CASP10"/>
+<node id="EPHX1"/>
+<node id="NFE2L2"/>
+<node id="TGFB1"/>
+<node id="CASP8"/>
+<node id="ERBB4"/>
+<node id="XRCC3"/>
+<node id="ASIP"/>
+<node id="SOD2"/>
+<edge source="ODC1" target="CSNK2B"/>
+<edge source="CEBPA" target="HIF1A"/>
+<edge source="NPPA" target="IVL"/>
+<edge source="PTCH1" target="TGFB1"/>
+<edge source="PTCH1" target="CSNK2A2"/>
+<edge source="PTCH1" target="SMO"/>
+<edge source="TGFBR1" target="TGFB1"/>
+<edge source="TGFBR1" target="NOTCH1"/>
+<edge source="NOTCH1" target="RELA"/>
+<edge source="NOTCH1" target="AKT1"/>
+<edge source="NOTCH1" target="HRAS"/>
+<edge source="NOTCH1" target="NOTCH2"/>
+<edge source="NOTCH1" target="NOTCH3"/>
+<edge source="NOTCH1" target="GJA1"/>
+<edge source="KRT10" target="AKT1"/>
+<edge source="KRT10" target="KRT17"/>
+<edge source="KRT10" target="KRT1"/>
+<edge source="POLE" target="PPARD"/>
+<edge source="IVL" target="POT1"/>
+<edge source="IVL" target="KRT1"/>
+<edge source="PTGS2" target="TP53"/>
+<edge source="RELA" target="IGF1R"/>
+<edge source="RELA" target="CSNK2A1"/>
+<edge source="RELA" target="CSNK2A2"/>
+<edge source="RELA" target="SP1"/>
+<edge source="RELA" target="PPARD"/>
+<edge source="RELA" target="HIF1A"/>
+<edge source="RELA" target="TP53"/>
+<edge source="RELA" target="NFE2L2"/>
+<edge source="IGF1R" target="IGF1"/>
+<edge source="IGF1R" target="TP53"/>
+<edge source="IGF1R" target="AKT1"/>
+<edge source="IGF1R" target="GJA1"/>
+<edge source="ERBB3" target="AKT1"/>
+<edge source="ERBB3" target="ERBB4"/>
+<edge source="ERBB3" target="PTK2B"/>
+<edge source="GJA1" target="AKT1"/>
+<edge source="GJA1" target="ERBB4"/>
+<edge source="GJA1" target="NOTCH2"/>
+<edge source="CSNK2A2" target="TP53"/>
+<edge source="CSNK2A2" target="CSNK2B"/>
+<edge source="CSNK2A2" target="CSNK2A1"/>
+<edge source="KRT17" target="HRAS"/>
+<edge source="KRT17" target="KRT1"/>
+<edge source="ERCC2" target="TP53"/>
+<edge source="ERCC2" target="XPA"/>
+<edge source="CSNK2B" target="TP53"/>
+<edge source="CSNK2B" target="CSNK2A1"/>
+<edge source="CSNK2B" target="NOTCH3"/>
+<edge source="CSNK2B" target="POT1"/>
+<edge source="CSNK2A1" target="AKT1"/>
+<edge source="CSNK2A1" target="TP53"/>
+<edge source="SP1" target="AKT1"/>
+<edge source="SP1" target="TP53"/>
+<edge source="SP1" target="HIF1A"/>
+<edge source="SP1" target="NOTCH2"/>
+<edge source="HIF1A" target="AKT1"/>
+<edge source="HIF1A" target="TP53"/>
+<edge source="MMP9" target="TGFB1"/>
+<edge source="NOTCH3" target="NOTCH2"/>
+<edge source="AKT1" target="NFE2L2"/>
+<edge source="AKT1" target="TP53"/>
+<edge source="TP53" target="HRAS"/>
+<edge source="TP53" target="NOTCH4"/>
+<edge source="TP53" target="ERBB4"/>
+<edge source="TP53" target="CASP8"/>
+<edge source="CASP10" target="CASP8"/>
+</graph></graphml>
