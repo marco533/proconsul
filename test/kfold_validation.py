@@ -13,7 +13,7 @@ from utils.data_utils import *
 
 
 # cross validation
-def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, database_name=None, hyperparams=None):
+def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, database_name=None, hyperparams=None, all_iterations=None):
     '''
     K-Fold Cross Validation.
 
@@ -47,6 +47,8 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, d
 
     # init scores array
     scores = np.zeros((K,4,4))
+    if all_iterations == True:
+        complete_scores = np.zeros((K, 4, num_genes_to_predict))
 
     for k in range(K):
         # init predicted genes and scores
@@ -106,16 +108,33 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, d
                                 compute_metrics(all_genes, test_genes, predicted_genes[:100]),
                                 compute_metrics(all_genes, test_genes, predicted_genes[:200]))).transpose()
 
+        if all_iterations == True:
+            complete_scores[k] = np.array([compute_metrics(all_genes, test_genes, predicted_genes[:i]) for i in range(num_genes_to_predict)]).transpose()
+
         # print iteration results
         print(scores[k])
+        # if all_iterations == True:
+        #     print(complete_scores[k])
         print("===============================")
 
     # compute average and std deviation of the metrics
     scores_avg = np.average(scores, axis=0)
     scores_std = np.std(scores, axis=0)
 
+    if all_iterations == True:
+        complete_scores_avg = np.average(complete_scores, axis=0)
+        complete_scores_std = np.std(complete_scores, axis=0)
+
     print(f"scores_avg:\n{scores_avg}")
     print(f"score_std:\n{scores_std}")
+
+    # if all_iterations == True:
+        # print(f"complete_scores_avg:\n{complete_scores_avg}")
+        # print(f"complete_score_std:\n{complete_scores_std}")
+
+    # We are not interested only in build the plot
+    if all_iterations == True:
+        return complete_scores_avg
 
     # create the final score dataframe where each value is (avg, std)
     n_rows, n_cols = scores_avg.shape
