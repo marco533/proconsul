@@ -314,9 +314,11 @@ if __name__ == '__main__':
     metrics = ["precision", "recall", "f1", "ndcg"]
     diseases = read_disease_file("data/disease_file_all.txt")
     # diseases = read_disease_file("data/diamond_dataset/diseases.txt")
+    # diseases = read_disease_file("data/best_diseases_D_and_pD.txt")
+
 
     hyperparams = {}
-    temp_values = [1.0]
+    temp_values = [0.5, 1.0]
     top_p_values = [0.0]
     top_k_values = [0]
 
