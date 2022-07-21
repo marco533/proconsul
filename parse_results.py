@@ -318,7 +318,7 @@ if __name__ == '__main__':
 
 
     hyperparams = {}
-    temp_values = [0.5, 1.0]
+    temp_values = [0.5, 1.0, 10.0]
     top_p_values = [0.0]
     top_k_values = [0]
 
