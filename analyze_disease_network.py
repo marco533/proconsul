@@ -102,7 +102,9 @@ def read_terminal_input(args):
 # ======================================
 #    N E T W O R K   A N A L Y S I S
 # ======================================
-def analyze_disease_networks(disease_networks, database_name=None, interactome=None, enriching_algorithm=None, algorithm_predicted_genes = {}, skip_path_lenghts=False, outfile=None):
+def analyze_disease_networks(disease_networks, database_name=None, interactome=None, enriching_algorithm=None, algorithm_predicted_genes = {},
+                            skip_path_lengths=False, skip_clustering=False, skip_global_efficency=False, skip_assortativity=False,
+                            skip_communities=False, skip_others=False, outfile=None):
     '''
     NB: predicted_genes given in input are enriched genes, if there are any. 
         When call this function after enrichment anlysis, pass also the dictioanry of predicted genes 
@@ -155,15 +157,17 @@ def analyze_disease_networks(disease_networks, database_name=None, interactome=N
         # 1. number_of_disease_genes
         number_of_disease_genes = disease_network.number_of_nodes()
         disease_attributes_dictionary[disease].append(number_of_disease_genes)
-
+        print("1. Done")
         # 2. number_of_connected_components
         connected_components = list(nx.connected_components(disease_network))
         number_of_connected_components = len(connected_components)
         disease_attributes_dictionary[disease].append(number_of_connected_components)
+        print("2. Done")
 
         # 3. percentage_of_connected_components
         percentage_connected_components = number_of_connected_components / number_of_disease_genes
         disease_attributes_dictionary[disease].append(percentage_connected_components)
+        print("3. Done")
 
         # 4. LCC_size
         disease_LCC = max(connected_components, key=len)
@@ -171,45 +175,66 @@ def analyze_disease_networks(disease_networks, database_name=None, interactome=N
         disease_LCC_size = nx.number_of_nodes(disease_LCC)
 
         disease_attributes_dictionary[disease].append(disease_LCC_size)
+        print("4. Done")
+
 
         # 5. density
         density = nx.density(disease_network)
         disease_attributes_dictionary[disease].append(density)
+        print("5. Done")
 
         # 6. density_of_LCC
         density_of_LCC = nx.density(disease_LCC)
         disease_attributes_dictionary[disease].append(density_of_LCC)
-
+        print("6. Done")
+        
         # 7. percentage_of_disease_genes_in_LCC
         disease_attributes_dictionary[disease].append(disease_LCC_size / number_of_disease_genes)
+        print("7. Done")
 
-        if database_name == "caccapupu":
-            # 8. longest_path_in_LCC
-            #if we don't have predicted genes for enrichment analysis
-            if (algorithm_predicted_genes == {}) :
-                disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease))
-            #if we are in enrichment analysis
-            else:
-                disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease, algorithm_predicted_genes[disease]))
+        if skip_path_lengths:
+            # 8.
+            disease_attributes_dictionary[disease].append("Skip")
+            print("8. Done")
 
-            # 9. longest_path_in_interactome
-            #if we don't have predicted genes for enrichment analysis
-            if (algorithm_predicted_genes == {}) :
-                disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
-            #if we are in enrichment analysis
-            else:
-                disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease, algorithm_predicted_genes[disease]))
+            # 9.
+            disease_attributes_dictionary[disease].append("Skip")
+            print("9. Done")
+
+            # 10.
+            disease_attributes_dictionary[disease].append("Skip")
+            print("10. Done")  
+
+            # 11.
+            disease_attributes_dictionary[disease].append("Skip")
+            print("11. Done")
         
         else:
-            if skip_path_lenghts:
-                # 8.
-                disease_attributes_dictionary[disease].append("Skip")
-                # 9
-                disease_attributes_dictionary[disease].append("Skip")
-                # 10.
-                disease_attributes_dictionary[disease].append("Skip")
+            if database_name == "biogrid": # BIOGRID ONLY
+                
+                # 8. longest_path_in_LCC
+                
+                # if we don't have predicted genes for enrichment analysis
+                if (algorithm_predicted_genes == {}) :
+                    disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease))
+                # if we are in enrichment analysis
+                else:
+                    disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_LCC(disease, algorithm_predicted_genes[disease]))
+                
+                print("8. Done")
+
+                # 9. longest_path_in_interactome
+                # if we don't have predicted genes for enrichment analysis
+                if (algorithm_predicted_genes == {}) :
+                    disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease))
+                # if we are in enrichment analysis
+                else:
+                    disease_attributes_dictionary[disease].append(get_longest_path_for_a_disease_interactome(disease, algorithm_predicted_genes[disease]))
+
+                print("9. Done")
 
             else:
+
                 # 8. longest simple shortest path in the disease network
                 longest_sp_in_the_interactome = 0
 
@@ -228,24 +253,34 @@ def analyze_disease_networks(disease_networks, database_name=None, interactome=N
                 shortest_path_lengths = dict(nx.all_pairs_shortest_path_length(disease_network))
                 longest_sp_length_in_disease_network = [np.max(list(spl.values())) for spl in shortest_path_lengths.values()]
                 disease_attributes_dictionary[disease].append(np.max(longest_sp_length_in_disease_network))
-                
-                # 10. average_path_length
-                # disease_attributes_dictionary[disease].append(nx.average_shortest_path_length(disease_LCC))
+                    
+            # 10. average_path_length
+            # disease_attributes_dictionary[disease].append(nx.average_shortest_path_length(disease_LCC))
+            try:
                 average_path_lengths = [np.mean(list(spl.values())) for spl in shortest_path_lengths.values()]
-                disease_attributes_dictionary[disease].append(np.mean(average_path_lengths))
+            except:
+                shortest_path_lengths = dict(nx.all_pairs_shortest_path_length(disease_network))
+                average_path_lengths = [np.mean(list(spl.values())) for spl in shortest_path_lengths.values()]
 
-        # 11. diameter_of_LCC
-        if skip_path_lenghts:
-            shortest_path_lengths = dict(nx.all_pairs_shortest_path_length(disease_network))
-            
-        disease_attributes_dictionary[disease].append(max(nx.eccentricity(disease_LCC, sp=shortest_path_lengths).values()))
+            disease_attributes_dictionary[disease].append(np.mean(average_path_lengths))
+            print("10. Done")
+
+            # 11. diameter_of_LCC            
+            disease_attributes_dictionary[disease].append(max(nx.eccentricity(disease_LCC, sp=shortest_path_lengths).values()))
+            print("11. Done")
 
         # 12. average_degree
         # disease_attributes_dictionary[disease].append(nx.average_degree_connectivity(disease_network))
         disease_attributes_dictionary[disease].append(np.mean([d for _, d in disease_network.degree()]))
+        print("12. Done")
 
         # 13. clustering_coefficient
-        disease_attributes_dictionary[disease].append(nx.average_clustering(disease_network))
+        if skip_clustering:
+            disease_attributes_dictionary[disease].append("Skip")
+        else:
+            disease_attributes_dictionary[disease].append(nx.average_clustering(disease_network))
+        
+        print("13. Done")
 
         # 14. modularity
         try:
@@ -254,71 +289,116 @@ def analyze_disease_networks(disease_networks, database_name=None, interactome=N
             modularity = 0
 
         disease_attributes_dictionary[disease].append(modularity)
+        print("14. Done")
 
         # 15. global_efficency
-        disease_attributes_dictionary[disease].append(nx.global_efficiency(disease_network))
+        if skip_global_efficency:
+            disease_attributes_dictionary[disease].append("Skip")
+        else:
+            disease_attributes_dictionary[disease].append(nx.global_efficiency(disease_network))
+        print("15. Done")
 
         # 16. assortativity
-        try:
-            disease_attributes_dictionary[disease].append(nx.degree_assortativity_coefficient(disease_network))
-        except:
-            disease_attributes_dictionary[disease].append("None")
+        if skip_assortativity:
+            disease_attributes_dictionary[disease].append("Skip")
+        else:
+            try:
+                disease_attributes_dictionary[disease].append(nx.degree_assortativity_coefficient(disease_network))
+            except:
+                disease_attributes_dictionary[disease].append("None")
+
+        print("16. Done")
 
         # 17. Communities greater than 1
-        try:
-            communities = nx.algorithms.community.greedy_modularity_communities(disease_network)
-        except:
-            communities = []
+        if skip_communities:
+            disease_attributes_dictionary[disease].append("Skip")
+        else:
+            try:
+                communities = nx.algorithms.community.greedy_modularity_communities(disease_network)
+            except:
+                communities = []
+            
+            # compute how many communities are greater than one. Smaller ones are meaningless.
+            communitites_greater_than_1 = 0
+            for community in communities:
+                if len(community) > 1:
+                    communitites_greater_than_1 +=1
+            disease_attributes_dictionary[disease].append(communitites_greater_than_1)
         
-        # compute how many communities are greater than one. Smaller ones are meaningless.
-        communitites_greater_than_1 = 0
-        for community in communities:
-            if len(community) > 1:
-                communitites_greater_than_1 +=1
-        disease_attributes_dictionary[disease].append(communitites_greater_than_1)
+        print("17. Done")
 
-        # 18. Node connectivity
-        node_connectivity = run_measure(disease_network, measure='node_connectivity')
-        # node_connectivity = nx.node_connectivity(disease_LCC)
-        disease_attributes_dictionary[disease].append(node_connectivity)
+        if skip_others:
+            # 18.
+            disease_attributes_dictionary[disease].append("Skip")
 
-        # 19. Edge connectivity
-        edge_connectivity = run_measure(disease_network, measure='edge_connectivity')
-        # edge_connectivity = nx.edge_connectivity(disease_LCC)
-        disease_attributes_dictionary[disease].append(edge_connectivity)
+            # 19.
+            disease_attributes_dictionary[disease].append("Skip")
 
-        # 20. Spectral radius
-        spectral_radius = run_measure(disease_network, measure='spectral_radius')
-        disease_attributes_dictionary[disease].append(spectral_radius)
+            # 20.
+            disease_attributes_dictionary[disease].append("Skip")
 
-        # 21. Spectral gap
-        spectral_gap = run_measure(disease_network, measure='spectral_gap')
-        disease_attributes_dictionary[disease].append(spectral_gap)
+            # 21.
+            disease_attributes_dictionary[disease].append("Skip")
 
-        # 22. Natural connectivity
-        natural_connectivity = run_measure(disease_network, measure='natural_connectivity')
-        disease_attributes_dictionary[disease].append(natural_connectivity)
+            # 22.
+            disease_attributes_dictionary[disease].append("Skip")
 
-        # 23. Algebraic connectivity
-        algebraic_connectivity = run_measure(disease_network, measure='algebraic_connectivity')
-        disease_attributes_dictionary[disease].append(algebraic_connectivity)
+            # 23.
+            disease_attributes_dictionary[disease].append("Skip")
 
-        # 24. Number of spanning trees
-        number_spanning_trees = run_measure(disease_network, measure='number_spanning_trees')
-        disease_attributes_dictionary[disease].append(number_spanning_trees)
+            # 24.
+            disease_attributes_dictionary[disease].append("Skip")
+        
+        else:
+            # 18. Node connectivity
+            node_connectivity = run_measure(disease_network, measure='node_connectivity')
+            # node_connectivity = nx.node_connectivity(disease_LCC)
+            disease_attributes_dictionary[disease].append(node_connectivity)
+            print("18. Done")
 
-        """
-        # 25. Effective resistance
-        effective_resistance = run_measure(disease_network, measure='effective_resistance')
-        disease_attributes_dictionary[disease].append(effective_resistance)
+            # 19. Edge connectivity
+            edge_connectivity = run_measure(disease_network, measure='edge_connectivity')
+            # edge_connectivity = nx.edge_connectivity(disease_LCC)
+            disease_attributes_dictionary[disease].append(edge_connectivity)
+            print("19. Done")
 
-        # 26. Generalized robustness index (IT SHOULD RETURN ALWAYS NONE)
-        generalized_robustness_index = run_measure(disease_network, measure='generalized_robustness_index')
-        disease_attributes_dictionary[disease].append(generalized_robustness_index)
+            # 20. Spectral radius
+            spectral_radius = run_measure(disease_network, measure='spectral_radius')
+            disease_attributes_dictionary[disease].append(spectral_radius)
+            print("20. Done")
 
-        # 27. Small-world
-        disease_attributes_dictionary[disease].append(nx.sigma(disease_LCC))
-        """
+            # 21. Spectral gap
+            spectral_gap = run_measure(disease_network, measure='spectral_gap')
+            disease_attributes_dictionary[disease].append(spectral_gap)
+            print("21. Done")
+
+            # 22. Natural connectivity
+            natural_connectivity = run_measure(disease_network, measure='natural_connectivity')
+            disease_attributes_dictionary[disease].append(natural_connectivity)
+            print("22. Done")
+
+            # 23. Algebraic connectivity
+            algebraic_connectivity = run_measure(disease_network, measure='algebraic_connectivity')
+            disease_attributes_dictionary[disease].append(algebraic_connectivity)
+            print("23. Done")
+        
+            # 24. Number of spanning trees
+            number_spanning_trees = run_measure(disease_network, measure='number_spanning_trees')
+            disease_attributes_dictionary[disease].append(number_spanning_trees)
+            print("24. Done")
+
+            """
+            # 25. Effective resistance
+            effective_resistance = run_measure(disease_network, measure='effective_resistance')
+            disease_attributes_dictionary[disease].append(effective_resistance)
+
+            # 26. Generalized robustness index (IT SHOULD RETURN ALWAYS NONE)
+            generalized_robustness_index = run_measure(disease_network, measure='generalized_robustness_index')
+            disease_attributes_dictionary[disease].append(generalized_robustness_index)
+
+            # 27. Small-world
+            disease_attributes_dictionary[disease].append(nx.sigma(disease_LCC))
+            """
         
         # Export the network for Cytoscape visualization
         if enriching_algorithm is not None:
@@ -514,7 +594,7 @@ if __name__ == "__main__":
         
 
     # get attributes
-    # print("\nAnalyzing original networks...")
+    print("\nAnalyzing original networks...")
     # network_attributes = analyze_disease_networks(original_disease_networks,
     #                                                 database_name=database_name,
     #                                                 interactome=hhi_lcc,
@@ -524,13 +604,23 @@ if __name__ == "__main__":
     network_attributes_with_first_neighbors = analyze_disease_networks(disease_networks_with_neighbors,
                                                                         database_name=database_name, 
                                                                         interactome=hhi_lcc,
-                                                                        skip_path_lenghts=True,
+                                                                        skip_path_lengths=True,
+                                                                        skip_clustering=True,
+                                                                        skip_global_efficency=True,
+                                                                        skip_assortativity=True,
+                                                                        skip_communities=True,
+                                                                        skip_others=True,
                                                                         outfile=f"disease_analysis/network_attributes_with_first_neighbors_{database_name}.csv")
     
     print("\nAnalizing only first neighbors network")
     only_first_neighbors_attributes = analyze_disease_networks(only_first_neighbors_networks,
                                                                 database_name=database_name, 
                                                                 interactome=hhi_lcc,
-                                                                skip_path_lenghts=True,
+                                                                skip_path_lengths=True,
+                                                                skip_clustering=True,
+                                                                skip_global_efficency=True,
+                                                                skip_assortativity=True,
+                                                                skip_communities=True,
+                                                                skip_others=True,
                                                                 outfile=f"disease_analysis/only_first_neighbors_attributes_{database_name}.csv")
 

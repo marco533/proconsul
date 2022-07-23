@@ -205,6 +205,21 @@ def get_diseases_from_file(disease_file):
 
     return disease_list
 
+def read_disease_file(disease_file):
+    '''
+    Read the disease file and return a list of diseases.
+    The file MUST HAVE only a desease name for each line.
+    '''
+    disease_list = []
+    with open(disease_file, 'r') as df:
+
+        for line in df:
+            if line[0] == "#":  # skip commented lines
+                continue
+            disease_list.append(line.replace("\n",""))
+
+    return disease_list
+
 def create_disease_mesh_dictionary(disease_file):
     '''
     Read the disease names from disease file
