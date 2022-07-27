@@ -265,10 +265,10 @@ if __name__ == "__main__":
                     hyperparams["pdiamond_temp"] = 0.5
                     alg_real_name = "pdiamond_log"
                 if alg == "proconsul_t1":
-                    hyperparams["pdiamond_temp"] = 1
+                    hyperparams["pdiamond_temp"] = 1.0
                     alg_real_name = "pdiamond_log"
                 if alg == "proconsul_t10":
-                    hyperparams["pdiamond_temp"] = 10
+                    hyperparams["pdiamond_temp"] = 10.0
                     alg_real_name = "pdiamond_log"
 
                 if database_name in ["diamond_dataset"]:
