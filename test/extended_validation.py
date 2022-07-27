@@ -4,7 +4,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from algorithms.diamond import DIAMOnD
-from algorithms.pdiamond_log import pDIAMOnD_log
+from algorithms.proconsul import PROCONSUL
 from algorithms.heat_diffusion import run_heat_diffusion
 from utils.network_utils import *
 from utils.metrics_utils import *
@@ -38,16 +38,16 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
         added_nodes = DIAMOnD(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile)
         predicted_genes = [item[0] for item in added_nodes]
 
-    elif algorithm == "pdiamond_log":
-        n_iters = hyperparams["pdiamond_n_iters"]
-        temp = hyperparams["pdiamond_temp"]
-        top_p = hyperparams["pdiamond_top_p"]
-        top_k = hyperparams["pdiamond_top_k"]
+    elif algorithm == "proconsul":
+        n_rounds = hyperparams["proconsul_n_rounds"]
+        temp = hyperparams["proconsul_temp"]
+        top_p = hyperparams["proconsul_top_p"]
+        top_k = hyperparams["proconsul_top_k"]
 
-        predicted_genes_outfile = f"predicted_genes/{database_name}/extended/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_iters}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__extended.txt"
-        csv_outfile = f"results/{database_name}/extended/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_iters}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__extended.csv"
+        predicted_genes_outfile = f"predicted_genes/{database_name}/extended/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__extended.txt"
+        csv_outfile = f"results/{database_name}/extended/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__extended.csv"
 
-        added_nodes = pDIAMOnD_log(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters, temperature=temp, top_p=top_p, top_k=top_k)
+        added_nodes = PROCONSUL(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, n_rounds=n_rounds, temperature=temp, top_p=top_p, top_k=top_k)
         predicted_genes = [item[0] for item in added_nodes]
 
     elif algorithm == "heat_diffusion":
@@ -62,7 +62,7 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
         print("  ERROR: No valid algorithm.    ")
         print("  Choose one of the following:  ")
         print("    - diamond                   ")
-        print("    - pdiamond_log              ")
+        print("    - proconsul                 ")
         print("    - heat_diffusion            ")
         sys.exit(1)
 

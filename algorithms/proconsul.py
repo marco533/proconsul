@@ -1,23 +1,26 @@
 #! /usr/bin/env python
 
 
-import time
-import networkx as nx
-import numpy as np
+import argparse
 import copy
-import scipy.stats
-from collections import defaultdict
 import csv
 import sys
+import time
+from collections import defaultdict
 
+import networkx as nx
+import numpy as np
+import scipy.stats
 import torch
 import torch.nn.functional as F
+from numpy import average
+
 
 # =============================================================================
 def print_usage():
 
     print(' ')
-    print('        usage: python3 pdiamond.py network_file seed_file n alpha(optional) outfile_name (optional)')
+    print('        usage: python3 proconsul.py --network_file --seed_file --n --alpha(optional) --outfile_name(optional) --n_rounds(optional) --temp(optional) --top_p(optional) --top_k(optional)')
     print('        -----------------------------------------------------------------')
     print('        network_file : The edgelist must be provided as any delimiter-separated')
     print('                       table. Make sure the delimiter does not exit in gene IDs')
@@ -27,61 +30,53 @@ def print_usage():
     print('        seed_file    : table containing the seed genes (if table contains')
     print('                       more than one column they must be tab-separated;')
     print('                       the first column will be used only)')
-    print('        n            : desired number of DIAMOnD genes, 200 is a reasonable')
+    print('        n            : desired number of genes to predict, 200 is a reasonable')
     print('                       starting point.')
     print('        alpha        : an integer representing weight of the seeds,default')
     print('                       value is set to 1')
     print('        outfile_name : results will be saved under this file name')
     print('                       by default the outfile_name is set to "first_n_added_nodes_weight_alpha.txt"')
+    print('        n_rounds     : How many different rounds PROCONSUL will do to reduce statistical fluctuation.')
+    print('                       (default: 10)' )
+    print('        temp         : Temperature value for the softmax function.')
+    print('                       (default: 1.0)')
+    print('        top_p        : Probability threshold value for nucleus sampling. If 0 no nucleus sampling')
+    print('                       (default: 0.0)')
+    print('        top_k        : Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling.')
+    print('                       (default: 0)')
     print(' ')
 
 
 # =============================================================================
-def check_input_style(input_list):
-    try:
-        network_edgelist_file = input_list[1]
-        seeds_file = input_list[2]
-        max_number_of_added_nodes = int(input_list[3])
-    # if no input is given, print out a usage message and exit
-    except:
-        print_usage()
-        sys.exit(0)
-        return
 
-    alpha = 1
-    outfile_name = 'first_%d_added_nodes_weight_%d.txt' % (max_number_of_added_nodes, alpha)
-    num_iterations = 10
-
-    if len(input_list) == 5:
-        try:
-            alpha = int(input_list[4])
-            outfile_name = 'first_%d_added_weight_%d.txt' % (max_number_of_added_nodes, alpha)
-        except:
-            outfile_name = input_list[4]
-
-    if len(input_list) == 6:
-        try:
-            alpha = int(input_list[4])
-            outfile_name = input_list[5]
-        except:
-            print_usage()
-            sys.exit(0)
-            return
-    if len(input_list) == 7:
-        try:
-            alpha = int(input_list[4])
-            outfile_name = input_list[5]
-            num_iterations = input_list[6]
-        except:
-            print_usage()
-            sys.exit(0)
-            return
-
-    return network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations
+def parse_args():
+    '''
+    Parse the terminal arguments.
+    '''
+    parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
+    parser.add_argument('--network_file', type=str,
+                    help='Path to the edgelist to be used for building the network. The edgelist must be provided as any delimiter-separated table. Make sure the delimiter does not exit in gene IDs and is consistent across the file.')
+    parser.add_argument('--seed_file', type=str,
+                    help='table containing the seed genes (if table contains more than one column they must be tab-separated;the first column will be used only)')
+    parser.add_argument('--n', type=int,
+                    help='desired number of genes to predict, 200 is a reasonable starting point.')
+    parser.add_argument('--alpha', type=int, default=1,
+                    help='an integer representing weight of the seeds (default: 1)')
+    parser.add_argument('--outfile_name', type=str, default="first_n_added_nodes_weight_alpha.txt",
+                    help='results will be saved under this file name (default: "first_n_added_nodes_weight_alpha.txt")')
+    parser.add_argument('--n_rounds', type=int, default=10,
+                    help='How many different rounds PROCONSUL will do to reduce statistical fluctuation. (default: 10)')
+    parser.add_argument('--temp', type=float, default=1.0,
+                    help='Temperature value for the pDIAMOnD softmax function. (default: 1.0)')
+    parser.add_argument('--top_p', type=float, default=0.0,
+                    help='Probability threshold value for pDIAMOnD nucleus sampling. If 0 no nucleus sampling. (default: 0.0)')
+    parser.add_argument('--top_k', type=int, default=0,
+                    help='Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling. (default: 0)')
+    return parser.parse_args()
 
 
 # =============================================================================
-def read_input(network_file, seed_file):
+def read_files(network_file, seed_file):
     """
     Reads the network and the list of seed genes from external files.
     * The edgelist must be provided as a tab-separated table. The
@@ -135,6 +130,21 @@ def read_input(network_file, seed_file):
 
     return G, seed_genes
 
+def read_input(args):
+    """
+    Reads the arguments passed by command line.
+    """
+
+    network_file    = args.network_file
+    seed_file       = args.seed_file
+    n               = args.n
+    alpha           = args.alpha
+    outfile_name    = args.outfile_name
+    n_rounds        = args.n_rounds
+    temp            = args.temp
+    top_p           = args.top_p
+    top_k           = args.top_k
+
 
 # ================================================================================
 def compute_all_gamma_ln(N):
@@ -170,7 +180,7 @@ def pvalue(kb, k, N, s, gamma_ln):
     """
     -------------------------------------------------------------------
     Computes the p-value for a node that has kb out of k links to
-    seeds, given that there's a total of s sees in a network of N nodes.
+    seeds, given that there's a total of s seeds in a network of N nodes.
 
     p-val = \sum_{n=kb}^{k} HypergemetricPDF(n,k,N,s)
     -------------------------------------------------------------------
@@ -236,22 +246,46 @@ def reduce_not_in_cluster_nodes(all_degrees, neighbors, G, not_in_cluster, clust
     return reduced_not_in_cluster
 
 
-# =============================================================================
-# Transform a list in a probabilistic array
-# =============================================================================
-def stable_softmax(x, dim=0):
+# See: https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
+def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
+    """ Filter a distribution of logits using top-k and/or nucleus (top-p) filtering
+        Args:
+            logits: logits distribution shape (vocabulary size)
+            top_k >0: keep only top k tokens with highest probability (top-k filtering).
+            top_p >0.0: keep the top tokens with cumulative probability >= top_p (nucleus filtering).
+                Nucleus filtering is described in Holtzman et al. (http://arxiv.org/abs/1904.09751)
     """
-    Compute softmax values for each sets of scores in x.
-    Subtraction of the max value of the array to handle the
-    exponential of very large numbers.
-    """
-    stable_x = (x - torch.max(x))
-    return F.softmax(stable_x, dim=dim)
+
+    assert logits.dim() == 1  # batch size 1 for now - could be updated for more but the code would be less clear
+    top_k = min(top_k, logits.size(-1))  # Safety check
+
+    if top_k > 0:
+        # Remove all tokens with a probability less than the last token of the top-k
+        indices_to_remove = logits < torch.topk(logits, top_k)[0][..., -1, None]
+        logits[indices_to_remove] = filter_value
+
+    if top_p > 0.0:
+        sorted_logits, sorted_indices = torch.sort(logits, descending=True)
+        cumulative_probs = torch.cumsum(F.softmax(sorted_logits, dim=-1), dim=-1)
+
+        # Remove tokens with cumulative probability above the threshold
+        sorted_indices_to_remove = cumulative_probs > top_p
+
+        # Shift the indices to the right to keep also the first token above the threshold
+        sorted_indices_to_remove[..., 1:] = sorted_indices_to_remove[..., :-1].clone()
+        sorted_indices_to_remove[..., 0] = 0
+
+        indices_to_remove = sorted_indices[sorted_indices_to_remove]
+        logits[indices_to_remove] = filter_value
+
+    return logits
+
+
 
 # ======================================================================================
 #   C O R E    A L G O R I T H M
 # ======================================================================================
-def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
+def proconsul_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0, top_k=0, top_p=0):
     """
     Parameters:
     ----------
@@ -313,7 +347,6 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
     all_p = {}
 
     while len(added_nodes) < X:
-
         # ------------------------------------------------------------------
         #
         # Going through all nodes that are not in the cluster yet and
@@ -328,12 +361,14 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                                                              neighbors, G,
                                                              not_in_cluster,
                                                              cluster_nodes, alpha)
+
         probable_next_nodes = []
-        inv_p_values = []
+        p_values = []
 
         for node, kbk in reduced_not_in_cluster.items():
             # Getting the p-value of this kb,k
             # combination and save it in all_p, so computing it only once!
+
             kb, k = kbk
             try:
                 p = all_p[(k, kb, s0)]
@@ -341,21 +376,33 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
                 p = pvalue(kb, k, N, s0, gamma_ln)
                 all_p[(k, kb, s0)] = p
 
-
             info[node] = (k, kb, p)
 
-            # Save the neighbour in the probable next nodes array
-            # and the inverse of its p_value
+            # Save the neighbour in the probable next nodes array and its p-value
             probable_next_nodes.append(node)
-            inv_p_values.append(1 - p[0])
+            p_values.append(p[0])
 
-        # print(probable_next_nodes)
+
 
         # ---------------------------------------------------------------------
-        # Convert the p-value list in a probability distribution and
-        # extract the next node based on it
+        # Get the negative logarithm of pvalues, use them as reference point
+        # to create a probability distribution and use it to draw the next node
         # ---------------------------------------------------------------------
-        probabilities = stable_softmax(inv_p_values, dim=-1)
+
+        # Cast the p-values list to a Tensor
+        p_values = torch.tensor(p_values, dtype=torch.float64)
+
+        # Get the negative logarithm of the p-values to use
+        log_p_values = -torch.log(p_values)
+
+        # Scale by the temperature
+        log_p_values /= temperature
+
+        # Top-K and Top-P filtering
+        log_p_values = top_k_top_p_filtering(log_p_values, top_k=top_k, top_p=top_p)
+
+        # Sample from the filtered distribution
+        probabilities = F.softmax(log_p_values, dim=-1)
 
         # Check on probabilities
         if True in torch.isnan(probabilities):
@@ -363,11 +410,8 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
             sys.exit(1)
 
         # Finally draw the next node
-        next_node_idx = torch.multinomial(probabilities, 1)
-        # print("next_node_idx: ", next_node_idx)
+        next_node = probable_next_nodes[torch.multinomial(probabilities, 1)]
 
-        next_node = probable_next_nodes[next_node_idx]
-        # print(next_node)
 
         # ---------------------------------------------------------------------
         # Adding the sorted node to the list of agglomerated nodes
@@ -385,12 +429,13 @@ def pdiamond_iteration_of_first_X_nodes(G, S, X, alpha):
 
     return added_nodes
 
+
 # ===========================================================================
 #
-#   M A I N    P R O B   D I A M O n D    A L G O R I T H M
+#   M A I N   P R O C O N S U L   A L G O R I T H M
 #
 # ===========================================================================
-def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, max_num_iterations=10):
+def PROCONSUL(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, n_rounds=10, temperature=1.0, top_k=0, top_p=0.0):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -398,33 +443,34 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
     disease_genes = seed_genes & all_genes_in_network
 
     if len(disease_genes) != len(seed_genes):
-        print("pDIAMOnD(): ignoring %s of %s seed genes that are not in the network" % (
+        print("PROCONSUL(): ignoring %s of %s seed genes that are not in the network" % (
             len(seed_genes - all_genes_in_network), len(seed_genes)))
 
     # 2. agglomeration algorithm.
-    print(f"pDIAMOnD(): number of rounds = {max_num_iterations}")
-
     node_ranks = {}
-    for i in range(max_num_iterations):
-        print(f"pDIAMOnD(): Round {i+1}/{max_num_iterations}")
-        added_nodes = pdiamond_iteration_of_first_X_nodes(G_original,
-                                                            disease_genes,
-                                                            max_number_of_added_nodes,
-                                                            alpha)
+    for i in range(n_rounds):
+        print(f"PROCONSUL(): Round {i+1}/{n_rounds}")
+        added_nodes = proconsul_iteration_of_first_X_nodes(G_original,
+                                                           disease_genes,
+                                                           max_number_of_added_nodes,
+                                                           alpha,
+                                                           temperature=temperature,
+                                                           top_k=top_k,
+                                                           top_p=top_p)
 
         # Assign rank value to the node
         for pos, node in enumerate(added_nodes):
             node_number = node[0]
             # print(node_number)
             if node_number not in node_ranks:
-                node_ranks[node_number] = (len(added_nodes) - pos ) / len(added_nodes)  # if pos = 0 => rank = (100 - 0)/100 = 1
+                node_ranks[node_number] = (len(added_nodes) - pos )  # if pos = 0 => rank = 100 - 0 = 100
             else:
-                node_ranks[node_number] += (len(added_nodes) - pos) / len (added_nodes)
+                node_ranks[node_number] += len(added_nodes) - pos
 
 
     # Average the rank of each node by the total number of pDIAMOnD iterations
     for key in node_ranks.keys():
-        node_ranks[key] /= max_num_iterations
+        node_ranks[key] /= n_rounds
 
     # Sort the dictionary in descendig order wrt the rank values
     sorted_nodes = sorted(node_ranks.items(), key=lambda x: x[1], reverse=True)
@@ -445,23 +491,6 @@ def pDIAMOnD(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=N
             fout.write('\t'.join(map(str, ([rank, node, rank_score]))) + '\n')
 
     return sorted_nodes[:max_number_of_added_nodes]
-
-def run_pdiamond(input_list):
-    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
-
-    # read the network and the seed genes:
-    G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
-
-    # run DIAMOnD
-    added_nodes = pDIAMOnD(G_original,
-                        seed_genes,
-                        max_number_of_added_nodes, alpha,
-                        outfile=outfile_name,
-                        max_num_iterations=num_iterations)
-
-    print("\n results have been saved to '%s' \n" % outfile_name)
-
-    return added_nodes
 
 
 # ===========================================================================
@@ -490,17 +519,17 @@ if __name__ == '__main__':
 
     # check if input style is correct
     input_list = sys.argv
-    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, num_iterations = check_input_style(input_list)
+    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, n_rounds = check_input_style(input_list)
 
     # read the network and the seed genes:
     G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
 
 
     # run Prob DIAMOnD
-    added_nodes = pDIAMOnD(G_original,
-                               seed_genes,
-                               max_number_of_added_nodes, alpha,
-                               outfile=outfile_name,
-                               max_iterations=num_iterations)
+    added_nodes = PROCONSUL(G_original,
+                            seed_genes,
+                            max_number_of_added_nodes, alpha,
+                            outfile=outfile_name,
+                            n_rounds=n_rounds)
 
     print("\n results have been saved to '%s' \n" % outfile_name)

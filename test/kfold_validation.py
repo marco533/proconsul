@@ -5,15 +5,13 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 from algorithms.diamond import DIAMOnD
-from algorithms.pdiamond_log import pDIAMOnD_log
-from algorithms.heat_diffusion import run_heat_diffusion
+from algorithms.proconsul import PROCONSUL
 from utils.network_utils import *
 from utils.metrics_utils import *
 from utils.data_utils import *
 
 
-# cross validation
-def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, database_name=None, hyperparams=None, all_iterations=None):
+def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, database_name=None, hyperparams=None, all_iterations=False):
     '''
     K-Fold Cross Validation.
 
@@ -32,29 +30,32 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, d
         print the scores DataFrame in a file
     '''
 
-    # get all genes in the network
+    # Get all genes in the network.
     all_genes = list(network.nodes)
 
-    # split  list in K equal parts
+    # Split the seed genes list in K equal parts.
     splitted_disease_genes = split_list(seed_genes, K)
 
-    # how many genes predict
+    # How many genes to predict.
     num_genes_to_predict = 200
 
     # K-fold cross validation:
-    # Compute the score for each algorithm using the top 25, top 50, top 100 and top 200 predicted genes
+    # Compute the score for each algorithm using the top 25, top 50, top 100 and top 200 predicted genes.
     print(f"{K}-Fold Cross Validation of {algorithm.upper()} on {disease_name.upper()}")
+    print(f"Hyperparameters: {hyperparams}")
+    print(f" ")
 
-    # init scores array
+    # Init scores array.
     scores = np.zeros((K,4,4))
     if all_iterations == True:
         complete_scores = np.zeros((K, 4, num_genes_to_predict))
 
     for k in range(K):
-        # init predicted genes and scores
+
+        # Init the list of predicted genes.
         predicted_genes = []
 
-        # split list and get the k-th
+        # Split list in K equal parts and get the k-th.
         print("===============================")
         print(f"iteration {k+1}/{K}")
 
@@ -63,46 +64,41 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, d
         training_genes = [gene for sublist in disease_genes for gene in sublist] # flatten the list of lists
 
 
-        # if the algorithm doesn't return a ranking set this flag False
+        # If the algorithm doesn't return a ranking set this flag to False.
         ranking_flag = True
 
-        # Run algorithm
+        # Run algorithm.
         if algorithm == "diamond":
+
             predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__kfold_{k+1}_{K}.txt"
             csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{K}_fold.csv"
 
             added_nodes = DIAMOnD(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile)
             predicted_genes = [item[0] for item in added_nodes]
 
-        elif algorithm == "pdiamond_log":
-            n_iters = hyperparams["pdiamond_n_iters"]
-            temp = hyperparams["pdiamond_temp"]
-            top_p = hyperparams["pdiamond_top_p"]
-            top_k = hyperparams["pdiamond_top_k"]
+        elif algorithm == "proconsul":
+            
+            # Get the hyperparameters of PROCONSUL
+            n_rounds    = hyperparams["proconsul_n_rounds"]
+            temp        = hyperparams["proconsul_temp"]
+            top_p       = hyperparams["proconsul_top_p"]
+            top_k       = hyperparams["proconsul_top_k"]
 
-            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_iters}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_iters}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__{K}_fold.csv"
+            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__kfold_{k+1}_{K}.txt"
+            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__{K}_fold.csv"
 
-            added_nodes = pDIAMOnD_log(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, max_num_iterations=n_iters, temperature=temp, top_p=top_p, top_k=top_k)
+            added_nodes = PROCONSUL(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, n_rounds=n_rounds, temperature=temp, top_p=top_p, top_k=top_k)
             predicted_genes = [item[0] for item in added_nodes]
 
-        elif algorithm == "heat_diffusion":
-            diffusion_time = hyperparams["heat_diffusion_time"]
-
-            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-diff_time_{diffusion_time}-kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}-{string_to_filename(disease_name)}-diff_time_{diffusion_time}-{K}_fold.csv"
-
-            predicted_genes = run_heat_diffusion(network, training_genes, n_positions=num_genes_to_predict, diffusion_time=diffusion_time)
 
         else:
             print("  ERROR: No valid algorithm.     ")
             print("  Choose one of the following:   ")
             print("    - diamond                    ")
-            print("    - pdiamond_log               ")
-            print("    - heat_diffusion             ")
+            print("    - proconsul                  ")
             sys.exit(1)
-
-        # compute the scores over the predicted genes
+        
+        # Compute the scores over the predicted genes.
         scores[k] = np.array((compute_metrics(all_genes, test_genes, predicted_genes[:25]),
                                 compute_metrics(all_genes, test_genes, predicted_genes[:50]),
                                 compute_metrics(all_genes, test_genes, predicted_genes[:100]),
@@ -132,7 +128,7 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, d
         # print(f"complete_scores_avg:\n{complete_scores_avg}")
         # print(f"complete_score_std:\n{complete_scores_std}")
 
-    # We are not interested only in build the plot
+    # We are interested only in plotting them (see: plot_iteration_scores.py)
     if all_iterations == True:
         return complete_scores_avg
 

@@ -10,8 +10,6 @@ from graph_tiger.measures import run_measure
 from sklearn.preprocessing import robust_scale
 from torch import absolute
 
-from algorithms.diamond import DIAMOnD
-from algorithms.pdiamond_log import pDIAMOnD_log
 from utils.data_utils import *
 from utils.network_utils import *
 
@@ -21,10 +19,12 @@ from utils.network_utils import *
 
 def print_usage():
     print(' ')
-    print('        usage: python3 disease_analysis_2.py --database --disease_file ')
-    print('        -----------------------------------------------------------------')
+    print('        usage: python3 analyze_disease_network.py --database --disease_file ')
+    print('        --------------------------------------------------------------------')
     print('        disease_file             : Relative path to the file containing the disease names to use for the comparison')
     print('                                   (default: "data/disease_file.txt).')
+    print('        database                 : Name of the database to use for the disease analyisis.')
+    print('                                   (default: "diamond_dataset")')
     print(' ')
 
 def parse_args():
@@ -595,32 +595,20 @@ if __name__ == "__main__":
 
     # get attributes
     print("\nAnalyzing original networks...")
-    # network_attributes = analyze_disease_networks(original_disease_networks,
-    #                                                 database_name=database_name,
-    #                                                 interactome=hhi_lcc,
-    #                                                 outfile=f"disease_analysis/network_attributes_{database_name}.csv")
+    network_attributes = analyze_disease_networks(original_disease_networks,
+                                                    database_name=database_name,
+                                                    interactome=hhi_lcc,
+                                                    outfile=f"disease_analysis/network_attributes_{database_name}.csv")
 
     print("\nAnalizing enriched networks with first neighbors...")
     network_attributes_with_first_neighbors = analyze_disease_networks(disease_networks_with_neighbors,
                                                                         database_name=database_name, 
                                                                         interactome=hhi_lcc,
-                                                                        skip_path_lengths=True,
-                                                                        skip_clustering=True,
-                                                                        skip_global_efficency=True,
-                                                                        skip_assortativity=True,
-                                                                        skip_communities=True,
-                                                                        skip_others=True,
                                                                         outfile=f"disease_analysis/network_attributes_with_first_neighbors_{database_name}.csv")
     
     print("\nAnalizing only first neighbors network")
     only_first_neighbors_attributes = analyze_disease_networks(only_first_neighbors_networks,
                                                                 database_name=database_name, 
                                                                 interactome=hhi_lcc,
-                                                                skip_path_lengths=True,
-                                                                skip_clustering=True,
-                                                                skip_global_efficency=True,
-                                                                skip_assortativity=True,
-                                                                skip_communities=True,
-                                                                skip_others=True,
                                                                 outfile=f"disease_analysis/only_first_neighbors_attributes_{database_name}.csv")
 
