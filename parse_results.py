@@ -1,9 +1,209 @@
 import sys
+import argparse
 
 import numpy as np
 import pandas as pd
 
 from utils.data_utils import string_to_filename
+
+# ===========================
+#     R E A D   I N P U T
+# ===========================
+
+def print_usage():
+    print(' ')
+    print('        usage: python3 parse_results.py --algs --metric --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k')
+    print('        -----------------------------------------------------------------')
+    print('        algs                     : List of algorithms for which plot the iteration scores.')
+    print('                                   They can be: "diamond" or "proconsul" (default: all)')
+    print('        metric                   : Metric to use to plot the scores. It can be')
+    print('                                   "precision", "recall", "f1" or "ndcg".')
+    print('                                   If all, makes a plot for each metric. (default: all')
+    print('        validation               : Type of validation on which test the algorithms. It can be')
+    print('                                   "kfold", "extended" or "all".')
+    print('                                   If all, perform both the validations. (default: all)')
+    print('        disease_file             : Relative path to the file containing the disease names to use for the comparison.')
+    print('                                   (default: "data/diamond_dataset/diseases.txt).')
+    print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset".')
+    print('                                   (default: "diamond_dataset)')
+    print('        proconsul_n_rounds       : How many different rounds PROCONSUL will do to reduce statistical fluctuation.')
+    print('                                   If you insert a list of values multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 10)')
+    print('        proconsul_temp           : Temperature value for the PROCONSUL softmax function.')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 1.0)')
+    print('        proconsul_top_p          : Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 0.0)')
+    print('        proconsul_top_k          : Length of the pvalues subset for the PROCONSUL top-k sampling. If 0 no top-k sampling.')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 0)')
+    print(' ')
+
+def parse_args():
+    '''
+    Parse the terminal arguments.
+    '''
+    parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
+    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "proconsul"],
+                    help='List of algorithms for which compute the average results. (default: ["diamond", "proconsul"])')
+    parser.add_argument('--metrics', nargs='+', default=['precision', 'recall', 'f1', 'ndcg'],
+                    help='Metrics to use for which compute the average. (default: recall')
+    parser.add_argument('--validation', type=str, default='all',
+                    help='Type of validation on which test the algorithms. It can be: "kfold", "extended" or "all". If all, perform both the validations. (default: all)')
+    parser.add_argument('--disease_file', type=str, default="data/diamond_dataset/diseases.txt",
+                    help='Relative path to the file containing the disease names to use for the comparison. (default: "data/diamond_dataset/diseases.txt")')
+    parser.add_argument('--database', type=str, default="diamond_dataset",
+                    help='Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset". (default: "diamond_dataset")')
+    parser.add_argument('--proconsul_n_rounds', type=int, nargs='+', default=[10],
+                    help='How many different rounds PROCONSUL will do to reduce statistical fluctuation. If you insert a list of values multiple version of PROCONSUL will be run. One for each value. (default: 10)')
+    parser.add_argument('--proconsul_temp', type=float, nargs='+', default=[1.0],
+                    help='Temperature value for the PROCONSUL softmax function. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 1.0)')
+    parser.add_argument('--proconsul_top_p', type=float, nargs='+', default=[0.0],
+                    help='Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0.0)')
+    parser.add_argument('--proconsul_top_k', type=int, nargs='+', default=[0],
+                    help='Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0)')
+    return parser.parse_args()
+
+def read_terminal_input(args):
+    '''
+    Read the arguments passed by command line.
+    '''
+
+    def read_disease_file(disease_file):
+        '''
+        Read the disease file and return a list of diseases.
+        The file MUST HAVE only a desease name for each line.
+        '''
+        disease_list = []
+        with open(disease_file, 'r') as df:
+
+            for line in df:
+                if line[0] == "#":  # skip commented lines
+                    continue
+                disease_list.append(line.replace("\n",""))
+
+        return disease_list
+    
+    # 0. Read parsed values
+    algs                = args.algs
+    metrics             = args.metrics
+    validation          = args.validation
+    disease_file        = args.disease_file
+    database_name       = args.database
+    proconsul_n_rounds  = args.proconsul_n_rounds
+    proconsul_temp      = args.proconsul_temp
+    proconsul_top_p     = args.proconsul_top_p
+    proconsul_top_k     = args.proconsul_top_k
+
+    # 1. Check algorithm names
+    for alg in algs:
+
+        if alg not in ["diamond", "proconsul"]:
+            print(f"ERROR: {alg} is not a valid algorithm!")
+            print_usage()
+            sys.exit(0)
+
+    # 2. Check metric
+    for metric in metrics:
+        if metric not in ["precision", "recall", "f1", "ndcg"]:
+            print(f"ERROR: {metric} is no valid metric!")
+            print_usage()
+            sys.exit(1)
+
+    # 3. Check validation
+    if validation not in ["kfold", "extended", "all"]:
+        print(f"ERROR: {validation} is no valid validation method!")
+        print_usage()
+        sys.exit(1)
+
+    if validation == 'all':
+        validations = ['kfold', 'extended']
+    else:
+        validations = [validation]
+
+    # 4. Get diesease list from file
+    try:
+        diseases = read_disease_file(disease_file)
+    except:
+        print(f"Not found file in {disease_file} or no valid location.")
+        print_usage()
+        sys.exit(1)
+
+    # if empty, exit with error
+    if len(diseases) == 0:
+        print(f"ERROR: No diseases in disease_file")
+        sys.exit(1)
+
+    # 5. Check database
+    if database_name not in ["biogrid", "stringdb", "pnas", "diamond_dataset"]:
+        print("ERROR: no valid database name")
+        print_usage()
+        sys.exit(1)
+
+    if database_name == "biogrid":
+        database_path = "data/biogrid/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+
+    if database_name == "stringdb":
+        database_path = "data/stringdb/9606.protein.links.full.v11.5.txt"
+
+    if database_name == "pnas":
+        database_path = "data/pnas/pnas.2025581118.sd02.csv"
+    
+    if database_name == "diamond_dataset":
+        database_path = "data/diamond_dataset/Interactome.tsv"
+
+    # 6. Check PROCONSUL number of round
+    for round in proconsul_n_rounds:
+        if round <= 0:
+            print(f"ERROR: The number of rounds must be greater or equal 1.")
+            print_usage()
+            sys.exit(1)
+
+    # 7. Check PROCONSUL temperatures
+    for temp in proconsul_temp:
+        if temp < 0:
+            print(f"ERROR: The temperature must be greater or equal 0.")
+            print_usage()
+            sys.exit(1)
+        
+        # If temp = 0 replace it with very samll number
+        # to avoid nan values
+        if temp == 0:
+            temp = 1e-40
+
+    # 8. Check PROCONSUL top-p sampling
+    for top_p in proconsul_top_p:
+        if top_p < 0 or top_p > 1:
+            print("ERROR: top_p must be in [0,1]")
+            print_usage()
+            sys.exit(1)
+
+    # 9. Check PROCONSUL top-k sampling
+    for top_k in proconsul_top_k:
+        if top_k < 0:
+            print("ERROR: top_k must be greater or equal 0.")
+            print_usage()
+            sys.exit(1)
+
+
+    # 11. Print all the parsed inputs.
+    print('                                                    ')
+    print(f"===================================================")
+    print(f"Algorithms: {algs}"                                 )
+    print(f"Metric: {metrics}"                                   )
+    print(f"Validations: {validations}"                         )
+    print(f"Diseases: {len(diseases)}"                          )
+    print(f"Database name: {database_name}"                     )
+    print(f"Database path: {database_path}"                     )
+    print(f"PROCONSUL number of rounds: {proconsul_n_rounds}"   )
+    print(f"PROCONSUL temperatures: {proconsul_temp}"           )
+    print(f"PROCONSUL top-p: {proconsul_top_p}"                 )
+    print(f"PROCONSUL top-k: {proconsul_top_k}"                 )
+    print(f"===================================================")
+    print('                                                    ')
+
+    return algs, metrics, validations, diseases, database_name, database_path, proconsul_n_rounds, proconsul_temp, proconsul_top_p, proconsul_top_k
 
 # =========================
 #     U T I L I T I E S
@@ -24,15 +224,15 @@ def read_disease_file(disease_file):
 
     return disease_list
 
-def get_score(algorithm=None, disease=None, database=None, validation=None, K=None, metric=None, diffusion_time=None, n_iters=None, temp=None, top_p=None, top_k=None):
+def get_score(algorithm=None, disease=None, database=None, validation=None, K=None, metric=None, diffusion_time=None, n_rounds=None, temp=None, top_p=None, top_k=None):
 
     # Get the relative path to the algorithm score
     score_path = f"results/{database}/{validation}/{algorithm}/{algorithm}__{string_to_filename(disease)}"
 
     if diffusion_time is not None:
         return
-    if n_iters is not None:
-        score_path += f"__{n_iters}_iters"
+    if n_rounds is not None:
+        score_path += f"__{n_rounds}_rounds"
     if temp is not None:
         score_path += f"__temp_{temp}"
     if top_p is not None:
@@ -83,7 +283,7 @@ def get_score(algorithm=None, disease=None, database=None, validation=None, K=No
         return scores, scores_std
 
 
-def average_score(algorithm=None, database=None, disease_list=None, validation=None, K=5, heat_diffusion_time=None, pdiamond_n_iters=None, pdiamond_temp=None, pdiamond_top_p=None, pdiamond_top_k=None):
+def average_score(algorithm=None, database=None, disease_list=None, validation=None, K=5, heat_diffusion_time=None, proconsul_n_rounds=None, proconsul_temp=None, proconsul_top_p=None, proconsul_top_k=None):
 
     # K-Fold Validation
     if validation == "kfold":
@@ -98,10 +298,10 @@ def average_score(algorithm=None, database=None, disease_list=None, validation=N
                                             validation="kfold",
                                             K=K,
                                             diffusion_time=heat_diffusion_time,
-                                            n_iters=pdiamond_n_iters,
-                                            temp=pdiamond_temp,
-                                            top_p=pdiamond_top_p,
-                                            top_k=pdiamond_top_k)
+                                            n_rounds=proconsul_n_rounds,
+                                            temp=proconsul_temp,
+                                            top_p=proconsul_top_p,
+                                            top_k=proconsul_top_k)
 
             avg_scores += (scores / len(disease_list))
             avg_scores_std += (scores_std / len(disease_list))
@@ -133,10 +333,10 @@ def average_score(algorithm=None, database=None, disease_list=None, validation=N
                                 database=database,
                                 validation="extended",
                                 diffusion_time=heat_diffusion_time,
-                                n_iters=pdiamond_n_iters,
-                                temp=pdiamond_temp,
-                                top_p=pdiamond_top_p,
-                                top_k=pdiamond_top_k)
+                                n_rounds=proconsul_n_rounds,
+                                temp=proconsul_temp,
+                                top_p=proconsul_top_p,
+                                top_k=proconsul_top_k)
 
             avg_scores += (scores / len(disease_list))
 
@@ -157,20 +357,20 @@ def average_score(algorithm=None, database=None, disease_list=None, validation=N
 #     A P P S
 # ===============
 
-def average_results(databases=None, validations=None, algorithms=None, diseases=None,
-                    temp_values=None, top_p_values=None, top_k_values=None):
+def average_results(database=None, validations=None, algorithms=None, diseases=None,
+                    temp_values=None, top_p_values=None, top_k_values=None, n_rounds=None):
     
-    for database in databases:
-        for validation in validations:
-            for alg in algorithms:
-                if alg == "diamond":
-                    avg_df = average_score(algorithm=alg, database=database, disease_list=diseases, validation=validation, K=5)
+    for validation in validations:
+        for alg in algorithms:
+            if alg == "diamond":
+                avg_df = average_score(algorithm=alg, database=database, disease_list=diseases, validation=validation, K=5)
 
-                    outfile = f"parsed_results/average_results/{database}/{validation}/{alg}.csv"
-                    avg_df.to_csv(outfile)
+                outfile = f"parsed_results/average_results/{database}/{validation}/{alg}.csv"
+                avg_df.to_csv(outfile)
 
 
-                if alg == "pdiamond_log":
+            if alg == "proconsul":
+                for r in n_rounds:
                     for t in temp_values:
                         for p in top_p_values:
                             for k in top_k_values:
@@ -179,79 +379,79 @@ def average_results(databases=None, validations=None, algorithms=None, diseases=
                                                         disease_list=diseases,
                                                         validation=validation,
                                                         K=5,
-                                                        pdiamond_n_iters=10,
-                                                        pdiamond_temp=t,
-                                                        pdiamond_top_p=p,
-                                                        pdiamond_top_k=k)
+                                                        proconsul_n_rounds=r,
+                                                        proconsul_temp=t,
+                                                        proconsul_top_p=p,
+                                                        proconsul_top_k=k)
 
-                                outfile = f"parsed_results/average_results/{database}/{validation}/{alg}__{10}_iters__temp_{t}__top_p_{p}__top_k_{k}.csv"
+                                outfile = f"parsed_results/average_results/{database}/{validation}/{alg}__{r}_rounds__temp_{t}__top_p_{p}__top_k_{k}.csv"
                                 avg_df.to_csv(outfile)
 
 
-def disease_scores_table(databases=None, validations=None, K=None, metrics=None, algorithms=None, diseases=None,
-                            temp_values=None, top_p_values=None, top_k_values=None):
+def disease_scores_table(database=None, validations=None, K=None, metrics=None, algorithms=None, diseases=None,
+                            temp_values=None, top_p_values=None, top_k_values=None, n_rounds=None):
 
-    for database in databases:
-        for validation in validations:
-            for alg in algorithms:
-                
-                if alg == "diamond":
-                    for metric in metrics:
-                        
-                        outfile = f"parsed_results/disease_results/{database}/{validation}/{alg}__{metric}.csv"
-                        
-                        index = []
-                        columns = ["Top 25", "Top 50", "Top 100", "Top 200"]
-                        data = np.zeros((len(diseases), 4), dtype=object)
+    for validation in validations:
+        for alg in algorithms:
+            
+            if alg == "diamond":
+                for metric in metrics:
+                    
+                    outfile = f"parsed_results/disease_results/{database}/{validation}/{alg}__{metric}.csv"
+                    
+                    index = []
+                    columns = ["Top 25", "Top 50", "Top 100", "Top 200"]
+                    data = np.zeros((len(diseases), 4), dtype=object)
 
-                        for idx, disease in enumerate(diseases):
-                            index.append(disease)
+                    for idx, disease in enumerate(diseases):
+                        index.append(disease)
 
-                            if validation == "kfold":
-                                try:
-                                    score, std = get_score(algorithm=alg, disease=disease, database=database,
-                                                            validation=validation, K=K, metric=metric)
-                                except:
-                                    score = np.ones((1,4)) * -1
-                                    std = np.ones((1,4)) * -1
-                                
-                                # Round array values at the third decimal
-                                score = np.around(score, decimals=3)
-                                std = np.around(std, decimals=3)
-
-                                # Combine score and std
-                                global_score = np.zeros((1,4), dtype=object)
-                                for j in range(4):
-                                    global_score[0][j] = f"{score[0][j]} +/- {std[0][j]}"
-                                
-                                # Save into data
-                                data[idx] = global_score
+                        if validation == "kfold":
+                            try:
+                                score, std = get_score(algorithm=alg, disease=disease, database=database,
+                                                        validation=validation, K=K, metric=metric)
+                            except:
+                                score = np.ones((1,4)) * -1
+                                std = np.ones((1,4)) * -1
                             
-                            if validation == "extended":
-                                try:
-                                    score = get_score(algorithm=alg, disease=disease, database=database,
-                                                    validation=validation, metric=metric)
-                                except:
-                                    score = np.ones((1,4)) * -1
-                                
-                                # Round array values at the third decimal
-                                score = np.around(score, decimals=3)
+                            # Round array values at the third decimal
+                            score = np.around(score, decimals=3)
+                            std = np.around(std, decimals=3)
 
-                                # Save into data
-                                data[idx] = score
+                            # Combine score and std
+                            global_score = np.zeros((1,4), dtype=object)
+                            for j in range(4):
+                                global_score[0][j] = f"{score[0][j]} +/- {std[0][j]}"
+                            
+                            # Save into data
+                            data[idx] = global_score
                         
-                        # Cast DataFrame to CSV
-                        df = pd.DataFrame(data=data, index=index, columns=columns)
-                        df.to_csv(outfile)
+                        if validation == "extended":
+                            try:
+                                score = get_score(algorithm=alg, disease=disease, database=database,
+                                                validation=validation, metric=metric)
+                            except:
+                                score = np.ones((1,4)) * -1
+                            
+                            # Round array values at the third decimal
+                            score = np.around(score, decimals=3)
 
-                
-                if alg == "pdiamond_log":
+                            # Save into data
+                            data[idx] = score
+                    
+                    # Cast DataFrame to CSV
+                    df = pd.DataFrame(data=data, index=index, columns=columns)
+                    df.to_csv(outfile)
+
+            
+            if alg == "proconsul":
+                for r in n_rounds:
                     for t in temp_values:
                         for p in top_p_values:
                             for k in top_k_values:
                                 for metric in metrics:
                                 
-                                    outfile = f"parsed_results/disease_results/{database}/{validation}/{alg}__{10}_iters__temp_{t}__top_p_{p}__top_k_{k}__{metric}.csv"
+                                    outfile = f"parsed_results/disease_results/{database}/{validation}/{alg}__{r}_rounds__temp_{t}__top_p_{p}__top_k_{k}__{metric}.csv"
                                     
                                     index = []
                                     columns = ["Top 25", "Top 50", "Top 100", "Top 200"]
@@ -265,7 +465,7 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                             try:
                                                 score, std = get_score(algorithm=alg, disease=disease, database=database,
                                                                             validation=validation, K=K, metric=metric,
-                                                                            n_iters=10, temp=t, top_p=p, top_k=k)
+                                                                            n_rounds=r, temp=t, top_p=p, top_k=k)
                                             except:
                                                 score = np.zeros((1,4))
                                                 std = np.zeros((1,4))
@@ -286,7 +486,7 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
                                             try:
                                                 score = get_score(algorithm=alg, disease=disease, database=database,
                                                                 validation=validation, metric=metric,
-                                                                n_iters=10, temp=t, top_p=p, top_k=k)
+                                                                n_rounds=r, temp=t, top_p=p, top_k=k)
                                             except:
                                                 score = np.zeros((1,4))
                                             
@@ -307,25 +507,15 @@ def disease_scores_table(databases=None, validations=None, K=None, metrics=None,
 # ===============
 
 if __name__ == '__main__':
+    
+    # Read input
+    args = parse_args()
+    algs, metrics, validations, diseases, database_name, database_path, proconsul_n_rounds, proconsul_temp, proconsul_top_p, proconsul_top_k = read_terminal_input(args)
 
-    databases = ["biogrid"]
-    validations = ["kfold"]
-    algorithms = ["pdiamond_log", "diamond"]
-    metrics = ["precision", "recall", "f1", "ndcg"]
-    diseases = read_disease_file("data/disease_file_all.txt")
-    # diseases = read_disease_file("data/diamond_dataset/diseases.txt")
-    # diseases = read_disease_file("data/best_diseases_D_and_pD.txt")
+    average_results(database=database_name, validations=validations, algorithms=algs, diseases=diseases,
+                    temp_values=proconsul_temp, top_p_values=proconsul_top_p, top_k_values=proconsul_top_k, n_rounds=proconsul_n_rounds)
 
-
-    hyperparams = {}
-    temp_values = [0.5, 1.0, 10.0]
-    top_p_values = [0.0]
-    top_k_values = [0]
-
-    average_results(databases=databases, validations=validations, algorithms=algorithms, diseases=diseases,
-                    temp_values=temp_values, top_p_values=top_p_values, top_k_values=top_k_values)
-
-    disease_scores_table(databases=databases, validations=validations, algorithms=algorithms, diseases=diseases,
-                    temp_values=temp_values, top_p_values=top_p_values, K=5, metrics=metrics, top_k_values=top_k_values)
+    disease_scores_table(database=database_name, validations=validations, algorithms=algs, diseases=diseases,
+                    temp_values=proconsul_temp, top_p_values=proconsul_top_p, K=5, metrics=metrics, top_k_values=proconsul_top_k, n_rounds=proconsul_n_rounds)
 
     print("Done!")

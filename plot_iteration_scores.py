@@ -20,30 +20,31 @@ from utils.network_utils import *
 
 def print_usage():
     print(' ')
-    print('        usage: python3 plot_iteration_scores.py --algs --metric --validation --disease_file --database --heat_diffusion_time --pdiamond_n_iters --pdiamond_temp --pdiamond_top_p --pdiamond_top_k')
+    print('        usage: python3 plot_iteration_scores.py --algs --metric --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k')
     print('        -----------------------------------------------------------------')
-    print('        algs                     : List of algorithms to use to collect results.')
-    print('                                   They can be: "diamond", "diamond2, "pdiamond", "pdiamond_log", "pdiamond_entropy", "heat_diffusion"')
-    print('                                   If all, run all the algorithms. (default: all')
+    print('        algs                     : List of algorithms for which plot the iteration scores.')
+    print('                                   They can be: "diamond" or "proconsul" (default: all)')
     print('        metric                   : Metric to use to plot the scores. It can be')
     print('                                   "precision", "recall", "f1" or "ndcg".')
     print('                                   If all, makes a plot for each metric. (default: all')
     print('        validation               : Type of validation on which test the algorithms. It can be')
     print('                                   "kfold", "extended" or "all".')
-    print('                                    If all, perform both the validations. (default: all')
-    print('        disease_file             : Relative path to the file containing the disease names to use for the comparison')
-    print('                                   (default: "data/disease_file.txt).')
+    print('                                   If all, perform both the validations. (default: all)')
+    print('        disease_file             : Relative path to the file containing the disease names to use for the comparison.')
+    print('                                   (default: "data/diamond_dataset/diseases.txt).')
     print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset".')
-    print('                                   (default: "biogrid)')
-    print('        heat_diffusion_time      : Diffusion time for Heat Diffusion algorithm.')
-    print('                                   (default: 0.005)')
-    print('        pdiamond_n_iters         : Number of iteration for pDIAMOnD.')
+    print('                                   (default: "diamond_dataset)')
+    print('        proconsul_n_rounds       : How many different rounds PROCONSUL will do to reduce statistical fluctuation.')
+    print('                                   If you insert a list of values multiple version of PROCONSUL will be run. One for each value.')
     print('                                   (default: 10)')
-    print('        pdiamond_temp            : Temperature value for the pDIAMOnD softmax function.')
+    print('        proconsul_temp           : Temperature value for the PROCONSUL softmax function.')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
     print('                                   (default: 1.0)')
-    print('        pdiamond_top_p           : Probability threshold value for pDIAMOnD nucleus sampling. If 0 no nucleus sampling')
+    print('        proconsul_top_p          : Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
     print('                                   (default: 0.0)')
-    print('        pdiamond_top_k           : Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling')
+    print('        proconsul_top_k          : Length of the pvalues subset for the PROCONSUL top-k sampling. If 0 no top-k sampling.')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
     print('                                   (default: 0)')
     print(' ')
 
@@ -52,26 +53,24 @@ def parse_args():
     Parse the terminal arguments.
     '''
     parser = argparse.ArgumentParser(description='Set disease, algorithms and validation')
-    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "pdiamond", "pdiamond_log", "heat_diffusion"],
-                    help='List of algorithms to run (default: all)')
+    parser.add_argument('-a','--algs', nargs='+', default=["diamond", "proconsul"],
+                    help='List of algorithms to run to collect results. (default: ["diamond", "proconsul"])')
     parser.add_argument('--metric', type=str, default='recall',
                     help='Metric to use for make the plot. (default: recall')
     parser.add_argument('--validation', type=str, default='all',
-                    help='Type of validation. (default: all')
-    parser.add_argument('--disease_file', type=str, default="data/disease_file.txt",
-                    help='Relative path to the file with disease names (default: "data/disease_file.txt)')
-    parser.add_argument('--database', type=str, default="biogrid",
-                    help='Database name (default: "biogrid')
-    parser.add_argument('--heat_diffusion_time', type=float, default=0.005,
-                    help='Diffusion time for heat_diffusion algorithm. (default: 0.005')
-    parser.add_argument('--pdiamond_n_iters', type=int, default=10,
-                    help='Number of iteration for pDIAMOnD. (default: 10)')
-    parser.add_argument('--pdiamond_temp', type=float, default=1.0,
-                    help='Temperature value for the pDIAMOnD softmax function. (default: 1.0)')
-    parser.add_argument('--pdiamond_top_p', type=float, default=0.0,
-                    help='Probability threshold value for pDIAMOnD nucleus sampling. (default: 0.0)')
-    parser.add_argument('--pdiamond_top_k', type=int, default=0,
-                    help='Length of the pvalues subset for Top-K sampling. (default: 0)')
+                    help='Type of validation on which test the algorithms. It can be: "kfold", "extended" or "all". If all, perform both the validations. (default: all)')
+    parser.add_argument('--disease_file', type=str, default="data/diamond_dataset/diseases.txt",
+                    help='Relative path to the file containing the disease names to use for the comparison. (default: "data/diamond_dataset/diseases.txt")')
+    parser.add_argument('--database', type=str, default="diamond_dataset",
+                    help='Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset". (default: "diamond_dataset")')
+    parser.add_argument('--proconsul_n_rounds', type=int, nargs='+', default=[10],
+                    help='How many different rounds PROCONSUL will do to reduce statistical fluctuation. If you insert a list of values multiple version of PROCONSUL will be run. One for each value. (default: 10)')
+    parser.add_argument('--proconsul_temp', type=float, nargs='+', default=[1.0],
+                    help='Temperature value for the PROCONSUL softmax function. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 1.0)')
+    parser.add_argument('--proconsul_top_p', type=float, nargs='+', default=[0.0],
+                    help='Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0.0)')
+    parser.add_argument('--proconsul_top_k', type=int, nargs='+', default=[0],
+                    help='Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0)')
     return parser.parse_args()
 
 def read_terminal_input(args):
@@ -93,25 +92,25 @@ def read_terminal_input(args):
                 disease_list.append(line.replace("\n",""))
 
         return disease_list
-
-    # Read parsed values
+    
+    # 0. Read parsed values
     algs                = args.algs
     metric              = args.metric
     validation          = args.validation
     disease_file        = args.disease_file
-    database            = args.database
-    heat_diffusion_time = args.heat_diffusion_time
-    pdiamond_n_iters    = args.pdiamond_n_iters
-    pdiamond_temp       = args.pdiamond_temp
-    pdiamond_top_p      = args.pdiamond_top_p
-    pdiamond_top_k      = args.pdiamond_top_k
+    database_name       = args.database
+    proconsul_n_rounds  = args.proconsul_n_rounds
+    proconsul_temp      = args.proconsul_temp
+    proconsul_top_p     = args.proconsul_top_p
+    proconsul_top_k     = args.proconsul_top_k
 
     # 1. Check algorithm names
-    # for alg in algs:
-    #     if alg not in ["diamond", "pdiamond_log", "pdiamond_t0.5", "pdiamond_t1", "pdiamond_t10"]:
-    #         print(f"ERROR: {alg} is not a valid algorithm!")
-    #         print_usage()
-    #         sys.exit(0)
+    for alg in algs:
+
+        if alg not in ["diamond", "proconsul"]:
+            print(f"ERROR: {alg} is not a valid algorithm!")
+            print_usage()
+            sys.exit(0)
 
     # 2. Check metric
     if metric not in ["precision", "recall", "f1", "ndcg"]:
@@ -125,7 +124,6 @@ def read_terminal_input(args):
         print_usage()
         sys.exit(1)
 
-    # Get list of validations
     if validation == 'all':
         validations = ['kfold', 'extended']
     else:
@@ -145,70 +143,119 @@ def read_terminal_input(args):
         sys.exit(1)
 
     # 5. Check database
-    if database not in ["biogrid", "stringdb", "pnas", "diamond_dataset"]:
+    if database_name not in ["biogrid", "stringdb", "pnas", "diamond_dataset"]:
         print("ERROR: no valid database name")
         print_usage()
         sys.exit(1)
 
-    if database == "biogrid":
-        database_path = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+    if database_name == "biogrid":
+        database_path = "data/biogrid/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
 
-    if database == "stringdb":
-        database_path = "data/9606.protein.links.full.v11.5.txt"
+    if database_name == "stringdb":
+        database_path = "data/stringdb/9606.protein.links.full.v11.5.txt"
 
-    if database == "pnas":
-        database_path = "data/pnas.2025581118.sd02.csv"
+    if database_name == "pnas":
+        database_path = "data/pnas/pnas.2025581118.sd02.csv"
     
-    if database == "diamond_dataset":
+    if database_name == "diamond_dataset":
         database_path = "data/diamond_dataset/Interactome.tsv"
 
-    # 6. Check diffusion time
-    if heat_diffusion_time < 0:
-        print(f"ERROR: diffusion time must be greater than 0")
-        print_usage()
-        sys.exit(1)
+    # 6. Check PROCONSUL number of round
+    for round in proconsul_n_rounds:
+        if round <= 0:
+            print(f"ERROR: The number of rounds must be greater or equal 1.")
+            print_usage()
+            sys.exit(1)
 
-    # 7. Check pDIAMOnD number of iterations
-    if pdiamond_n_iters <= 0:
-        print(f"ERROR: pdiamond_n_iters must be greater or equal 1")
-        print_usage()
-        sys.exit(1)
+    # 7. Check PROCONSUL temperatures
+    for temp in proconsul_temp:
+        if temp < 0:
+            print(f"ERROR: The temperature must be greater or equal 0.")
+            print_usage()
+            sys.exit(1)
+        
+        # If temp = 0 replace it with very samll number
+        # to avoid nan values
+        if temp == 0:
+            temp = 1e-40
 
-    # 8. Check pDIAMOnD temperature
-    if pdiamond_temp < 0:
-        print(f"ERROR: pdiamond_temp must be greater or equal 0")
-        print_usage()
-        sys.exit(1)
+    # 8. Check PROCONSUL top-p sampling
+    for top_p in proconsul_top_p:
+        if top_p < 0 or top_p > 1:
+            print("ERROR: top_p must be in [0,1]")
+            print_usage()
+            sys.exit(1)
 
-    # 9. Check pDIAMOnD top-p sampling
-    if pdiamond_top_p < 0 or pdiamond_top_p > 1:
-        print("ERROR: top_p must be in [0,1]")
-        print_usage()
-        sys.exit(1)
+    # 9. Check PROCONSUL top-k sampling
+    for top_k in proconsul_top_k:
+        if top_k < 0:
+            print("ERROR: top_k must be greater or equal 0.")
+            print_usage()
+            sys.exit(1)
+    
+    # 10. Build the schedules of PROCONSUL hyperparameters
+    max_len = max([len for len in [len(proconsul_n_rounds), len(proconsul_temp), len(proconsul_top_p), len(proconsul_top_k)]])
+    
+    # 10.1. n_rounds
+    len_n_rounds = len(proconsul_n_rounds)
+    if len_n_rounds < max_len:
+        for i in range(max_len - len_n_rounds):
+            proconsul_n_rounds.append(10)   # append the deafault value to fill
+                                            # the gap with the other hyperparams
+    # 10.2. temperature
+    len_temperatures = len(proconsul_temp)
+    if len_temperatures < max_len:
+        for i in range(max_len - len_temperatures):
+            proconsul_temp.append(1.0)
 
-    # 10. Check pDIAMOnD top-k sampling
-    if pdiamond_top_k < 0:
-        print("ERROR: pdiamond_top_k must be greater or equal 0")
-        print_usage()
-        sys.exit(1)
+    # 10.3. top_p
+    len_top_p = len(proconsul_top_p)
+    if len_top_p < max_len:
+        for i in range(max_len - len_top_p):
+            proconsul_top_p.append(0.0)
 
+    # 10.4. top_k
+    len_top_k = len(proconsul_top_k)
+    if len_top_k < max_len:
+        for i in range(max_len - len_top_k):
+            proconsul_top_k.append(0)
+    
+    # 10.5. final check to see if all the hyperparameters have the same length
+    assert(len(proconsul_n_rounds) == len(proconsul_temp) == len(proconsul_top_k) == len(proconsul_top_p))
+
+    # 11. Make a list of tuples [(alg_name, hyperparams)]
+    algs_and_hyperparams = []
+
+    for alg in algs:
+        if alg == "diamond":
+            algs_and_hyperparams.append((alg, {}))
+        
+        if alg == "proconsul":
+            proconsul_n_instances = len(proconsul_n_rounds)
+            for i in range(proconsul_n_instances):
+                algs_and_hyperparams.append((alg, {"proconsul_n_rounds": proconsul_n_rounds[i],
+                                                   "proconsul_temp": proconsul_temp[i],
+                                                   "proconsul_top_p": proconsul_top_p[i],
+                                                   "proconsul_top_k": proconsul_top_k[i]}))
+
+
+    # 11. Print all the parsed inputs.
     print('                                                    ')
     print(f"===================================================")
     print(f"Algorithms: {algs}"                                 )
-    print(f"Metric: {metric}"                         )
+    print(f"Metric: {metric}"                                   )
     print(f"Validations: {validations}"                         )
     print(f"Diseases: {len(diseases)}"                          )
-    print(f"Database: {database}"                               )
-    print(f"Heat Diffusion Time: {heat_diffusion_time}"         )
-    print(f"pDIAMOnD number of iterations: {pdiamond_n_iters}"  )
-    print(f"pDIAMOnD temperature: {pdiamond_temp}"  )
-    print(f"pDIAMOnD top-p: {pdiamond_top_p}"                   )
-    print(f"pDIAMOnD top-k: {pdiamond_top_k}"                   )
+    print(f"Database name: {database_name}"                     )
+    print(f"Database path: {database_path}"                     )
+    print(f"PROCONSUL number of rounds: {proconsul_n_rounds}"   )
+    print(f"PROCONSUL temperatures: {proconsul_temp}"           )
+    print(f"PROCONSUL top-p: {proconsul_top_p}"                 )
+    print(f"PROCONSUL top-k: {proconsul_top_k}"                 )
     print(f"===================================================")
     print('                                                    ')
 
-
-    return algs, metric, validations, diseases, database, database_path, heat_diffusion_time, pdiamond_n_iters, pdiamond_temp, pdiamond_top_p, pdiamond_top_k
+    return algs_and_hyperparams, metric, validations, diseases, database_name, database_path
 
 
 # main
@@ -216,14 +263,7 @@ if __name__ == "__main__":
 
     # Read input
     args = parse_args()
-    algs, metric, validations, diseases, database_name, database_path, heat_diffusion_time, pdiamond_n_iters, pdiamond_temp, pdiamond_top_p, pdiamond_top_k = read_terminal_input(args)
-
-    # Compact all the algorithm hyperparameters in a dictionary
-    hyperparams = {"heat_diffusion_time": heat_diffusion_time,
-                   "pdiamond_n_iters": pdiamond_n_iters,
-                   "pdiamond_temp": pdiamond_temp,
-                   "pdiamond_top_p": pdiamond_top_p,
-                   "pdiamond_top_k": pdiamond_top_k}
+    algs_and_hyperparams, metric, validations, diseases, database_name, database_path = read_terminal_input(args)
 
     # Build the Human-Human Interactome
     if database_name == "biogrid":
@@ -250,26 +290,19 @@ if __name__ == "__main__":
     #     K-FOLD CROSS VALIDATION
     # -------------------------------
 
-    gda_curated = "data/curated_gene_disease_associations.tsv"
+    gda_curated = "data/gda/curated_gene_disease_associations.tsv"
     seeds_file = "data/diamond_dataset/seeds.tsv"
 
     if 'kfold' in validations:
         for disease in diseases:
             data = []
 
-            for alg in algs:
-                alg_real_name = alg
+            for a_and_h in algs_and_hyperparams:
                 
-                if alg == "proconsul_t0.5":
-                    hyperparams["pdiamond_temp"] = 0.5
-                    alg_real_name = "pdiamond_log"
-                if alg == "proconsul_t1":
-                    hyperparams["pdiamond_temp"] = 1.0
-                    alg_real_name = "pdiamond_log"
-                if alg == "proconsul_t10":
-                    hyperparams["pdiamond_temp"] = 10.0
-                    alg_real_name = "pdiamond_log"
-
+                # Separate algorithm name and its hyperparameters.
+                alg = a_and_h[0]
+                hyperparams = a_and_h[1]
+                
                 if database_name in ["diamond_dataset"]:
                     disease_genes = get_disease_genes_from_seeds_file(seeds_file, disease, fix_random=True)
                 else:
@@ -281,7 +314,7 @@ if __name__ == "__main__":
                     continue
 
                 alg_scores = k_fold_cross_validation(hhi_lcc,
-                                                    alg_real_name,
+                                                    alg,
                                                     disease,
                                                     disease_genes,
                                                     K=5,
@@ -299,14 +332,28 @@ if __name__ == "__main__":
                 if metric == 'ndcg':
                     alg_scores = alg_scores[3]
                 
-                # print(f"complete k-fold scores of {metric}: \n{alg_scores}")
+                
+                if alg == "diamond":
+                    alg_label = alg
+                if alg == "proconsul":
+                    t = hyperparams["proconsul_temp"]
+                    p = hyperparams["proconsul_top_p"]
+                    k = hyperparams["proconsul_top_k"]
+
+                    alg_label = f"{alg}_t{t}"
+
+                    if p > 0:
+                        alg_label += f"_top_p{p}"
+                    
+                    if k > 0:
+                        alg_label += f"top_k{k}"
 
                 # Fill the DataFrame
                 for i in range(len(alg_scores)):
                     data.append(
                         {
                             metric: alg_scores[i],
-                            'algorithms': alg,
+                            'algorithms': alg_label,
                             'iterations': i
                         }
                     )

@@ -61,9 +61,9 @@ def parse_args():
     parser.add_argument('--proconsul_n_rounds', type=int, nargs='+', default=[10],
                     help='How many different rounds PROCONSUL will do to reduce statistical fluctuation. If you insert a list of values multiple version of PROCONSUL will be run. One for each value. (default: 10)')
     parser.add_argument('--proconsul_temp', type=float, nargs='+', default=[1.0],
-                    help='Temperature value for the pDIAMOnD softmax function. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 1.0)')
+                    help='Temperature value for the PROCONSUL softmax function. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 1.0)')
     parser.add_argument('--proconsul_top_p', type=float, nargs='+', default=[0.0],
-                    help='Probability threshold value for pDIAMOnD nucleus sampling. If 0 no nucleus sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0.0)')
+                    help='Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0.0)')
     parser.add_argument('--proconsul_top_k', type=int, nargs='+', default=[0],
                     help='Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0)')
     return parser.parse_args()
@@ -285,7 +285,7 @@ if __name__ == "__main__":
     #     K-FOLD CROSS VALIDATION
     # -------------------------------
 
-    gda_curated = "data/curated_gene_disease_associations.tsv"
+    gda_curated = "data/gda/curated_gene_disease_associations.tsv"
     seeds_file = "data/diamond_dataset/seeds.tsv"
 
     if 'kfold' in validations:
@@ -325,7 +325,7 @@ if __name__ == "__main__":
     #       EXTENDED VALIDATION
     # --------------------------------
 
-    gda_all = "data/all_gene_disease_associations.tsv"
+    gda_all = "data/gda/all_gene_disease_associations.tsv"
 
     if 'extended' in validations:
         
