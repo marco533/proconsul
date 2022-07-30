@@ -1,3 +1,0 @@
-Density
-Percentage
-Highest path between 2 seed genes (connected and not connected)
