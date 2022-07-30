@@ -82,8 +82,8 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, d
             top_p       = hyperparams["proconsul_top_p"]
             top_k       = hyperparams["proconsul_top_k"]
 
-            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__kfold_{k+1}_{K}.txt"
-            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_iters__temp_{temp}__top_p_{top_p}__top_k_{top_k}__{K}_fold.csv"
+            predicted_genes_outfile = f"predicted_genes/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_rounds__temp_{temp}__top_p_{top_p}__top_k_{top_k}__kfold_{k+1}_{K}.txt"
+            csv_outfile = f"results/{database_name}/kfold/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__{n_rounds}_rounds__temp_{temp}__top_p_{top_p}__top_k_{top_k}__{K}_fold.csv"
 
             added_nodes = PROCONSUL(network, training_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, n_rounds=n_rounds, temperature=temp, top_p=top_p, top_k=top_k)
             predicted_genes = [item[0] for item in added_nodes]
