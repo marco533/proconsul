@@ -7,10 +7,6 @@ import sys
 from test.extended_validation import *
 from test.kfold_validation import *
 
-import networkx as nx
-import numpy as np
-import pandas as pd
-
 from utils.network_utils import *
 from utils.data_utils import *
 
@@ -23,31 +19,31 @@ from utils.data_utils import *
 
 def print_usage():
 
-    print('                                                                                                                                                         '   )
-    print('        usage: python3 project.py --algs --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k'   )
-    print('        -------------------------------------------------------------------------------------------------------------------------------------------------'   )
-    print('        algs                     : List of algorithms to run to collect results.'                                                                            )
-    print('                                   They can be: "diamond" or "proconsul" (default: all)'                                                                     )
-    print('        validation               : Type of validation on which test the algorithms. It can be'                                                               )
-    print('                                   "kfold", "extended" or "all".'                                                                                            )
-    print('                                   If all, perform both the validations. (default: all)'                                                                     )
-    print('        disease_file             : Relative path to the file containing the disease names to use for the comparison.'                                        )
-    print('                                   (default: "data/diamond_dataset/diseases.txt).'                                                                                       )
-    print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset".'                 )
-    print('                                   (default: "diamond_dataset)'                                                                                              )
-    print('        proconsul_n_rounds       : How many different rounds PROCONSUL will do to reduce statistical fluctuation.'                                           )
-    print('                                   If you insert a list of values multiple version of PROCONSUL will be run. One for each value.'                            )
-    print('                                   (default: 10)'                                                                                                            )
-    print('        proconsul_temp           : Temperature value for the PROCONSUL softmax function.'                                                                     )
-    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.'                           )
-    print('                                   (default: 1.0)'                                                                                                           )
-    print('        proconsul_top_p          : Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling'                                      )
-    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.'                           )
-    print('                                   (default: 0.0)'                                                                                                           )
-    print('        proconsul_top_k          : Length of the pvalues subset for the PROCONSUL top-k sampling. If 0 no top-k sampling.'                                                 )
-    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.'                           )
-    print('                                   (default: 0)'                                                                                                             )
-    print('                                                                                                                                                         '   )
+    print(' ')
+    print('        usage: python3 project.py --algs --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k')
+    print('        -------------------------------------------------------------------------------------------------------------------------------------------------')
+    print('        algs                     : List of algorithms to run to collect results.')
+    print('                                   They can be: "diamond" or "proconsul" (default: all)')
+    print('        validation               : Type of validation on which test the algorithms. It can be')
+    print('                                   "kfold", "extended" or "all".')
+    print('                                   If all, perform both the validations. (default: all)')
+    print('        disease_file             : Relative path to the file containing the disease names to use for the comparison.')
+    print('                                   (default: "data/diamond_dataset/diseases.txt).')
+    print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset".')
+    print('                                   (default: "diamond_dataset)')
+    print('        proconsul_n_rounds       : How many different rounds PROCONSUL will do to reduce statistical fluctuation.')
+    print('                                   If you insert a list of values multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 10)')
+    print('        proconsul_temp           : Temperature value for the PROCONSUL softmax function.')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 1.0)')
+    print('        proconsul_top_p          : Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 0.0)')
+    print('        proconsul_top_k          : Length of the pvalues subset for the PROCONSUL top-k sampling. If 0 no top-k sampling.')
+    print('                                   If you insert a list of values, multiple version of PROCONSUL will be run. One for each value.')
+    print('                                   (default: 0)')
+    print(' ')
 
 def parse_args():
     '''
@@ -141,13 +137,13 @@ def read_terminal_input(args):
         sys.exit(1)
 
     if database_name == "biogrid":
-        database_path = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+        database_path = "data/biogrid/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
 
     if database_name == "stringdb":
-        database_path = "data/9606.protein.links.full.v11.5.txt"
+        database_path = "data/stringdb/9606.protein.links.full.v11.5.txt"
 
     if database_name == "pnas":
-        database_path = "data/pnas.2025581118.sd02.csv"
+        database_path = "data/pnas/pnas.2025581118.sd02.csv"
     
     if database_name == "diamond_dataset":
         database_path = "data/diamond_dataset/Interactome.tsv"
@@ -165,6 +161,11 @@ def read_terminal_input(args):
             print(f"ERROR: The temperature must be greater or equal 0.")
             print_usage()
             sys.exit(1)
+        
+        # If temp = 0 replace it with very samll number
+        # to avoid nan values
+        if temp == 0:
+            temp = 1e-40
 
     # 7. Check PROCONSUL top-p sampling
     for top_p in proconsul_top_p:

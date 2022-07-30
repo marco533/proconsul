@@ -1,13 +1,7 @@
-from pyexpat.model import XML_CQUANT_NONE
-import sys
-from itertools import combinations
-
+import bct
 import networkx as nx
 import numpy as np
 import pandas as pd
-import bct
-import re
-
 
 from utils.data_utils import get_disease_genes_from_gda
 

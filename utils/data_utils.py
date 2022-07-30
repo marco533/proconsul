@@ -1,19 +1,8 @@
 
-import enum
-from fnmatch import translate
-from ossaudiodev import control_names
-import sys
-import csv
 import random
 
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import matplotlib.ticker as mticker
 import numpy as np
 import pandas as pd
-from matplotlib.colors import BoundaryNorm, LogNorm, Normalize
-from pytest import skip
-from sklearn.utils import shuffle
 
 #################
 #   UTILITIES   #
@@ -29,7 +18,7 @@ def translate_gene_names(genes=None, database=None):
 
     if database == "stringdb":
         # Read the alisases from StringDB
-        stringdb_aliases = pd.read_csv("data/9606.protein.aliases.v11.5.txt", sep="\t", header=0)
+        stringdb_aliases = pd.read_csv("data/stringdb/9606.protein.aliases.v11.5.txt", sep="\t", header=0)
 
         # Select only the rows that have
         # 1. the alias name in our genes list

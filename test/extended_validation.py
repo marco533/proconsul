@@ -50,27 +50,18 @@ def extended_validation(network, algorithm, disease_name, seed_genes, test_genes
         added_nodes = PROCONSUL(network, seed_genes, num_genes_to_predict, 1, outfile=predicted_genes_outfile, n_rounds=n_rounds, temperature=temp, top_p=top_p, top_k=top_k)
         predicted_genes = [item[0] for item in added_nodes]
 
-    elif algorithm == "heat_diffusion":
-        diffusion_time = hyperparams["heat_diffusion_time"]
-
-        predicted_genes_outfile = f"predicted_genes/{database_name}/extended/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__diff_time_{diffusion_time}__extended.txt"
-        csv_outfile = f"results/{database_name}/extended/{algorithm}/{algorithm}__{string_to_filename(disease_name)}__diff_time_{diffusion_time}__extended.csv"
-
-        predicted_genes = run_heat_diffusion(network, seed_genes, n_positions=num_genes_to_predict, diffusion_time=diffusion_time)
-
     else:
         print("  ERROR: No valid algorithm.    ")
         print("  Choose one of the following:  ")
         print("    - diamond                   ")
         print("    - proconsul                 ")
-        print("    - heat_diffusion            ")
         sys.exit(1)
 
     # compute the scores over the predicted genes
     scores = np.array((compute_metrics(all_genes, test_genes, predicted_genes[:25]),
-                        compute_metrics(all_genes, test_genes, predicted_genes[:50]),
-                        compute_metrics(all_genes, test_genes, predicted_genes[:100]),
-                        compute_metrics(all_genes, test_genes, predicted_genes[:200]))).transpose()
+                       compute_metrics(all_genes, test_genes, predicted_genes[:50]),
+                       compute_metrics(all_genes, test_genes, predicted_genes[:100]),
+                       compute_metrics(all_genes, test_genes, predicted_genes[:200]))).transpose()
 
     # print results
     print(scores)

@@ -1,14 +1,12 @@
-import imp
 import sys
 
-import networkx as nx
 import numpy as np
 import pandas as pd
 from algorithms.diamond import DIAMOnD
 from algorithms.proconsul import PROCONSUL
-from utils.network_utils import *
-from utils.metrics_utils import *
 from utils.data_utils import *
+from utils.metrics_utils import *
+from utils.network_utils import *
 
 
 def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, database_name=None, hyperparams=None, all_iterations=False):
@@ -100,9 +98,9 @@ def k_fold_cross_validation(network, algorithm, disease_name, seed_genes, K=5, d
         
         # Compute the scores over the predicted genes.
         scores[k] = np.array((compute_metrics(all_genes, test_genes, predicted_genes[:25]),
-                                compute_metrics(all_genes, test_genes, predicted_genes[:50]),
-                                compute_metrics(all_genes, test_genes, predicted_genes[:100]),
-                                compute_metrics(all_genes, test_genes, predicted_genes[:200]))).transpose()
+                              compute_metrics(all_genes, test_genes, predicted_genes[:50]),
+                              compute_metrics(all_genes, test_genes, predicted_genes[:100]),
+                              compute_metrics(all_genes, test_genes, predicted_genes[:200]))).transpose()
 
         if all_iterations == True:
             complete_scores[k] = np.array([compute_metrics(all_genes, test_genes, predicted_genes[:i]) for i in range(num_genes_to_predict)]).transpose()
