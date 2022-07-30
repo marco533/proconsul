@@ -2,10 +2,8 @@
 
 
 import argparse
-import copy
 import csv
 import sys
-import time
 from collections import defaultdict
 
 import networkx as nx
@@ -13,7 +11,6 @@ import numpy as np
 import scipy.stats
 import torch
 import torch.nn.functional as F
-from numpy import average
 
 
 # =============================================================================
@@ -40,9 +37,9 @@ def print_usage():
     print('                       (default: 10)' )
     print('        temp         : Temperature value for the softmax function.')
     print('                       (default: 1.0)')
-    print('        top_p        : Probability threshold value for nucleus sampling. If 0 no nucleus sampling')
+    print('        top_p        : Probability threshold value for nucleus sampling. If 0 no nucleus sampling.')
     print('                       (default: 0.0)')
-    print('        top_k        : Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling.')
+    print('        top_k        : Length of the p-values subset for Top-K sampling. If 0 no top-k sampling.')
     print('                       (default: 0)')
     print(' ')
 
@@ -62,14 +59,14 @@ def parse_args():
                     help='desired number of genes to predict, 200 is a reasonable starting point.')
     parser.add_argument('--alpha', type=int, default=1,
                     help='an integer representing weight of the seeds (default: 1)')
-    parser.add_argument('--outfile_name', type=str, default="first_n_added_nodes_weight_alpha.txt",
-                    help='results will be saved under this file name (default: "first_n_added_nodes_weight_alpha.txt")')
+    parser.add_argument('--outfile_name', type=str, default="default",
+                    help='results will be saved under this file name (default: "proconsul_n_predicted_genes_temp_t(top_p_top_k_).txt")')
     parser.add_argument('--n_rounds', type=int, default=10,
                     help='How many different rounds PROCONSUL will do to reduce statistical fluctuation. (default: 10)')
     parser.add_argument('--temp', type=float, default=1.0,
-                    help='Temperature value for the pDIAMOnD softmax function. (default: 1.0)')
+                    help='Temperature value for the PROCONSUL softmax function. (default: 1.0)')
     parser.add_argument('--top_p', type=float, default=0.0,
-                    help='Probability threshold value for pDIAMOnD nucleus sampling. If 0 no nucleus sampling. (default: 0.0)')
+                    help='Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling. (default: 0.0)')
     parser.add_argument('--top_k', type=int, default=0,
                     help='Length of the pvalues subset for Top-K sampling. If 0 no top-k sampling. (default: 0)')
     return parser.parse_args()
@@ -130,7 +127,7 @@ def read_files(network_file, seed_file):
 
     return G, seed_genes
 
-def read_input(args):
+def read_terminal_input(args):
     """
     Reads the arguments passed by command line.
     """
@@ -144,6 +141,57 @@ def read_input(args):
     temp            = args.temp
     top_p           = args.top_p
     top_k           = args.top_k
+
+    # Check arguments
+    if n < 1:
+        print(f"ERROR: The number of genes to predict must be greater or equal 1.")
+        print_usage()
+        sys.exit(1)
+    
+    if alpha < 0:
+        print(f"ERROR: alpha must be greater or equal 0.")
+        print_usage
+        sys.exit(1)
+
+    if n_rounds < 1:
+        print(f"ERROR: The number of PROCONSUL rounds must be greater or equal 1.")
+        print_usage()
+        sys.exit(1)
+
+    if temp < 0:
+        print(f"ERROR: The temperature must be greater or equal 0.")
+        print_usage()
+        sys.exit(1)
+    
+    if temp == 0:
+        # Sustitue 0 with a very small number to avoid nan values
+        temp = 1e-40
+    
+    if top_p < 0:
+        print(f"ERROR: The probability threshold for nucleus sampling (top-p) must be greater or equal 0.")
+        print_usage()
+        sys.exit(1)
+
+    if top_k < 0:
+        print(f"ERROR: The number of p-values subset for top-k sampling must be greater or equal 0.")
+        print_usage()
+        sys.exit(1)
+    
+    # Generate the default outfile
+    if outfile_name == "default":
+        outfile_name = f"proconsul_{n}_predicted_genes_{n_rounds}_rounds_temp_{temp}.txt"
+
+        # Add top-p and top-k if they are greater than 0
+        if top_p > 0.0:
+            outfile_name = outfile_name.replace(".txt", f"_top_p_{top_p}.txt")
+        
+        if top_k > 0:
+            outfile_name = outfile_name.replace(".txt", f"_top_k_{top_k}.txt")
+    
+    # Read network and seed files
+    G_original, seed_genes = read_files(network_file, seed_file)
+
+    return G_original, seed_genes, n, alpha, outfile_name, n_rounds, temp, top_p, top_k
 
 
 # ================================================================================
@@ -246,7 +294,7 @@ def reduce_not_in_cluster_nodes(all_degrees, neighbors, G, not_in_cluster, clust
     return reduced_not_in_cluster
 
 
-# See: https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
+# This implementation cames from: https://gist.github.com/thomwolf/1a5a29f6962089e871b94cbd09daf317
 def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')):
     """ Filter a distribution of logits using top-k and/or nucleus (top-p) filtering
         Args:
@@ -285,7 +333,7 @@ def top_k_top_p_filtering(logits, top_k=0, top_p=0.0, filter_value=-float('Inf')
 # ======================================================================================
 #   C O R E    A L G O R I T H M
 # ======================================================================================
-def proconsul_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0, top_k=0, top_p=0):
+def proconsul_iteration_of_first_X_nodes(G, S, X, alpha, temp=1.0, top_k=0, top_p=0):
     """
     Parameters:
     ----------
@@ -294,6 +342,10 @@ def proconsul_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0, top_k=
     - X:     the number of iterations, i.e only the first X gened will be
              pulled in
     - alpha: seeds weight
+    - temp:  the temperaure value for the softmax function
+    - top_k: number of subset of p-values for top-k sampling
+    - top_p: prob threshold for top-p sampling
+
     Returns:
     --------
 
@@ -368,7 +420,6 @@ def proconsul_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0, top_k=
         for node, kbk in reduced_not_in_cluster.items():
             # Getting the p-value of this kb,k
             # combination and save it in all_p, so computing it only once!
-
             kb, k = kbk
             try:
                 p = all_p[(k, kb, s0)]
@@ -396,7 +447,7 @@ def proconsul_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0, top_k=
         log_p_values = -torch.log(p_values)
 
         # Scale by the temperature
-        log_p_values /= temperature
+        log_p_values /= temp
 
         # Top-K and Top-P filtering
         log_p_values = top_k_top_p_filtering(log_p_values, top_k=top_k, top_p=top_p)
@@ -430,12 +481,12 @@ def proconsul_iteration_of_first_X_nodes(G, S, X, alpha, temperature=1.0, top_k=
     return added_nodes
 
 
-# ===========================================================================
-#
-#   M A I N   P R O C O N S U L   A L G O R I T H M
-#
-# ===========================================================================
-def PROCONSUL(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, n_rounds=10, temperature=1.0, top_k=0, top_p=0.0):
+# ===================================================================================
+#  P R O C O N S U L
+#  U s e   t h i s   f u n c   t o   c a l l   i t   f r o m   a   t h i r d   a p p  
+# ===================================================================================
+
+def PROCONSUL(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=None, n_rounds=10, temp=1.0, top_k=0, top_p=0.0):
 
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
@@ -454,21 +505,21 @@ def PROCONSUL(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=
                                                            disease_genes,
                                                            max_number_of_added_nodes,
                                                            alpha,
-                                                           temperature=temperature,
+                                                           temp=temp,
                                                            top_k=top_k,
                                                            top_p=top_p)
 
         # Assign rank value to the node
         for pos, node in enumerate(added_nodes):
             node_number = node[0]
-            # print(node_number)
+
             if node_number not in node_ranks:
-                node_ranks[node_number] = (len(added_nodes) - pos )  # if pos = 0 => rank = 100 - 0 = 100
+                node_ranks[node_number] = len(added_nodes) - pos # if pos = 0 => rank = 100-0 = 100
             else:
                 node_ranks[node_number] += len(added_nodes) - pos
 
 
-    # Average the rank of each node by the total number of pDIAMOnD iterations
+    # Average the rank of each node by the total number of PROCONSUL iterations
     for key in node_ranks.keys():
         node_ranks[key] /= n_rounds
 
@@ -481,9 +532,10 @@ def PROCONSUL(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=
         fout.write('\t'.join(['rank', 'node', 'rank_score']) + '\n')
         rank = 0
         for sn in sorted_nodes:
-            # if rank > max_number_of_added_nodes:
-            #     break
-
+        	
+            if rank >= max_number_of_added_nodes:
+                break
+        		
             rank += 1
             node = sn[0]
             rank_score = sn[1]
@@ -493,43 +545,26 @@ def PROCONSUL(G_original, seed_genes, max_number_of_added_nodes, alpha, outfile=
     return sorted_nodes[:max_number_of_added_nodes]
 
 
-# ===========================================================================
-#
-# "Hey Ho, Let's go!" -- The Ramones (1976)
-#
-# ===========================================================================
-
+# =============================================================
+#  M A I N:  T o   r u n   i t   b y   c o m m a n d   l i n e
+# =============================================================
 
 if __name__ == '__main__':
-    # -----------------------------------------------------
-    # Checking for input from the command line:
-    # -----------------------------------------------------
-    #
-    # [1] file providing the network in the form of an edgelist
-    #     (tab-separated table, columns 1 & 2 will be used)
-    #
-    # [2] file with the seed genes (if table contains more than one
-    #     column they must be tab-separated; the first column will be
-    #     used only)
-    #
-    # [3] number of desired iterations
-    #
-    # [4] (optional) seeds weight (integer), default value is 1
-    # [5] (optional) name for the results file
 
-    # check if input style is correct
-    input_list = sys.argv
-    network_edgelist_file, seeds_file, max_number_of_added_nodes, alpha, outfile_name, n_rounds = check_input_style(input_list)
-
-    # read the network and the seed genes:
-    G_original, seed_genes = read_input(network_edgelist_file, seeds_file)
+    # Read input
+    args = parse_args()
+    G_original, seed_genes, max_number_of_added_nodes, alpha, outfile_name, n_rounds, temp, top_p, top_k = read_terminal_input(args)
 
 
-    # run Prob DIAMOnD
+    # run PROCONSUL
     added_nodes = PROCONSUL(G_original,
                             seed_genes,
-                            max_number_of_added_nodes, alpha,
+                            max_number_of_added_nodes,
+                            alpha,
                             outfile=outfile_name,
-                            n_rounds=n_rounds)
+                            n_rounds=n_rounds,
+                            temp=temp,
+                            top_p=top_p,
+                            top_k=top_k)
 
     print("\n results have been saved to '%s' \n" % outfile_name)
