@@ -14,14 +14,16 @@ from utils.data_utils import *
 def print_usage():
 
     print(' ')
-    print('        usage: python3 compare_algs.py --left_ring --right_ring --metric --validation --disease_file --database --heat_diffusion_time --pdiamond_n_iters --pdiamond_temp --pdiamond_top_p --pdiamond_top_k')
+    print('        usage: python3 compare_algs.py --left_ring --right_ring --metric --validation --disease_file --database --heat_diffusion_time --proconsul_n_rounds')
     print('        -----------------------------------------------------------------')
     print('        left_ring                : Algorithms in the LEFT part of the ring. We will compare the greatest algorithm on the left')
     print('                                   against the greatest algorithms on the right.')
-    print('                                   They can be: "diamond", "proconsul_t*", where * is any temperature value.')
+    print('                                   They can be: "diamond", "proconsul_t\{t\}_p{p}_k{k}",')
+    print('                                   where t, p and k are the values for the temperature, the nucleus sampling and the top-k sampling.')
     print('        right_ring               : Algorithms in the RIGHT part of the ring. We will compare the greatest algorithm on the left')
     print('                                   against the greatest algorithms on the right.')
-    print('                                   They can be: "diamond", "proconsul_t*", where * is any temperature value.')
+    print('                                   They can be: "diamond", "proconsul_t\{t\}_p{p}_k{k}",')
+    print('                                   where t, p and k are the values for the temperature, the nucleus sampling and the top-k sampling.')
     print('        left_name                : Name for the algorithms in the left ring.')
     print('        right_name               : Name for the algorithms in the right ring.')
     print('        metric                   : Metric to use to plot the scores. It can be')
@@ -33,7 +35,7 @@ def print_usage():
     print('                                   (default: "data/disease_file.txt).')
     print('        database                 : Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset".')
     print('                                   (default: "diamond_dataset)')
-    print('        proconsul_n_iters        : Number of iteration for PROCONSUL.')
+    print('        proconsul_n_rounds        : Number of iteration for PROCONSUL.')
     print('                                   (default: 10)')
     print(' ')
 
@@ -60,8 +62,8 @@ def parse_args():
                     help='Relative path to the file with disease names (default: "data/disease_file.txt)')
     parser.add_argument('--database', type=str, default="biogrid",
                     help='Database name (default: "biogrid')
-    parser.add_argument('--proconsul_n_iters', type=int, default=10,
-                    help='Number of iteration for pDIAMOnD. (default: 10)')
+    parser.add_argument('--proconsul_n_rounds', type=int, default=10,
+                    help='Number of iteration for PROCONSUL. (default: 10)')
     
     return parser.parse_args()
 
@@ -94,11 +96,11 @@ def read_terminal_input(args):
     validation          = args.validation
     disease_file        = args.disease_file
     database            = args.database
-    proconsul_n_iters   = args.proconsul_n_iters
+    proconsul_n_rounds  = args.proconsul_n_rounds
 
     # # 1. Check algorithm names
     # for alg in algs:
-    #     if alg not in ["diamond", "diamond2", "pdiamond", "pdiamond_log", "pdiamond_entropy", "heat_diffusion"]:
+    #     if alg not in ["diamond", "diamond2", "proconsul", "proconsul", "proconsul_entropy", "heat_diffusion"]:
     #         print(f"ERROR: {alg} is not a valid algorithm!")
     #         print_usage()
     #         sys.exit(0)
@@ -152,29 +154,29 @@ def read_terminal_input(args):
     if database == "diamond_dataset":
         database_path = "data/diamond_dataset/Interactome.tsv"
 
-    # 5. Check pDIAMOnD number of iterations
-    if proconsul_n_iters <= 0:
-        print(f"ERROR: pdiamond_n_iters must be greater or equal 1")
+    # 5. Check PROCONSUL number of iterations
+    if proconsul_n_rounds <= 0:
+        print(f"ERROR: proconsul_n_rounds must be greater or equal 1")
         print_usage()
         sys.exit(1)
 
-    print('                                                    ')
-    print(f"===================================================")
-    print(f"{left_name} ring: {left_ring}"                      )
-    print(f"{right_name} ring: {right_ring}"                    )
-    print(f"Metric: {metric}"                                   )
-    print(f"Validations: {validations}"                         )
-    print(f"Diseases: {len(diseases)}"                          )
-    print(f"Database: {database}"                               )
-    print(f"PROCONSUL number of iterations: {proconsul_n_iters}")
-    print(f"===================================================")
-    print('                                                    ')
+    print('                                                        ')
+    print(f"=======================================================")
+    print(f"{left_name} ring: {left_ring}"                          )
+    print(f"{right_name} ring: {right_ring}"                        )
+    print(f"Metric: {metric}"                                       )
+    print(f"Validations: {validations}"                             )
+    print(f"Diseases: {len(diseases)}"                              )
+    print(f"Database: {database}"                                   )
+    print(f"PROCONSUL number of iterations: {proconsul_n_rounds}"   )
+    print(f"=======================================================")
+    print('                                                        ')
 
 
-    return left_ring, right_ring, left_name, right_name, metric, validations, diseases, database, database_path, proconsul_n_iters
+    return left_ring, right_ring, left_name, right_name, metric, validations, diseases, database, database_path, proconsul_n_rounds
 
 
-def get_score(algorithm=None, disease=None, database=None, validation=None, K=None, metric=None, diffusion_time=None, n_iters=None, temp=None, top_p=None, top_k=None):
+def get_score(algorithm=None, disease=None, database=None, validation=None, K=None, metric=None, diffusion_time=None, n_rounds=None, temp=None, top_p=None, top_k=None):
     """
     Get the algorithm score on a given disease.
     """
@@ -185,8 +187,8 @@ def get_score(algorithm=None, disease=None, database=None, validation=None, K=No
 
     if diffusion_time is not None:
         return
-    if n_iters is not None:
-        score_path += f"__{n_iters}_iters"
+    if n_rounds is not None:
+        score_path += f"__{n_rounds}_rounds"
     if temp is not None:
         score_path += f"__temp_{temp}"
     if top_p is not None:
@@ -238,7 +240,7 @@ def get_score(algorithm=None, disease=None, database=None, validation=None, K=No
 
 
 def compare_algs_heatmap(left_ring=None, right_ring=None, left_name=None, right_name=None,
-                         metric=None, validation=None, diseases=None, proconsul_n_iters=None,
+                         metric=None, validation=None, diseases=None, proconsul_n_rounds=None,
                          database_name=None):
 
     """
@@ -262,17 +264,37 @@ def compare_algs_heatmap(left_ring=None, right_ring=None, left_name=None, right_
         # best_right_scores, substitute it.
         for ra in right_ring:
             if "proconsul" in ra:
-                alg, temp = ra.split("_t")
-                temp = float(temp)
-                alg = "pdiamond_log"
+                # Get the proconsul hyperparams from the algorithm name
+                alg_and_hyperparams = []
+                alg_and_hyperparams = ra.split("_")
+
+                # Pop-out the algorithm name
+                alg = alg_and_hyperparams.pop(0)
+
+                t = 1.0
+                p = 0.0
+                k = 0
+
+                # Iter on the remaining hyperparameters
+                for h in alg_and_hyperparams:
+                    if 't' in h:
+                        t = float(h.replace('t', ''))
+                    
+                    if 'p' in h:
+                        p = float(h.replace('p', ''))
+                    
+                    if 'k' in h:
+                        k = int(h.replace('k', ''))
+                
+
                 scores, _ = get_score(algorithm=alg,
                                       disease=disease,
                                       database=database_name, 
                                       metric=metric,
                                       validation=validation,
                                       K=5,
-                                      n_iters=proconsul_n_iters,
-                                      temp=temp, top_k=0, top_p=0.0)
+                                      n_rounds=proconsul_n_rounds,
+                                      temp=t, top_k=k, top_p=p)
             else:
                 alg = ra
                 scores, _ = get_score(algorithm=alg,
@@ -296,25 +318,37 @@ def compare_algs_heatmap(left_ring=None, right_ring=None, left_name=None, right_
         # Do the same for the left ring algorithms
         for la in left_ring:
             if "proconsul" in la:
-                alg, temp = la.split("_t")
-                temp = float(temp)
-                alg = "pdiamond_log"
-                scores, _ = get_score(algorithm=alg, 
+                # Get the proconsul hyperparams from the algorithm name
+                alg_and_hyperparams = []
+                alg_and_hyperparams = ra.split("_")
+
+                # Pop-out the algorithm name
+                alg = alg_and_hyperparams.pop(0)
+
+                t = 1.0
+                p = 0.0
+                k = 0
+
+                # Iter on the remaining hyperparameters
+                for h in alg_and_hyperparams:
+                    if 't' in h:
+                        t = float(h.replace('t', ''))
+                    
+                    if 'p' in h:
+                        p = float(h.replace('p', ''))
+                    
+                    if 'k' in h:
+                        k = int(h.replace('k', ''))
+                
+
+                scores, _ = get_score(algorithm=alg,
                                       disease=disease,
-                                      database=database_name,
+                                      database=database_name, 
                                       metric=metric,
                                       validation=validation,
                                       K=5,
-                                      n_iters=proconsul_n_iters,
-                                      temp=temp, top_k=0, top_p=0.0)
-            else:
-                alg = la     
-                scores, _ = get_score(algorithm=alg,
-                                      disease=disease,
-                                      database=database_name,
-                                      metric=metric,
-                                      validation=validation,
-                                      K=5)
+                                      n_rounds=proconsul_n_rounds,
+                                      temp=t, top_k=k, top_p=p)
 
             
             scores = scores[0]                          
@@ -358,14 +392,7 @@ if __name__ == "__main__":
     
     # Read input
     args = parse_args()
-    left_ring, right_ring, left_name, right_name, metric, validations, diseases, database_name, database_path, proconsul_n_iters = read_terminal_input(args)
-
-    # Compact all the algorithm hyperparameters in a dictionary
-    hyperparams = {"heat_diffusion_time": 0,
-                   "pdiamond_n_iters": proconsul_n_iters,
-                   "pdiamond_temp": 0,
-                   "pdiamond_top_p": 0.0,
-                   "pdiamond_top_k": 0}
+    left_ring, right_ring, left_name, right_name, metric, validations, diseases, database_name, database_path, proconsul_n_rounds = read_terminal_input(args)
 
     # Build the Human-Human Interactome
     if database_name == "biogrid":
@@ -390,5 +417,5 @@ if __name__ == "__main__":
 
     for validation in validations:
         compare_algs_heatmap(left_ring=left_ring, right_ring=right_ring, left_name=left_name, right_name=right_name,
-                             metric=metric, validation=validation, diseases=diseases, proconsul_n_iters=proconsul_n_iters,
+                             metric=metric, validation=validation, diseases=diseases, proconsul_n_rounds=proconsul_n_rounds,
                              database_name=database_name)
