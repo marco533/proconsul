@@ -58,10 +58,10 @@ def parse_args():
                     help='Metric to use for make the plot. (default: f1')
     parser.add_argument('--validation', type=str, default='all',
                     help='Type of validation. (default: all')
-    parser.add_argument('--disease_file', type=str, default="data/disease_file.txt",
-                    help='Relative path to the file with disease names (default: "data/disease_file.txt)')
-    parser.add_argument('--database', type=str, default="biogrid",
-                    help='Database name (default: "biogrid')
+    parser.add_argument('--disease_file', type=str, default="data/diamond_dataset/diseases.txt",
+                    help='Relative path to the file with disease names (default: "data/diamond_dataset/diseases.txt)')
+    parser.add_argument('--database', type=str, default="diamond_dataset",
+                    help='Database name (default: "diamond_dataset')
     parser.add_argument('--proconsul_n_rounds', type=int, default=10,
                     help='Number of iteration for PROCONSUL. (default: 10)')
     
@@ -143,13 +143,13 @@ def read_terminal_input(args):
         sys.exit(1)
 
     if database == "biogrid":
-        database_path = "data/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
+        database_path = "data/biogrid/BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3.txt"
 
     if database == "stringdb":
-        database_path = "data/9606.protein.links.full.v11.5.txt"
+        database_path = "data/stringdb/9606.protein.links.full.v11.5.txt"
 
     if database == "pnas":
-        database_path = "data/pnas.2025581118.sd02.csv"
+        database_path = "data/pnas/pnas.2025581118.sd02.csv"
     
     if database == "diamond_dataset":
         database_path = "data/diamond_dataset/Interactome.tsv"
@@ -349,7 +349,14 @@ def compare_algs_heatmap(left_ring=None, right_ring=None, left_name=None, right_
                                       K=5,
                                       n_rounds=proconsul_n_rounds,
                                       temp=t, top_k=k, top_p=p)
-
+            else:
+                alg = la
+                scores, _ = get_score(algorithm=alg,
+                                      disease=disease,
+                                      database=database_name,
+                                      metric=metric,
+                                      validation=validation,
+                                      K=5)
             
             scores = scores[0]                          
             
@@ -358,7 +365,7 @@ def compare_algs_heatmap(left_ring=None, right_ring=None, left_name=None, right_
                 if score > best_left_scores[idx]:
                     best_left_scores[idx] = score
         
-        print(f"best lest scores: {best_left_scores}")
+        print(f"best left scores: {best_left_scores}")
 
         # Compare left and right scores
         compared_scores = best_left_scores - best_right_scores
@@ -375,12 +382,17 @@ def compare_algs_heatmap(left_ring=None, right_ring=None, left_name=None, right_
 
     # From the DataFrame build the HeatMap
 
-    sns.set(rc = {'figure.figsize':(15,15)})
+    sns.set(rc = {'figure.figsize':(5,15)})
     cmap = sns.diverging_palette(220, 20, as_cmap=True)
     hm = sns.heatmap(df, annot=False, cmap=cmap, center=0, cbar_kws={'label': f'<-- {right_name} | {left_name} -->'})
 
     fig = hm.get_figure()
     fig.suptitle(f"{left_name} VS {right_name} on {metric.upper()} Score")
+    
+    # Rotate the labels on x-axes to increase the readability
+    plt.xticks(rotation=90, horizontalalignment='right')
+
+    # Save the figure
     fig.savefig(f'plots/heatmaps/{left_name}_vs_{right_name}_{database_name}.png', bbox_inches='tight')
 
     # Close previous plots
