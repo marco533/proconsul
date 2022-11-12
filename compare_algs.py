@@ -14,7 +14,7 @@ from utils.data_utils import *
 def print_usage():
 
     print(' ')
-    print('        usage: python3 compare_algs.py --left_ring --right_ring --metric --validation --disease_file --database --heat_diffusion_time --proconsul_n_rounds')
+    print('        usage: python3 compare_algs.py --left_ring --right_ring --left_name --right_name --metric --validation --disease_file --database --heat_diffusion_time --proconsul_n_rounds')
     print('        -----------------------------------------------------------------')
     print('        left_ring                : Algorithms in the LEFT part of the ring. We will compare the greatest algorithm on the left')
     print('                                   against the greatest algorithms on the right.')

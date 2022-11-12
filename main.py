@@ -20,7 +20,7 @@ from utils.data_utils import *
 def print_usage():
 
     print(' ')
-    print('        usage: python3 project.py --algs --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k')
+    print('        usage: python3 main.py --algs --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k')
     print('        -------------------------------------------------------------------------------------------------------------------------------------------------')
     print('        algs                     : List of algorithms to run to collect results.')
     print('                                   They can be: "diamond" or "proconsul" (default: all)')

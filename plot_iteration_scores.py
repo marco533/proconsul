@@ -361,6 +361,7 @@ if __name__ == "__main__":
             disease_df = pd.DataFrame(data)
 
             # Plot
+            sns.set(font_scale=2)   # Change font size
             plot = sns.lineplot(data=disease_df, x="iterations", y=metric, hue="algorithms").set_title(disease)
             fig = plot.get_figure()
             fig.savefig(f'plots/iteration_scores/{disease}.png', bbox_inches='tight')
