@@ -128,7 +128,7 @@ The results will be saved in ```results``` folder.
 
 ### Analyze disease network attributes
 ```
-python3 analyze_disease_network.py --database --disease_file
+python3 analyze_disease_network.py --database --disease_file --skip_high
 ```
 
 Where:
@@ -145,18 +145,38 @@ python3 analyze_disease_network.py --database=biogrid --disease_file=data/diseas
 The resulting tables will be saved in ```disease_analysis```.
 
 ### Parse results
-After having collected the results with ```main.py``` you can parse them using:
+__After having collected the results__ with ```main.py``` you can parse them using:
 
 ```
 python3 parse_results.py --algs --metric --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k
 ```
 
-In this case the arguments are not used to set a new run of the algorithms, but to select which of the previously produced results we want to use
+In this case the arguments are not used to set a new run of the algorithms, but to select which of the previously produced results we want to use.
+
+Resulting tables will be saved in ```parsed_results```.
 
 ### Generate plots
+Here we can generate some plots __starting from the parsed results__.
+* __Heatmap of the performance__: Here the things are a bit tricky, but please follow the instructions and everything will become more clear. We define two sets of algorithms that we call left_ring and right_ring. Then, after having selected a database, a metric and a validation, we compare, for each disease, the performancese of the best algorithm in the left ring (on that specific disease) against the best algorithm in the right ring. The command line script is the following:
+```
+python3 compare_algs.py --left_ring --right_ring --left_name --right_name --metric --validation --disease_file --database --heat_diffusion_time --proconsul_n_rounds
+```
+In this case the hyperparameters of PROCONSUL must be specified within the name (e.g. proconsul_t10_p0.8_k3, when the hyperparams are not specified assume the default values (temperature=0, top-p=0, top-k=0))
 
+Example: 
+```
+python3 compare_algs.py --left_ring diamond --right_ring proconsul_t0.5 proconsul_t1.0 proconsul_t10.0 --left_name DIAMOnD_Family --right_name PROCONSUL_Family
+```
+Will compare for each disease DIAMOnD against the best version of PROCONSUL on that disease (temperature = 0.5, 1 or 10). All the other arguments are the default ones (see ```main.py```).
 
+The heatmaps will be saved in ```plots/heatmaps```
 
+* __Plot iteration scores__: Plots how the performances (on the given metric) of the choosen algorithms for each disease evolve as the numeber of iteration increases.
 
+```
+python3 plot_iteration_scores.py --algs --metric --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k
+```
 
+Here we can insert multiple values in proconsul_n_rounds, proconsul_temp, proconsul_top_p and proconsul_top_k to analyze multiple instances of PROCONSUL at the same time (__as long we collected the results for this hyperparameters__ using ```main.py```.
 
+The results will be saved in ```plots/iteration_score```
