@@ -112,8 +112,14 @@ Where:
 | algs 	| List of algorithms to run to collect results. They can be: "diamond" or "proconsul" (default: all) 	|
 | validation 	| Type of validation on which test the algorithms. It can be "kfold", "extended" or "all". If all, perform both the validations. (default: all) 	|
 | disease_file 	| Relative path to the file containing the disease names to use for the comparison. (default: "data/diamond_dataset/diseases.txt). 	|
-| database 	| Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset". (default: "diamond_dataset) 	|
+| database 	| Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset". (default: "diamond_dataset") 	|
 | proconsul_n_rounds 	| How many different rounds PROCONSUL will do to reduce statistical fluctuation. If you insert a list of values multiple version of PROCONSUL will be run. One for each value. (default: 10) 	|
 | proconsul_temp 	| Temperature value for the PROCONSUL softmax function. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 1.0) 	|
 | proconsul_top_p 	| Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0.0) 	|
 | proconsul_top_k 	| Length of the pvalues subset for the PROCONSUL top-k sampling. If 0 no top-k sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0) 	|
+
+Example:
+```
+python3 main.py --algs diamond proconsul --validation=kfold --proconsul_n_rounds=10 --proconsul_temp=10.0
+```
+Will run DIAMOnD and PROCONSUL using the diamond_dataset (default), PROCONSUL will run with 10 round and with a temperature of 10. Top-p and top-k will be the default values (0.0 and 0) and the performances will be tested with the K-Fold Cross Validation (in our implementation K=5).
