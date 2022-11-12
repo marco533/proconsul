@@ -63,6 +63,8 @@ It contains varius sets of utility functions used by the main computations.
 ## Prerequisites
 Our code requires the following modules to work properly:
 
+| Module      	| Url                                                     	|
+|-------------	|---------------------------------------------------------	|
 | Graph Tiger 	| https://graph-tiger.readthedocs.io/en/latest/index.html 	|
 | Matplotlib  	| https://matplotlib.org/                                 	|
 | NetworkX    	| https://networkx.org/                                   	|
