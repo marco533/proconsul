@@ -41,7 +41,7 @@ The scores are computed for four different metrics: precision, recall, f1 and nd
 ### plots
 Here you can find two plot types:
 * _heatmaps_ contains the heatmaps of the comparison between couple of algorithms. At the moment you can find only the comparison between DIAMOnD and PROCONSUL, but you can easily generate the comparison between different algorithms (see: How to run).
-* iteration_score contains the plots that represent how the performance (of one metric) evolves as we increase the number of iteration for the different algorithms.
+* _iteration_score_ contains the plots that represent how the performance (of one metric) evolves as we increase the number of iteration for the different algorithms.
 
 ### predicted_genes
 It contains the putative disease genes predicted by the different algrithms using different datasets.
@@ -61,5 +61,16 @@ It contains varius sets of utility functions used by the main computations.
 
 
 ## Prerequisites
+Our code requires the following modules to work properly:
+
+| Graph Tiger 	| https://graph-tiger.readthedocs.io/en/latest/index.html 	|
+| Matplotlib  	| https://matplotlib.org/                                 	|
+| NetworkX    	| https://networkx.org/                                   	|
+| NumPy       	| https://numpy.org/                                      	|
+| Pandas      	| https://pandas.pydata.org/                              	|
+| PyTorch     	| https://pytorch.org/                                    	|
+| scikit-earn 	| https://scikit-learn.org/stable/                        	|
+| SciPy       	| https://scipy.org/                                      	|
+| seaborn     	| https://seaborn.pydata.org/                             	|
 
 ## How to run
