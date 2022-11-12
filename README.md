@@ -76,20 +76,26 @@ Our code requires the following modules to work properly:
 | seaborn     	| https://seaborn.pydata.org/                             	|
 
 To install them you can manually install each module by click on the provided url and following the installation procedure or, if you have already installed python3 and pip3 on your computer, use the provided __requiriments.txt__ file with:
-
-  pip3 install -r requirements.txt
-
+```
+pip3 install -r requirements.txt
+```
 Alternatively, if you prefer to use a virtual _Conda_ environment, you can, __after creating the virtual environment__, activate the environment and install the modules through the conda installer:
-  (base) $ conda activate -n env_name
-  (env_name) $ conda install --file requirements.txt
-  (env_name) $ pip3 install -r requirements.txt (_since not all the modules are provided by conda__)
-  
+```
+(base) $ conda activate -n env_name
+(env_name) $ conda install --file requirements.txt
+(env_name) $ pip3 install -r requirements.txt (_since not all the modules are provided by conda__)
+```
+
 __IMPORTANT:__ Before running the code you need to __downlad the missing data files__. 
 In fact, due to the limitations of github we have not been able to provide all the necessary files. Now we will explain you where to find those missing files and where to place them.
 
 | Missing file  | Download link | Where to place it |
 |-------------	|-------------- |------------------ |
-| BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3  | https://downloads.thebiogrid.org/BioGRID/Release-Archive/BIOGRID-4.4.204/| Download BIOGRID-ORGANISM-4.4.204.tab3.zip, extract it, copy BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3 and paste it inside ___data/biogrid___|
+| BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3  | https://downloads.thebiogrid.org/BioGRID/Release-Archive/BIOGRID-4.4.204/| Download BIOGRID-ORGANISM-4.4.204.tab3.zip, extract it, copy BIOGRID-ORGANISM-Homo_sapiens-4.4.204.tab3 and paste it inside ```data/biogrid```|
+| adacency_matrix.npy (precomputed adjacency matrix used for network analysis)| | ```data/biogrid```  |
+| distance_matrix.npy (precomputed distance matrix used for network analysis)| | ```data/biogrid```  |
+| all_gene_disease_associations.tvs | https://www.disgenet.org/downloads  | ```data/gda```  |
+
 
 
 ## How to run
