@@ -75,16 +75,16 @@ Our code requires the following modules to work properly:
 | SciPy       	| https://scipy.org/                                      	|
 | seaborn     	| https://seaborn.pydata.org/                             	|
 
-To install them you can manually install each module by click on the provided url and following the installation procedure or, if you have already installed python3 and pip3 on your computer, use the provided __requiriments.txt__ file with:
+To install them you can manually install each module by click on the provided url and following the installation procedure (suggested) or, if you have already installed python3 and pip3 on your computer, use the provided __requiriments.txt__ file with:
 ```
 pip3 install -r requirements.txt
 ```
 Alternatively, if you prefer to use a virtual _Conda_ environment, you can, __after creating the virtual environment__, activate the environment and install the modules through the conda installer:
 ```
-(base) $ conda activate -n env_name
+(base) $ conda activate env_name
 (env_name) $ conda install --file requirements.txt
-(env_name) $ pip3 install -r requirements.txt (_since not all the modules are provided by conda__)
 ```
+Please note that not all the modules are present in the conda channel (e.g. graph-tiger). So you have to install the missing ones using pip3 (always inside the conda environment).
 
 __IMPORTANT:__ Before running the code you need to __downlad the missing data files__. 
 In fact, due to the limitations of github we have not been able to provide all the necessary files. Now we will explain you where to find those missing files and where to place them.
@@ -97,5 +97,23 @@ In fact, due to the limitations of github we have not been able to provide all t
 | all_gene_disease_associations.tvs | https://www.disgenet.org/downloads  | ```data/gda```  |
 
 
-
 ## How to run
+Now we have everything ready to launch the programs. Within this repository we have both the script to launch the algorithms (PROCONSUL, DIAMOnD, etc ...) and collect their results, and the scripts to process the results and generate the related plots.
+
+### Collect the results
+To collect the results we need to run ```main.py``` who takes in input multiple arguments:
+```
+python3 main.py --algs --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k
+```
+Where:
+
+| Argument 	| What it does 	|
+|---	|---	|
+| algs 	| List of algorithms to run to collect results. They can be: "diamond" or "proconsul" (default: all) 	|
+| validation 	| Type of validation on which test the algorithms. It can be "kfold", "extended" or "all". If all, perform both the validations. (default: all) 	|
+| disease_file 	| Relative path to the file containing the disease names to use for the comparison. (default: "data/diamond_dataset/diseases.txt). 	|
+| database 	| Database name from which take the PPIs. Choose from "biogrid", "stringdb", "pnas", or "diamond_dataset". (default: "diamond_dataset) 	|
+| proconsul_n_rounds 	| How many different rounds PROCONSUL will do to reduce statistical fluctuation. If you insert a list of values multiple version of PROCONSUL will be run. One for each value. (default: 10) 	|
+| proconsul_temp 	| Temperature value for the PROCONSUL softmax function. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 1.0) 	|
+| proconsul_top_p 	| Probability threshold value for PROCONSUL nucleus sampling. If 0 no nucleus sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0.0) 	|
+| proconsul_top_k 	| Length of the pvalues subset for the PROCONSUL top-k sampling. If 0 no top-k sampling. If you insert a list of values, multiple version of PROCONSUL will be run. One for each value. (default: 0) 	|
