@@ -123,3 +123,40 @@ Example:
 python3 main.py --algs diamond proconsul --validation=kfold --proconsul_n_rounds=10 --proconsul_temp=10.0
 ```
 Will run DIAMOnD and PROCONSUL using the diamond_dataset (default), PROCONSUL will run with 10 round and with a temperature of 10. Top-p and top-k will be the default values (0.0 and 0) and the performances will be tested with the K-Fold Cross Validation (in our implementation K=5).
+
+The results will be saved in ```results``` folder.
+
+### Analyze disease network attributes
+```
+python3 analyze_disease_network.py --database --disease_file
+```
+
+Where:
+| Argument 	| What it does 	|
+|---	|---	|
+| disease_file 	| Relative path to the file containing the disease names to use for the comparison (default: "data/diamond_dataset/diseases.txt). 	|
+| database 	| Name of the database to use for the disease analyisis. (default: "diamond_dataset") 	|
+| skip_high 	| Boolean flag to skip the highly computational attributes. (default: "False") 	|
+
+Example using the BioGRID dataset:
+```
+python3 analyze_disease_network.py --database=biogrid --disease_file=data/disease_file.txt
+```
+The resulting tables will be saved in ```disease_analysis```.
+
+### Parse results
+After having collected the results with ```main.py``` you can parse them using:
+
+```
+python3 parse_results.py --algs --metric --validation --disease_file --database --proconsul_n_rounds --proconsul_temp --proconsul_top_p --proconsul_top_k
+```
+
+In this case the arguments are not used to set a new run of the algorithms, but to select which of the previously produced results we want to use
+
+### Generate plots
+
+
+
+
+
+
